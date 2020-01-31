@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "bin": {
+    "sentinel": "./bin/sentinel.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "prettier:write": "prettier --write \"src/**/*.ts\"",
@@ -16,8 +19,10 @@
   "author": "Shelley Vohr <shelley.vohr@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "commander": "^4.1.0",
     "dayjs": "^1.8.19",
     "fs-extra": "^8.1.0",
+    "rimraf": "^3.0.1",
     "simple-git": "^1.131.0",
     "typescript": "^3.7.5",
     "uuidv4": "^6.0.2"
@@ -25,6 +30,7 @@
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
     "@types/node": "^13.5.3",
+    "@types/rimraf": "^2.0.3",
     "@types/uuid": "^3.4.7"
   }
 }

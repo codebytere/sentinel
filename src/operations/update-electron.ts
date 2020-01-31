@@ -4,11 +4,11 @@ import * as path from 'path';
 /**
  * Updates the version of Electron in the project being tested.
  *
- * @param {string} repoPath
- * @returns {Promise<boolean>}
+ * @param {string} projectPath - the path to the project.
+ * @returns {Promise<boolean>} - whether or not the project's Electron version was updated.
  */
-export async function updateElectronVersion(repoPath: string) {
-  const packageJSONPath = path.resolve(repoPath, 'package.json');
+export async function updateElectronVersion(projectPath: string) {
+  const packageJSONPath = path.resolve(projectPath, 'package.json');
   const packageJSON = await fs.readJson(packageJSONPath);
 
   // TODO(codebytere): fetch the locally built version of Electron

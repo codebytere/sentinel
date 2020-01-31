@@ -5,7 +5,7 @@
 		"outDir": "lib",
 		"lib": [
 			"esnext"
-		],
+    ],
 		"sourceMap": true,
 		"rootDir": "src",
     "experimentalDecorators": true,
@@ -26,11 +26,11 @@
 	},
 	"exclude": [
 		"node_modules",
-		"tests",
 		"lib",
-    "coverage",
-    "mini-servers"
-	],
+  ],
+  "include": [
+    "src"
+   ],
   "formatCodeOptions": {
     "indentSize": 2,
     "tabSize": 2

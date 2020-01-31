@@ -7,7 +7,7 @@ import * as simpleGit from 'simple-git/promise';
 /**
  * Clones a project repo. Returns the path it was cloned to.
  *
- * @returns {Promise<string | null>}
+ * @returns {Promise<string | null>} - the path the project was cloned into, or null.
  */
 export async function cloneRepo(repo: string) {
   const gitURL = `https://github.com/${repo}.git`;
@@ -24,11 +24,10 @@ export async function cloneRepo(repo: string) {
     const git = simpleGit(tempPath);
     await git.clone(gitURL, '.');
   } catch (error) {
-    console.error(`Failed to clone ${repo} to: ${tempPath}`);
+    console.error(`Failed to clone ${repo} to temporary directory`, error);
     return null;
   }
 
-  console.error(`Successfully cloned ${repo} to: ${tempPath}`);
-
+  console.error(`Successfully cloned ${repo} to temporary directory`);
   return tempPath;
 }

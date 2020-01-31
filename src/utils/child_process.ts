@@ -4,13 +4,10 @@ import { ISpawnPromiseResult } from '../interfaces';
 
 /**
  * Spawns a promise, logging along the way.
- * Resolves even if the called command
- * fails, never rejects.
  *
- * @export
- * @param {string} cmd
- * @param {Array<string>} [args=[]]
- * @param {SpawnOptions} [options]
+ * @param {string} cmd - the process to spawn.
+ * @param {Array<string>} [args=[]] - list of string arguments for the spawned command.
+ * @param {SpawnOptions} [options] - Extra options for the spawned process.
  * @returns
  */
 export async function spawnLoggedPromise(
@@ -66,7 +63,7 @@ export async function spawnLoggedPromise(
  *
  * @param {Array<string>} stdout
  * @param {Array<string>} stderr
- * @returns {string}
+ * @returns {string} - the last seen output.
  */
 export function getLastSeenOutputString(stdout: Array<string>, stderr: Array<string>): string {
   return (

@@ -3,12 +3,12 @@ import { spawnLoggedPromise } from '../utils/child_process';
 /**
  * Installs dependencies in a given directory.
  *
- * @param {string} repoPath
- * @returns {Promise<boolean>}
+ * @param {string} projectPath - the path to the project.
+ * @returns {Promise<boolean>} - whether or not the project's dependencies were successfully installed.
  */
-export async function installDependencies(repoPath: string) {
+export async function installDependencies(projectPath: string) {
   const result = await spawnLoggedPromise('npm', ['install'], {
-    cwd: repoPath,
+    cwd: projectPath,
   });
 
   if (result.success) {
