@@ -1,0 +1,38 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2018",
+		"outDir": "lib",
+		"lib": [
+			"esnext"
+		],
+		"sourceMap": true,
+		"rootDir": "src",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "noImplicitThis": true,
+    "noUnusedParameters": true,
+    "importHelpers": true,
+    "noEmitHelpers": true,
+    "moduleResolution": "node",
+    "pretty": true,
+	},
+	"exclude": [
+		"node_modules",
+		"tests",
+		"lib",
+    "coverage",
+    "mini-servers"
+	],
+  "formatCodeOptions": {
+    "indentSize": 2,
+    "tabSize": 2
+  }
+}
