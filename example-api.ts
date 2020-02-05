@@ -48,6 +48,14 @@ function example_reservation_webhook_handler(fr: FeedbackRequest): FeedbackReque
  * For example, if you test on Mac, Win, and Linux you submit three reports.
  */
 interface Report {
+    /**
+     * Posting a report deletes the old report of the same id.
+     * Reports are not addative or unioned, thus downstream tests should aggregate before sending.
+     * 
+     * You SHOULD send multiple reports as a means of updating status.
+     * 
+     * It is acceptable to post anywhere from a single test, to thousands.
+     */
     id: string
 
     /**
@@ -65,14 +73,6 @@ interface Report {
      */
     please: Please
 
-    /**
-     * Posting a report deletes the old report of the same id.
-     * Reports are not addative or unioned, thus downstream tests should aggregate before sending.
-     * 
-     * You SHOULD send multiple reports as a means of updating status.
-     * 
-     * It is acceptable to post anywhere from a single test, to thousands.
-     */
     tests: Test[]
 
     arch?: Arch
