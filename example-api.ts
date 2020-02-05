@@ -1,7 +1,24 @@
 interface FeedbackRequest {
     install: url /* fetch the npm installable gzip from here */
-    line: string /* master, nightly, 9x, 8x, etc. */
+    
+    /**
+     * A string providing information on what release line is being submitted for feedback.
+     * 
+     * Some apps may only be capable of testing certain release lines.
+     * They can use this line to filter and skip specific builds.
+     */
+    line: string
+    
+    /**
+     * This URL is unique per repo/commit.
+     * 
+     * Submitting two reports with the same id but to different callbacks results in two different reports.
+     */
     report_callback: url,
+
+    /**
+     * We can add more info here as we learn what folks need.
+     */
 }
 
 interface FeedbackRequestResponse {
@@ -38,8 +55,15 @@ interface Report {
      * 
      * This may override the underlying tests. A test may fail, but the report may still pass.
      * It is up to the application runner to decide.
+     * 
+     * It does not affect requests back to our CI. Use `please` for requests.
      */
     status: Status 
+
+    /**
+     * Request back to our CI system, not necessarily honored.
+     */
+    please: Please
 
     /**
      * Posting a report deletes the old report of the same id.
@@ -53,12 +77,22 @@ interface Report {
 
     arch?: Arch
     os?: OS
-    os_version?: string
+
+    /**
+     * This should be verbatim generated from a module which *WE* can distribute.
+     */
+    os_details?: string
 }
 
 /* It is allowable that only one Test is reported back which aggregates all actual test */
 interface Test {
-    id: string /* This will be used to report trends */
+    /**
+     * It is up to the application how to name test.
+     * 
+     * It is acceptable to have a single test.
+     * It is also acceptable to submit thousands of tests for more granular tracking of failures between builds.
+     */
+    name: string
 
     source_link?: url /* optional link to code */
     
@@ -90,29 +124,31 @@ interface Test {
 }
 
 /**
- * OPTIONAL - This may be skipped for now
- * 
- * The reservation informs CI about how many reports it should expect to see back.
- * It is possible to submit reports without a reservation.
- */
-interface Reservations {
-    reservations: Reservation[]
-}
-interface Reservation {
-    report_id: string
-    
-    /**
-     * How long do we hold this reservation before moving on. 
-     * This effectively blocks CI until the lease expires, or the report is uploaded.
-     */
-    lease: Date
-}
-
-
-/**
  * Other stuff
  */
+enum Please {
+    /**
+     * Please reject the changes, something breaks!
+     * 
+     * This is used when an unexpected breaking change is encountered.
+     */
+    REJECT_CHANGES = 'block',
 
+    /**
+     * Approve the changes. Hopefully nothing breaks.
+     */
+    APPROVE_CHANGES = 'approve',
+
+    /**
+     * I'm testing. Don't merge until I'm finished.
+     */
+    WAIT_FOR_ME = 'wait',
+
+    /**
+     * I'm sitting this one out.
+     */
+    SKIP_ME = 'skip',
+}
 enum Arch {
     ARM   = 'arm',
     ARM64 = 'arm64',
@@ -125,13 +161,12 @@ enum OS {
     WIN   = 'win',
     LINUX = 'linux',
 }
-
 enum Status {
-    READY = 'ready', // Tests have not been run - BLOCKS CI
-    RUNNING = 'run', // Tests are running - BLOCKS CI
+    READY = 'ready', // Tests have not been run
+    RUNNING = 'run', // Tests are running 
     PASSED = 'pass', // Tests are passed!
-    FAILED = 'fail', // Tests are failed - BLOCKS CI
-    ABORTED = 'abort', // Unknown error - WARNS CI
+    FAILED = 'fail', // Tests are failed
+    ABORTED = 'abort', // Unknown error
     SKIPPED = 'skip', // Tests not run
 }
 
