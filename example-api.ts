@@ -28,7 +28,14 @@ interface FeedbackRequestResponse {
       * It is permissible to use a fixed token, but we allow the flexibility of generating per-request tokens.
       * That is one less credential sitting on CI machines waiting to be compromised.
       */
-    session_token: string
+    session_token?: string
+
+    /**
+     * You can set this to `false` if you're sure you wanna skip a run.
+     * 
+     * We can use this to hide your app from the list.
+     */
+    expect_reports: boolean
 }
 
 /**
@@ -38,7 +45,8 @@ interface FeedbackRequestResponse {
  */
 function example_reservation_webhook_handler(fr: FeedbackRequest): FeedbackRequestResponse {
     return {
-        session_token: `some random token`
+        session_token: `some random token`,
+        expect_reports: true,
     }
 }
 
@@ -73,6 +81,12 @@ interface Report {
      */
     please: Please
 
+    /**
+     * The tests!
+     * 
+     * Later, we may allow a more streaming means of updating tests. 
+     * For now, you have to submit them all as part of a single report.
+     */
     tests: Test[]
 
     arch?: Arch
@@ -184,9 +198,15 @@ declare const RunCI: (line: string) => Promise<Report>
 async function mainwebhook() {
     // new incoming request!
     let { req: { install, line, report_callback }, res } = await nextFeedbackRequest()
-    // make sure to reply
-    await res({ session_token: 'hello' })
-    
+
+    if (line != 'master') {
+        // We only test master, so tell CI we're skipping this run
+        return res({ expect_reports: false })
+    } else {
+        // We want to test, so set a session token
+        await res({ session_token: 'hello', expect_reports: true })
+    }
+
     // kick off CI
     let report = await RunCI(install)
 
