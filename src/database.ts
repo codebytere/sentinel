@@ -9,30 +9,32 @@ export class mRegistrant {
   }
 }
 
-export class mTest {
+export class mTestData {
   constructor(public table: Tables.TestData) {}
 
   static async NewFromReport(report: mReport, test: any) {
     const report_id = report.table.id
-  
-    const t = await Tables.TestData.create({report_id, ...test })
-    return new mTest(t)
+
+    const t = await Tables.TestData.create({ report_id, ...test })
+    return new mTestData(t)
   }
 }
 
 export class mReport {
-  constructor(public table: Tables.report) {}
+  constructor(public table: Tables.Report) {}
 
   static async NewFromFeedback(feedback: mFeedback, defaults: any) {
     const feedback_id = feedback.table.id
-    return new mReport(await Tables.report.create({
-      feedback_id, 
-      ...defaults
-    }))
+    return new mReport(
+      await Tables.Report.create({
+        feedback_id,
+        ...defaults
+      })
+    )
   }
 
   static async FindById(id: number) {
-    let record = await Tables.report.findOne({ where: { id } })
+    let record = await Tables.Report.findOne({ where: { id } })
     if (!record) {
       throw new Error(`Report id:${id} not found`)
     }
@@ -43,10 +45,7 @@ export class mReport {
 export class mFeedback {
   constructor(public table: Tables.Feedback) {}
 
-  static async NewFromRequest(
-    req: mRequest,
-    reg: mRegistrant
-  ) {
+  static async NewFromRequest(req: mRequest, reg: mRegistrant) {
     const request_id = req.table.id
     const registrant_id = reg.table.id
 
@@ -67,10 +66,7 @@ export class mFeedback {
 export class mRequest {
   constructor(public table: Tables.Request) {}
 
-  static async CreateNew(opts: {
-    install_url: string
-    version: string
-  }) {
+  static async CreateNew(opts: { install_url: string; version: string }) {
     return new mRequest(await Tables.Request.create(opts))
   }
 
@@ -82,4 +78,3 @@ export class mRequest {
     return new mRequest(record)
   }
 }
-

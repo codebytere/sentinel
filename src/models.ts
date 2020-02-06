@@ -12,9 +12,9 @@ const {
 //   |
 // Report - per-platform CI result status(es) (See mReport)
 //   |
-// Test[] - a set of Test models containing information about the CI run.
+// TestData[] - a set of Test models containing information about the CI run.
 //   |
-// Test - See mTest
+// TestData - See mTest
 
 import {
   INTEGER,
@@ -55,7 +55,10 @@ export namespace Tables {
       display_href: TEXT,
       webhook: TEXT
     },
-    { sequelize, tableName: 'registrant' }
+    {
+      sequelize,
+      tableName: 'Registrant'
+    }
   )
 
   export class Request extends Model {
@@ -71,10 +74,13 @@ export namespace Tables {
       commit_github_url: TEXT,
       pull_request_url: TEXT
     },
-    { sequelize, tableName: 'request' }
+    {
+      sequelize,
+      tableName: 'Request'
+    }
   )
 
-  export enum feedback_expect_reports {
+  export enum FeedbackExpectReports {
     YES = 'yes',
     NO = 'no',
     UNKNOWN = 'unknown'
@@ -97,15 +103,18 @@ export namespace Tables {
       expect_reports: BOOLEAN,
       session_token: TEXT
     },
-    { sequelize, tableName: 'feedback' }
+    {
+      sequelize,
+      tableName: 'Feedback'
+    }
   )
 
-  export class report extends Model {
+  export class Report extends Model {
     id!: number
     feedback_id!: number
   }
 
-  report.init(
+  Report.init(
     {
       feedback_id: { type: INTEGER, allowNull: false },
       name: { type: TEXT, allowNull: false },
@@ -120,7 +129,10 @@ export namespace Tables {
 
       ci_link: TEXT
     },
-    { sequelize, tableName: 'report' }
+    {
+      sequelize,
+      tableName: 'Report'
+    }
   )
 
   export class TestData extends Model {
@@ -161,7 +173,10 @@ export namespace Tables {
       workspace_gzip_link: TEXT,
       logfile_link: TEXT
     },
-    { sequelize, tableName: 'test' }
+    {
+      sequelize,
+      tableName: 'TestData'
+    }
   )
 
   export const random = () => sequelize.random()

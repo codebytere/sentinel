@@ -2,51 +2,30 @@ export module api {
   export interface FeedbackRequest {
     // Location of installable Electron build
     install: string
-
     // Representation of the current Electron version.
     version: string
-
     // Unique per-commit url that an app will post back CI status information to.
     report_callback: string
   }
 
   export interface FeedbackRequestResponse {
-    /**
-     * This token must be included in future requests for this CI run.
-     *
-     * It is permissible to use a fixed token, but we allow the flexibility of generating per-request tokens.
-     * That is one less credential sitting on CI machines waiting to be compromised.
-     */
+    // Must be included in future requests for this CI run.
     session_token?: string
-
     // Whether or not Electron should expect to receive reports from an app
     expect_reports: boolean
   }
 
   /**
-   * Representation of a CI status summary for a single platform
+   * Representation of a CI status summary for a single platform.
    *
-   *
+   * Multiple reports should be sent as a means of updating status.
+   * Posting a report deletes the old report of the same name.
    */
   export interface Report {
-    /**
-     * Posting a report deletes the old report of the same name.
-     * Reports are not addative or unioned, thus downstream tests should aggregate before sending.
-     *
-     * You SHOULD send multiple reports as a means of updating status.
-     *
-     * It is acceptable to post anywhere from a single test, to thousands.
-     */
+    // The name of the report.
     name: string
 
-    /**
-     * The overall status of the report; determined holistically by the application runner.
-     *
-     * This may override the underlying tests. A test may fail, but the report may still pass.
-     * It is up to the application runner to decide.
-     *
-     * It does not affect requests back to our CI. Use `please` for requests.
-     */
+    // The overall status of the report; determined holistically by the application runner.
     status: Status
 
     effect_request: CIEffectRequest
@@ -66,13 +45,11 @@ export module api {
     test_callback?: string
   }
 
-  export interface Test {
-    /**
-     * It is up to the application how to name test.
-     *
-     * It is acceptable to have a single test.
-     * It is also acceptable to submit thousands of tests for more granular tracking of failures between builds.
-     */
+  /**
+   * Data
+   */
+  export interface TestData {
+    // Name for a
     name: string
 
     // Link to project source code.
@@ -112,6 +89,9 @@ export module api {
     WAIT = 'wait'
   }
 
+  /**
+   * Platform architecture.
+   */
   export enum Arch {
     ARM = 'arm',
     ARM64 = 'arm64',
@@ -130,11 +110,11 @@ export module api {
   }
 
   export enum Status {
-    TESTS_READY_BUT_NOT_STARTED = 'ready',
-    TESTS_RUNNING_BUT_NOT_FINISHED = 'run',
-    TESTS_FINISHED_YAY_WE_PASSED = 'pass',
-    TESTS_FINISHED_BUT_WE_FAILED = 'fail',
-    TESTS_ABORTED_UNKNOWN_REASON = 'abort',
-    TESTS_SKIPPED_POSSIBLY_NOT_RUN = 'skip'
+    READY_NOT_STARTED = 'ready',
+    RUNNING_NOT_FINISHED = 'run',
+    FINISHED_PASSED = 'pass',
+    FINISHED_FAILED = 'fail',
+    ABORTED_UNKNOWN = 'abort',
+    SKIPPED = 'skip'
   }
 }

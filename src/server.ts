@@ -1,6 +1,5 @@
 import * as fast from 'fastify'
 import fetch from 'node-fetch'
-import * as Joi from '@hapi/joi'
 
 import { api } from './api'
 import { Tables } from './models'
@@ -9,7 +8,7 @@ import {
   mRequest,
   mFeedback,
   mReport,
-  mTest,
+  mTestData
 } from './database'
 
 const { PORT = '3000' } = process.env
@@ -19,23 +18,17 @@ fastify.route({
   method: 'POST',
   url: '/trigger',
   schema: {
-    body: Joi.object()
-      .keys({
-        version: Joi.string()
-          .pattern(/^[0-9]+.[0-9]+.[0-9]+(?:-[a-z]+.[0-9]+)?$/)
-          .required(),
-        install: Joi.string()
-          .uri({ scheme: 'https' })
-          .required()
-      })
-      .required()
+    body: {
+      type: 'object',
+      required: ['version', 'install'],
+      properties: {
+        version: { type: 'string' },
+        install: { type: 'string' }
+      }
+    }
   },
-  handler: async request => {
-    // When a new gzipped tarball is uploaded to SOME_LOCATION,
-    // trigger web-hooks to all registered consumers
-
+  handler: async (request, reply) => {
     const { install, version } = request.body
-
     const req = await mRequest.CreateNew({
       install_url: install,
       version
@@ -44,6 +37,7 @@ fastify.route({
     const registrants = await mRegistrant.FindAll()
 
     for (let reg of registrants) {
+      console.log(reg)
       const fb = await mFeedback.NewFromRequest(req, reg)
       const report_callback = `http://localhost:${PORT}/report/${fb.table.id}`
 
@@ -53,7 +47,6 @@ fastify.route({
         report_callback
       } as api.FeedbackRequest
 
-      // Get FeedbackResponse from app webhooks
       const resp = await fetch(reg.table.webhook, {
         method: 'POST',
         headers: {
@@ -76,6 +69,7 @@ fastify.route({
 
       await fb.table.save()
     }
+    reply.code(200)
   }
 })
 
@@ -83,11 +77,21 @@ fastify.route({
   method: 'POST',
   url: '/report/:feedback_id',
   schema: {
-    params: Joi.object()
-      .keys({
-        feedback_id: Joi.number().required()
-      })
-      .required()
+    params: {
+      type: 'object',
+      required: ['feedback_id'],
+      properties: {
+        feedback_id: { type: 'number' }
+      }
+    },
+    response: {
+      '2xx': {
+        type: 'object',
+        properties: {
+          test_callback: { type: 'string', format: 'uri' }
+        }
+      }
+    }
   },
   handler: async request => {
     const { feedback_id } = request.params
@@ -106,25 +110,27 @@ fastify.route({
   method: 'POST',
   url: '/test/:report_id',
   schema: {
-    params: Joi.object()
-      .keys({
-        report_id: Joi.number().required()
-      })
-      .required(),
-    body: Joi.object()
-      .keys({
-        // TODO
-      })
-      .required()
+    params: {
+      type: 'object',
+      required: ['report_id'],
+      properties: {
+        report_id: { type: 'number' }
+      }
+    },
   },
-  handler: async request => {
+  handler: async (request, reply)=> {
     const { report_id } = request.params
     const report = await mReport.FindById(report_id)
-    const test: api.Test = request.body
+    const test: api.TestData = request.body
 
     // TODO: validate test information
-    await mTest.NewFromReport(report, test)
+    await mTestData.NewFromReport(report, test)
+    reply.code(200)
   }
+})
+
+fastify.get('/ping', (_request, reply) => {
+  reply.code(200).send({ pong: 'success!' })
 })
 
 const start = async () => {
