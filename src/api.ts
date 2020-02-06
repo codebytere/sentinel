@@ -1,5 +1,4 @@
 export module api {
-
   export interface FeedbackRequest {
     // Location of installable Electron build
     install: string
@@ -7,7 +6,7 @@ export module api {
     // Representation of the current Electron version.
     version: string
 
-    // Unique per-commit url that an app will post back CI status information to. 
+    // Unique per-commit url that an app will post back CI status information to.
     report_callback: string
   }
 
@@ -67,7 +66,6 @@ export module api {
     test_callback?: string
   }
 
-
   export interface Test {
     /**
      * It is up to the application how to name test.
@@ -101,7 +99,7 @@ export module api {
   }
 
   /**
-   * Represents the request made by the consumer app as to 
+   * Represents the request made by the consumer app as to
    * how the results of their tests on should affect the CI status
    * of Electron.
    */
@@ -119,9 +117,9 @@ export module api {
     ARM64 = 'arm64',
     IA32 = 'ia32',
     x86 = 'x86',
-    AMD64 = 'amd64',
+    AMD64 = 'amd64'
   }
-  
+
   /**
    * The platform on which a test suite is being run.
    */

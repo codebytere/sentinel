@@ -1,19 +1,18 @@
-// Require the framework and instantiate it
 import * as fast from 'fastify'
 import fetch from 'node-fetch'
+import * as Joi from '@hapi/joi'
+
+import { api } from './api'
+import { Tables } from './models'
 import {
   mRegistrant,
   mRequest,
   mFeedback,
   mReport,
   mTest,
-  tables
-} from './tables'
-import * as Joi from '@hapi/joi'
-import { api } from './api'
+} from './database'
 
-let { PORT = '3000' } = process.env
-
+const { PORT = '3000' } = process.env
 const fastify = fast({ logger: true })
 
 fastify.route({
@@ -35,8 +34,6 @@ fastify.route({
     // When a new gzipped tarball is uploaded to SOME_LOCATION,
     // trigger web-hooks to all registered consumers
 
-    // qualifier: determinant for whether CI should be run (version number?)
-    // install - url to a bundled release of Electron based on a commit.
     const { install, version } = request.body
 
     const req = await mRequest.CreateNew({
@@ -132,7 +129,7 @@ fastify.route({
 
 const start = async () => {
   try {
-    await tables.sync()
+    await Tables.sync()
     await fastify.listen(PORT)
     fastify.log.info(`server listening on ${PORT}`)
   } catch (err) {

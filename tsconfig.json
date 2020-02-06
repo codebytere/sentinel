@@ -29,7 +29,7 @@
 		"lib",
   ],
   "include": [
-    "src"
+    "src",
    ],
   "formatCodeOptions": {
     "indentSize": 2,
