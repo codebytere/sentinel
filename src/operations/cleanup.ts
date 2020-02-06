@@ -1,7 +1,7 @@
-import * as rmrf from 'rimraf';
-import { promisify } from 'util';
+import * as rmrf from 'rimraf'
+import { promisify } from 'util'
 
-const rimraf = promisify(rmrf);
+const rimraf = promisify(rmrf)
 
 /**
  * Removes a temporary directory.
@@ -11,12 +11,12 @@ const rimraf = promisify(rmrf);
  */
 export async function cleanup(projectPath: string) {
   try {
-    await rimraf(projectPath);
+    await rimraf(projectPath)
   } catch (error) {
-    console.error('cleanup(): Failed to remove temporary directory ', error);
-    return false;
+    console.error('cleanup(): Failed to remove temporary directory ', error)
+    return false
   }
 
-  console.info('cleanup(): Successfully removed temporary directory');
-  return true;
+  console.info('cleanup(): Successfully removed temporary directory')
+  return true
 }

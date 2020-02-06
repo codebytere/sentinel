@@ -19,18 +19,28 @@
   "author": "Shelley Vohr <shelley.vohr@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
+    "@types/hapi__joi": "^16.0.9",
+    "@types/node-fetch": "^2.5.4",
+    "@types/sequelize": "^4.28.8",
     "commander": "^4.1.0",
     "dayjs": "^1.8.19",
+    "fastify": "^2.11.0",
     "fs-extra": "^8.1.0",
+    "node-fetch": "^2.6.0",
+    "pg": "^7.18.1",
     "rimraf": "^3.0.1",
+    "sequelize": "^5.21.3",
     "simple-git": "^1.131.0",
+    "tslib": "^1.10.0",
     "typescript": "^3.7.5",
     "uuidv4": "^6.0.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
-    "@types/node": "^13.5.3",
+    "@types/node": "^13.7.0",
     "@types/rimraf": "^2.0.3",
-    "@types/uuid": "^3.4.7"
+    "@types/uuid": "^3.4.7",
+    "prettier": "^1.19.1"
   }
 }

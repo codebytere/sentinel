@@ -1,4 +1,4 @@
-import { spawnLoggedPromise } from '../utils/child_process';
+import { spawnLoggedPromise } from '../utils/child_process'
 
 /**
  * Installs dependencies in a given directory.
@@ -8,14 +8,14 @@ import { spawnLoggedPromise } from '../utils/child_process';
  */
 export async function installDependencies(projectPath: string) {
   const result = await spawnLoggedPromise('npm', ['install'], {
-    cwd: projectPath,
-  });
+    cwd: projectPath
+  })
 
   if (result.success) {
-    console.info('installDependencies(): Successfully installed dependencies');
+    console.info('installDependencies(): Successfully installed dependencies')
   } else {
-    console.error('installDependencies(): Failed to install dependencies');
+    console.error('installDependencies(): Failed to install dependencies')
   }
 
-  return result.success;
+  return result.success
 }

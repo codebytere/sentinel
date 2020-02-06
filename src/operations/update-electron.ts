@@ -1,5 +1,5 @@
-import * as fs from 'fs-extra';
-import * as path from 'path';
+import * as fs from 'fs-extra'
+import * as path from 'path'
 
 /**
  * Updates the version of Electron in the project being tested.
@@ -7,29 +7,29 @@ import * as path from 'path';
  * @param {string} projectPath - the path to the project.
  * @returns {Promise<boolean>} - whether or not the project's Electron version was updated.
  */
-export async function updateElectronVersion(projectPath: string) {
-  const packageJSONPath = path.resolve(projectPath, 'package.json');
-  const packageJSON = await fs.readJson(packageJSONPath);
-
-  // TODO(codebytere): fetch the locally built version of Electron
-  const version = '8.0.0-beta.8';
+export async function updateElectronVersion(
+  projectPath: string,
+  version?: string
+) {
+  const packageJSONPath = path.resolve(projectPath, 'package.json')
+  const packageJSON = await fs.readJson(packageJSONPath)
 
   if (Object.keys(packageJSON.dependencies).includes('electron')) {
-    packageJSON.dependencies.electron = version;
+    packageJSON.dependencies.electron = version
   } else if (Object.keys(packageJSON.devDependencies).includes('electron')) {
-    packageJSON.devDependencies.electron = version;
+    packageJSON.devDependencies.electron = version
   } else {
-    console.error('Electron not found in project dependencies');
-    return false;
+    console.error('Electron not found in project dependencies')
+    return false
   }
 
   try {
-    await fs.writeJson(packageJSONPath, packageJSON, { spaces: 2 });
+    await fs.writeJson(packageJSONPath, packageJSON, { spaces: 2 })
   } catch (error) {
-    console.error(`Failed to update Electron to ${version}`, error);
-    return false;
+    console.error(`Failed to update Electron to ${version}`, error)
+    return false
   }
 
-  console.info(`Updated Electron version to ${version}`);
-  return true;
+  console.info(`Updated Electron version to ${version}`)
+  return true
 }
