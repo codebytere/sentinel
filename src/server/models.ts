@@ -2,19 +2,23 @@ const {
   DATABASE_URL = 'postgres://postgres@localhost:5432/postgres'
 } = process.env
 
-// Request - 1 request per commit (See mRequest)
-//   |
-// Feedback[] - 1 request per app registrant
-//   |
-// Feedback - Per-app feedback for the release of electron (See mFeedback)
-//   |
-// Report[] - the set of all CI run results across platforms
-//   |
-// Report - per-platform CI result status(es) (See mReport)
-//   |
-// TestData[] - a set of Test models containing information about the CI run.
-//   |
-// TestData - See mTest
+/**
+ * HIERARCHY
+ * 
+ * Request - 1 request per commit (See mRequest)
+ *    | 
+ *    | (has many)
+ *    | 
+ * Feedback -  Per-app feedback for the release of electron (See mFeedback)
+ *    | 
+ *    | (has many)
+ *    | 
+ *  Report- Per-platform CI result status(es) (See mReport)
+ *    | 
+ *    | (has many)
+ *    | 
+ * TestData - Per platform granular data about the CI run (See mTest)
+ */
 
 import {
   INTEGER,
