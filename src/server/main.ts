@@ -16,6 +16,10 @@ const { HOST = '0.0.0.0' } = process.env
 
 const fastify = fast({ logger: true })
 
+fastify.get('/', (_req, reply) => {
+  reply.code(200).send('Welcome to Sentinel!')
+})
+
 fastify.route({
   method: 'POST',
   url: '/trigger',
