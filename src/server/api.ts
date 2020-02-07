@@ -1,11 +1,13 @@
 export module api {
   export interface FeedbackRequest {
     // Location of installable Electron build
-    install: string
+    install_data: { platform: string; link: string }
     // Representation of the current Electron version.
-    version: string
+    version_qualifier: string
     // Unique per-commit url that an app will post back CI status information to.
     report_callback: string
+    // Commit hash corresponding to a PR's HEAD sha.
+    commit_hash: string
   }
 
   export interface FeedbackRequestResponse {

@@ -42,17 +42,13 @@ export namespace Tables {
 
   export class Registrant extends Model {
     webhook!: string
+    name!: string
     id!: number
   }
 
   Registrant.init(
     {
-      auth_email_verified: BOOLEAN,
-      auth_email: TEXT,
-      auth_pass_hash: TEXT,
-      display_name: TEXT,
-      display_icon: TEXT,
-      display_href: TEXT,
+      name: TEXT,
       webhook: TEXT
     },
     {
@@ -63,16 +59,16 @@ export namespace Tables {
 
   export class Request extends Model {
     id!: number
-    install_url!: string
+    platform_install_data!: Record<string, string>
+    version_qualifier!: string
+    commit_hash!: string
   }
 
   Request.init(
     {
-      install_url: TEXT,
-      version: STRING,
-      commit_sha: STRING,
-      commit_github_url: TEXT,
-      pull_request_url: TEXT
+      platform_install_data: JSONB,
+      version_qualifier: STRING,
+      commit_hash: STRING
     },
     {
       sequelize,

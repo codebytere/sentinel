@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.json",
     "prettier:write": "prettier --write \"src/**/*.ts\"",
     "lint": "prettier --check \"src/**/*.ts\"",
-    "start": "npm run build && node lib/server.js"
+    "start": "npm run build && node lib/server/main.js"
   },
   "repository": {
     "type": "git",
