@@ -11,7 +11,9 @@ import {
   mTestData
 } from './database'
 
-const { PORT = '3000' } = process.env
+const PORT = ((process.env.PORT as unknown) as number) || 3000
+const { HOST = '0.0.0.0' } = process.env
+
 const fastify = fast({ logger: true })
 
 fastify.route({
@@ -173,7 +175,7 @@ fastify.route({
 const start = async () => {
   try {
     await Tables.sync()
-    await fastify.listen(PORT)
+    await fastify.listen({ port: PORT, host: HOST })
     fastify.log.info(`server listening on ${PORT}`)
   } catch (err) {
     fastify.log.error(err)
@@ -199,4 +201,3 @@ fastify.get('/ping', async (_request, reply) => {
     reply.code(500).send(err)
   }
 })
-

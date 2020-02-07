@@ -4,19 +4,19 @@ const {
 
 /**
  * HIERARCHY
- * 
+ *
  * Request - 1 request per commit (See mRequest)
- *    | 
+ *    |
  *    | (has many)
- *    | 
+ *    |
  * Feedback -  Per-app feedback for the release of electron (See mFeedback)
- *    | 
+ *    |
  *    | (has many)
- *    | 
+ *    |
  *  Report- Per-platform CI result status(es) (See mReport)
- *    | 
+ *    |
  *    | (has many)
- *    | 
+ *    |
  * TestData - Per platform granular data about the CI run (See mTest)
  */
 
