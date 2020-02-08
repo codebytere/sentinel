@@ -1,6 +1,7 @@
 import * as os from 'os'
+import { api } from '../api'
 
-export async function testAgent() {
+export function testAgent(): api.TestAgent {
   return {
     arch: os.arch(),
     platform: os.platform(),
@@ -9,10 +10,10 @@ export async function testAgent() {
       model: os.cpus()[0].model,
       speed: os.cpus()[0].speed
     },
-    freemem: os.freemem(),
+    freeMem: os.freemem(),
     release: os.release(),
-    totalmem: os.totalmem(),
+    totalMem: os.totalmem(),
     type: os.type(),
     endianness: os.endianness()
-  }
+  } as api.TestAgent
 }

@@ -27,7 +27,6 @@ export class mRegistrant {
  *
  * There will be TestData created per report for a given platform.
  */
-
 export class mTestData {
   constructor(public table: Tables.TestData) {}
 
@@ -37,9 +36,9 @@ export class mTestData {
    * @param test
    */
   static async NewFromReport(report: mReport, test: any) {
-    const report_id = report.table.id
+    const reportId = report.table.id
 
-    const t = await Tables.TestData.create({ report_id, ...test })
+    const t = await Tables.TestData.create({ reportId, ...test })
     return new mTestData(t)
   }
 }
@@ -61,10 +60,10 @@ export class mReport {
    * @param defaults
    */
   static async NewFromFeedback(feedback: mFeedback, defaults: any) {
-    const feedback_id = feedback.table.id
+    const feedbackId = feedback.table.id
     return new mReport(
       await Tables.Report.create({
-        feedback_id,
+        feedbackId,
         ...defaults
       })
     )
@@ -100,11 +99,11 @@ export class mFeedback {
   constructor(public table: Tables.Feedback) {}
 
   static async NewFromRequest(req: mRequest, reg: mRegistrant) {
-    const request_id = req.table.id
-    const registrant_id = reg.table.id
+    const requestId = req.table.id
+    const registrantId = reg.table.id
 
     return new mFeedback(
-      await Tables.Feedback.create({ request_id, registrant_id })
+      await Tables.Feedback.create({ requestId, registrantId })
     )
   }
 
@@ -152,12 +151,12 @@ export class mRequest {
    * @returns A newly created or existing mRequest associated with a commit hash.
    */
   static async FindOrCreate(opts: {
-    version_qualifier: string
-    commit_hash: string
+    versionQualifier: string
+    commitHash: string
   }) {
     const record = await Tables.Request.findOne({
       where: {
-        commit_hash: opts.commit_hash
+        commitHash: opts.commitHash
       }
     })
     console.log(record)
@@ -166,9 +165,9 @@ export class mRequest {
     } else {
       return new mRequest(
         await Tables.Request.create({
-          version_qualifier: opts.version_qualifier,
-          commit_hash: opts.commit_hash,
-          platform_install_data: {}
+          versionQualifier: opts.versionQualifier,
+          commitHash: opts.commitHash,
+          platformInstallData: {}
         })
       )
     }

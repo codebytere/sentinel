@@ -1,20 +1,31 @@
-export module api {
+export namespace api {
   export interface FeedbackRequest {
     // Location of installable Electron build
-    install_data: { platform: string; link: string }
+    platformInstallData: { platform: string; link: string }
     // Representation of the current Electron version.
-    version_qualifier: string
+    versionQualifier: string
     // Unique per-commit url that an app will post back CI status information to.
-    report_callback: string
+    reportCallback: string
     // Commit hash corresponding to a PR's HEAD sha.
-    commit_hash: string
+    commitHash: string
+  }
+
+  export interface TestAgent {
+    arch: string
+    platform: NodeJS.Platform
+    cpus: { cores: number; model: string; speed: number }
+    freeMem: number
+    release: string
+    totalMem: number
+    type: string
+    endianness: 'BE' | 'DE'
   }
 
   export interface FeedbackRequestResponse {
     // Must be included in future requests for this CI run.
-    session_token?: string
+    sessionToken?: string
     // Whether or not Electron should expect to receive reports from an app
-    expect_reports: boolean
+    expectReports: boolean
   }
 
   /**
@@ -24,19 +35,12 @@ export module api {
    * Posting a report deletes the old report of the same name.
    */
   export interface Report {
-    // The name of the report.
     name: string
-
-    // The overall status of the report; determined holistically by the application runner.
     status: Status
-
-    effect_request: CIEffectRequest
-
+    effectRequest: CIEffectRequest
     arch?: Arch
     os?: OS
-
-    // Similar to a user agent. See utils/test_agent.ts.
-    test_agent?: any
+    testAgent: TestAgent
   }
 
   /**
@@ -44,37 +48,25 @@ export module api {
    */
   export interface ReportResponse {
     // URL used to submit individual tests.
-    test_callback?: string
+    testCallback?: string
   }
 
   /**
    * Data
    */
   export interface TestData {
-    // Name for a
     name: string
-
-    // Link to project source code.
-    source_link?: string
-
-    datetime_start?: Date
-    datetime_stop?: Date
-
-    // Aggregates of underlying test/assertions.
-    total_passed?: number
-    total_skipped?: number
-    total_aborted?: number
-    total_warnings?: number
-    total_failed?: number
-
-    // Download for debugging build/test artifacts.
-    workspace_gzip_link?: string
-
-    // Link to shared log files.
-    logfile_link?: string
-
-    // CI platform website link.
-    ci_link?: string
+    sourceLink?: string
+    datetimeStart?: Date
+    datetimeStop?: Date
+    totalPassed?: number
+    totalSkipped?: number
+    totalAborted?: number
+    totalWarnings?: number
+    totalFailed?: number
+    workspaceGzipLink?: string
+    logfileLink?: string
+    ciLink?: string
   }
 
   /**

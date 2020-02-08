@@ -14,6 +14,18 @@ import {
 const PORT = ((process.env.PORT as unknown) as number) || 3000
 const { HOST = '0.0.0.0' } = process.env
 
+// Valid platforms where CI may be run.
+const platforms = [
+  'win32-ia32',
+  'win32-x64',
+  'win32-arm64',
+  'win32-arm64-x64',
+  'darwin-x64',
+  'mas-x64',
+  'linux-armv7l',
+  'linux-arm64'
+]
+
 const fastify = fast({ logger: true })
 
 fastify.get('/', (_req, reply) => {
@@ -28,9 +40,9 @@ fastify.route({
       type: 'object',
       required: ['version', 'install_data'],
       properties: {
-        commit_hash: { type: 'string' },
-        version_qualifier: { type: 'string' },
-        install_data: {
+        commitHash: { type: 'string' },
+        versionQualifier: { type: 'string' },
+        platformInstallData: {
           type: 'object',
           required: ['platform', 'link'],
           properties: {
@@ -42,17 +54,17 @@ fastify.route({
     }
   },
   handler: async (request, reply) => {
-    const { install_data, version_qualifier, commit_hash } = request.body
+    const { platformInstallData, versionQualifier, commitHash } = request.body
 
     try {
       const req = await mRequest.FindOrCreate({
-        commit_hash,
-        version_qualifier
+        commitHash,
+        versionQualifier
       })
 
       // Update platform install data with the platform/link that was passed.
-      const { platform, link } = install_data
-      req.table.platform_install_data[platform] = link
+      const { platform, link } = platformInstallData
+      req.table.platformInstallData[platform] = link
       await req.table.save()
 
       // Fetch all current service registrants
@@ -62,43 +74,61 @@ fastify.route({
       // with the new platform dist zip and feedback link.
       for (let reg of registrants) {
         const fb = await mFeedback.NewFromRequest(req, reg)
-        const report_callback = `http://localhost:${PORT}/report/${fb.table.id}`
+        const reportCallback = `http://localhost:${PORT}/report/${fb.table.id}`
 
-        const feedback_request = {
-          install_data,
-          version_qualifier,
-          report_callback,
-          commit_hash
+        const feedbackRequest = {
+          platformInstallData,
+          versionQualifier,
+          reportCallback,
+          commitHash
         } as api.FeedbackRequest
 
         // Fetch back expectation data and session token from a registrant
-        const resp = await fetch(reg.table.webhook, {
+        if (!platforms.includes(platform)) {
+          throw new Error(`Invalid platform: ${platform}`)
+        }
+
+        // Check that the registrant has registered for this platform-specific webhook.
+        const platformWebhook = reg.table.webhook[platform]
+        if (!platformWebhook) {
+          console.log(
+            `${reg.table.name} is not registered for platform: ${platform}`
+          )
+          continue
+        }
+
+        const resp = await fetch(platformWebhook, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(feedback_request)
+          body: JSON.stringify(feedbackRequest)
         })
 
         // Destructure registrant feedback request response.
         const {
-          expect_reports,
-          session_token
+          expectReports,
+          sessionToken
         } = (await resp.json()) as api.FeedbackRequestResponse
 
-        if (!session_token) {
+        // Ensure that requisite data has been sent back by the registrant.
+        if (!sessionToken) {
           throw new Error('No session token found')
+        } else if (!expectReports) {
+          throw new Error(
+            'Invalid report expectation value: must be true or false.'
+          )
         }
 
         // Update expectation data for this per-registrant Feedback instance.
-        fb.table.expect_reports = expect_reports
-        fb.table.session_token = session_token
+        fb.table.expectReports = expectReports
+        fb.table.sessionToken = sessionToken
         await fb.table.save()
       }
 
       reply
         .code(200)
-        .send(`Sent updated webhooks for ${platform} on ${commit_hash}`)
+        .send(`Sent updated webhooks for ${platform} on ${commitHash}`)
     } catch (err) {
       reply.code(500).send(err)
     }
@@ -107,30 +137,42 @@ fastify.route({
 
 fastify.route({
   method: 'POST',
-  url: '/report/:feedback_id',
+  url: '/report/:feedbackId',
   schema: {
     params: {
       type: 'object',
-      required: ['feedback_id'],
+      required: ['feedbackId'],
       properties: {
         feedback_id: { type: 'number' }
+      }
+    },
+    body: {
+      type: 'object',
+      required: ['name', 'effectRequest', 'testAgent'],
+      properties: {
+        name: { type: 'string' },
+        status: { type: api.Status },
+        arch: { type: api.Arch },
+        os: { type: api.OS },
+        effectRequest: { type: api.CIEffectRequest },
+        testAgent: { type: 'object' }
       }
     },
     response: {
       '2xx': {
         type: 'object',
         properties: {
-          test_callback: { type: 'string', format: 'uri' }
+          testCallback: { type: 'string', format: 'uri' }
         }
       }
     }
   },
   handler: async (request, reply) => {
-    const { feedback_id } = request.params
+    const { feedbackId } = request.params
 
     try {
       // Find feedback created at the trigger stage for this Registrant.
-      const fb = await mFeedback.FindById(feedback_id)
+      const fb = await mFeedback.FindById(feedbackId)
       const report: api.Report = request.body
 
       // Create new Report instance from this Feedback.
@@ -139,39 +181,59 @@ fastify.route({
       } = await mReport.NewFromFeedback(fb, report)
 
       // Tell the Registrant where to post their granular test run data.
-      reply.send({ test_callback: `http://localhost:${PORT}/test/${id}` })
+      reply
+        .code(200)
+        .send({ testCallback: `http://localhost:${PORT}/test/${id}` })
     } catch (err) {
-      reply.send(err)
+      reply.code(500).send(err)
     }
   }
 })
 
 fastify.route({
   method: 'POST',
-  url: '/test/:report_id',
+  url: '/test/:reportId',
   schema: {
     params: {
       type: 'object',
-      required: ['report_id'],
+      required: ['reportId'],
       properties: {
-        report_id: { type: 'number' }
+        reportId: { type: 'number' }
+      }
+    },
+    body: {
+      type: 'object',
+      properties: {
+        id: { type: 'number' },
+        reportId: { type: 'number' },
+        sourceLink: { type: 'string' },
+        datetimeStart: { type: Date },
+        datetimeStop: { type: Date },
+        totalReady: { type: 'number' },
+        totalPassed: { type: 'number' },
+        totalSkipped: { type: 'number' },
+        totalAborted: { type: 'number' },
+        totalWarnings: { type: 'number' },
+        totalFailed: { type: 'number' },
+        workspaceGzipLink: { type: 'string' },
+        logfileLink: { type: 'string' }
       }
     }
   },
   handler: async (request, reply) => {
-    const { report_id } = request.params
+    const { reportId } = request.params
 
     try {
-      // Find Report generated by the Feedback
-      const report = await mReport.FindById(report_id)
+      // Find Report generated by the Feedback.
+      const report = await mReport.FindById(reportId)
       const test: api.TestData = request.body
 
-      // TODO: validate test information
+      // Create new TestData from the information in the request body.
       await mTestData.NewFromReport(report, test)
 
-      reply.code(200)
+      reply.code(200).send('TestData successfully created')
     } catch (err) {
-      reply.send(err)
+      reply.code(500).send(err)
     }
   }
 })

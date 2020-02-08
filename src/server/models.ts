@@ -45,7 +45,7 @@ export namespace Tables {
   // See: http://docs.sequelizejs.com/manual/models-definition.html
 
   export class Registrant extends Model {
-    webhook!: string
+    webhook!: Record<string, string>
     name!: string
     id!: number
   }
@@ -53,7 +53,7 @@ export namespace Tables {
   Registrant.init(
     {
       name: TEXT,
-      webhook: TEXT
+      webhook: JSONB
     },
     {
       sequelize,
@@ -63,16 +63,16 @@ export namespace Tables {
 
   export class Request extends Model {
     id!: number
-    platform_install_data!: Record<string, string>
-    version_qualifier!: string
-    commit_hash!: string
+    platformInstallData!: Record<string, string>
+    versionQualifier!: string
+    commitHash!: string
   }
 
   Request.init(
     {
-      platform_install_data: JSONB,
-      version_qualifier: STRING,
-      commit_hash: STRING
+      platformInstallData: JSONB,
+      versionQualifier: STRING,
+      commitHash: STRING
     },
     {
       sequelize,
@@ -88,20 +88,20 @@ export namespace Tables {
 
   export class Feedback extends Model {
     id!: number
-    request_id!: number
-    expect_reports!: boolean
-    session_token!: string
+    requestId!: number
+    expectReports!: boolean
+    sessionToken!: string
   }
 
   Feedback.init(
     {
       /* foreign keys */
-      request_id: INTEGER,
-      registrant_id: INTEGER,
+      requestId: INTEGER,
+      registrantId: INTEGER,
 
       /* data */
-      expect_reports: BOOLEAN,
-      session_token: TEXT
+      expectReports: BOOLEAN,
+      sessionToken: TEXT
     },
     {
       sequelize,
@@ -111,23 +111,18 @@ export namespace Tables {
 
   export class Report extends Model {
     id!: number
-    feedback_id!: number
+    feedbackId!: number
   }
 
   Report.init(
     {
-      feedback_id: { type: INTEGER, allowNull: false },
+      feedbackId: { type: INTEGER, allowNull: false },
       name: { type: TEXT, allowNull: false },
-
       status: ENUM('ready', 'run', 'pass', 'fail', 'abort', 'skip'),
-      please: ENUM('reject', 'approve', 'wait', 'skip'),
-
+      effectRequest: ENUM('reject', 'approve', 'wait'),
       arch: STRING,
       os: STRING,
-
-      agent: JSONB,
-
-      ci_link: TEXT
+      testAgent: JSONB
     },
     {
       sequelize,
@@ -137,41 +132,34 @@ export namespace Tables {
 
   export class TestData extends Model {
     id!: number
-    report_id!: number
-
-    source_link!: string
-
-    datetime_start!: Date
-    datetime_stop!: Date
-
-    total_ready!: number
-    total_passed!: number
-    total_skipped!: number
-    total_aborted!: number
-    total_warnings!: number
-    total_failed!: number
-
-    workspace_gzip_link!: string
-    logfile_link!: string
+    reportId!: number
+    sourceLink!: string
+    datetimeStart!: Date
+    datetimeStop!: Date
+    totalReady!: number
+    totalPassed!: number
+    totalSkipped!: number
+    totalAborted!: number
+    totalWarnings!: number
+    totalFailed!: number
+    workspaceGzipLink!: string
+    logfileLink!: string
   }
 
   TestData.init(
     {
-      report_id: INTEGER,
-
-      source_link: TEXT,
-      datetime_start: DATE,
-      datetime_stop: DATE,
-
-      total_ready: { type: INTEGER },
-      total_passsed: { type: INTEGER },
-      total_skipped: { type: INTEGER },
-      total_aborted: { type: INTEGER },
-      total_warnings: { type: INTEGER },
-      total_failed: { type: INTEGER },
-
+      reportId: INTEGER,
+      sourceLink: TEXT,
+      datetimeStart: DATE,
+      datetimeStop: DATE,
+      totalReady: { type: INTEGER },
+      totalPassed: { type: INTEGER },
+      totalSkipped: { type: INTEGER },
+      totalAborted: { type: INTEGER },
+      totalWarnings: { type: INTEGER },
+      totalFailed: { type: INTEGER },
       workspace_gzip_link: TEXT,
-      logfile_link: TEXT
+      logfileLink: TEXT
     },
     {
       sequelize,
@@ -181,6 +169,6 @@ export namespace Tables {
 
   export const random = () => sequelize.random()
   export async function sync() {
-    await sequelize.sync()
+    await sequelize.sync({ alter: true })
   }
 }
