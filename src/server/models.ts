@@ -16,17 +16,7 @@ const {
  * TestData - Per platform granular data about the CI run (See mTest)
  */
 
-import {
-  INTEGER,
-  JSONB,
-  Model,
-  Sequelize,
-  TEXT,
-  STRING,
-  BOOLEAN,
-  ENUM,
-  DATE
-} from 'sequelize'
+import { INTEGER, JSONB, Model, Sequelize, TEXT, STRING, DATE } from 'sequelize'
 import { api } from './api'
 
 export namespace Tables {
@@ -77,17 +67,11 @@ export namespace Tables {
     }
   )
 
-  export enum ReportExpectTests {
-    YES = 'yes',
-    NO = 'no',
-    UNKNOWN = 'unknown'
-  }
-
   export class Report extends Model {
     id!: number
     registrantId!: number
     requestId!: number
-    expectReports: boolean
+    reportsExpected: number
     sessionToken: string
   }
 
@@ -96,7 +80,7 @@ export namespace Tables {
       registrantId: { type: INTEGER, allowNull: false },
       requestId: { type: INTEGER, allowNull: false },
       name: { type: TEXT, allowNull: false },
-      expectReports: { type: BOOLEAN, allowNull: false },
+      reportsExpected: { type: INTEGER, allowNull: false },
       sessionToken: { type: STRING, allowNull: false }
     },
     {
@@ -110,7 +94,6 @@ export namespace Tables {
     status: api.Status
     arch: api.Arch
     os: api.OS
-    testAgent: api.TestAgent
     reportId!: number
     sourceLink!: string
     datetimeStart!: Date
@@ -123,14 +106,15 @@ export namespace Tables {
     totalFailed!: number
     workspaceGzipLink!: string
     logfileLink!: string
+    ciLink?: string
+    testAgent: api.TestAgent
   }
 
   TestData.init(
     {
-      status: ENUM('ready', 'run', 'pass', 'fail', 'abort', 'skip'),
+      status: STRING,
       arch: STRING,
       os: STRING,
-      testAgent: JSONB,
       reportId: INTEGER,
       sourceLink: TEXT,
       timeStart: DATE,
@@ -142,7 +126,9 @@ export namespace Tables {
       totalWarnings: INTEGER,
       totalFailed: INTEGER,
       workspace_gzip_link: TEXT,
-      logfileLink: TEXT
+      logfileLink: TEXT,
+      ciLink: STRING,
+      testAgent: JSONB
     },
     {
       sequelize,
@@ -152,6 +138,6 @@ export namespace Tables {
 
   export const random = () => sequelize.random()
   export async function sync() {
-    await sequelize.sync({ alter: true })
+    await sequelize.sync({ alter: true, force: true })
   }
 }

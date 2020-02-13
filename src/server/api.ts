@@ -25,7 +25,7 @@ export namespace api {
     // Must be included in future requests for this CI run.
     sessionToken?: string
     // Whether or not Electron should expect to receive reports from an app
-    expectReports: boolean
+    reportsExpected: number
   }
 
   /**

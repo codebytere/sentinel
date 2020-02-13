@@ -35,7 +35,7 @@ fastify.route({
   schema: {
     body: {
       type: 'object',
-      required: ['commitHash', 'version', 'platformInstallData'],
+      required: ['commitHash', 'versionQualifier', 'platformInstallData'],
       properties: {
         commitHash: { type: 'string' },
         versionQualifier: { type: 'string' },
@@ -103,21 +103,21 @@ fastify.route({
 
         // Destructure registrant report request response.
         const {
-          expectReports,
+          reportsExpected,
           sessionToken
         } = (await resp.json()) as api.ReportRequestResponse
 
         // Ensure that requisite data has been sent back by the registrant.
         if (!sessionToken) {
           throw new Error('No session token found')
-        } else if (!expectReports) {
+        } else if (!reportsExpected) {
           throw new Error(
             'Invalid report expectation value: must be true or false.'
           )
         }
 
         // Update expectation data for this per-registrant Feedback instance.
-        rp.table.expectReports = expectReports
+        rp.table.reportsExpected = reportsExpected
         rp.table.sessionToken = sessionToken
         await rp.table.save()
       }
@@ -139,22 +139,23 @@ fastify.route({
       type: 'object',
       required: ['reportId'],
       properties: {
-        feedback_id: { type: 'number' }
+        reportId: { type: 'number' }
       }
     },
     body: {
       type: 'object',
-      required: ['name', 'testAgent'],
+      // required: ['name', 'testAgent'],
       properties: {
         name: { type: 'string' },
-        status: { type: api.Status },
-        arch: { type: api.Arch },
-        os: { type: api.OS },
+        status: { type: 'string' },
+        arch: { type: 'string' },
+        os: { type: 'string' },
         id: { type: 'number' },
         reportId: { type: 'number' },
         sourceLink: { type: 'string' },
-        timeStart: { type: Date },
-        timeStop: { type: Date },
+        // TODO(codebytere): make timeStart and timeStop date-time types
+        timeStart: { type: 'string' },
+        timeStop: { type: 'string' },
         totalReady: { type: 'number' },
         totalPassed: { type: 'number' },
         totalSkipped: { type: 'number' },
@@ -163,6 +164,7 @@ fastify.route({
         totalFailed: { type: 'number' },
         workspaceGzipLink: { type: 'string' },
         logfileLink: { type: 'string' },
+        ciLink: { type: 'string' },
         testAgent: { type: 'object' }
       }
     }
