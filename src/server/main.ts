@@ -3,16 +3,13 @@ import fetch from 'node-fetch'
 
 import { api } from './api'
 import { Tables } from './models'
-import {
-  mRegistrant,
-  mRequest,
-  mFeedback,
-  mReport,
-  mTestData
-} from './database'
+import { mRegistrant, mRequest, mReport, mTestData } from './database'
 
 const PORT = ((process.env.PORT as unknown) as number) || 3000
-const { HOST = '0.0.0.0' } = process.env
+const {
+  HOST = '0.0.0.0',
+  REPORT_WEBHOOK = 'https://electron-sentinel.herokuapp.com/'
+} = process.env
 
 // Valid platforms where CI may be run.
 const platforms = [
@@ -38,7 +35,7 @@ fastify.route({
   schema: {
     body: {
       type: 'object',
-      required: ['version', 'install_data'],
+      required: ['commitHash', 'version', 'platformInstallData'],
       properties: {
         commitHash: { type: 'string' },
         versionQualifier: { type: 'string' },
@@ -73,17 +70,9 @@ fastify.route({
       // Fan out webhook to each registered AFP feedback user
       // with the new platform dist zip and feedback link.
       for (let reg of registrants) {
-        const fb = await mFeedback.NewFromRequest(req, reg)
-        const reportCallback = `http://localhost:${PORT}/report/${fb.table.id}`
+        const rp = await mReport.NewFromRequest(req, reg)
+        const reportCallback = `${REPORT_WEBHOOK}${rp.table.id}`
 
-        const feedbackRequest = {
-          platformInstallData,
-          versionQualifier,
-          reportCallback,
-          commitHash
-        } as api.FeedbackRequest
-
-        // Fetch back expectation data and session token from a registrant
         if (!platforms.includes(platform)) {
           throw new Error(`Invalid platform: ${platform}`)
         }
@@ -97,19 +86,26 @@ fastify.route({
           continue
         }
 
+        const reportRequest: api.ReportRequest = {
+          platformInstallData,
+          versionQualifier,
+          reportCallback,
+          commitHash
+        }
+
         const resp = await fetch(platformWebhook, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(feedbackRequest)
+          body: JSON.stringify(reportRequest)
         })
 
-        // Destructure registrant feedback request response.
+        // Destructure registrant report request response.
         const {
           expectReports,
           sessionToken
-        } = (await resp.json()) as api.FeedbackRequestResponse
+        } = (await resp.json()) as api.ReportRequestResponse
 
         // Ensure that requisite data has been sent back by the registrant.
         if (!sessionToken) {
@@ -121,9 +117,9 @@ fastify.route({
         }
 
         // Update expectation data for this per-registrant Feedback instance.
-        fb.table.expectReports = expectReports
-        fb.table.sessionToken = sessionToken
-        await fb.table.save()
+        rp.table.expectReports = expectReports
+        rp.table.sessionToken = sessionToken
+        await rp.table.save()
       }
 
       reply
@@ -137,78 +133,28 @@ fastify.route({
 
 fastify.route({
   method: 'POST',
-  url: '/report/:feedbackId',
+  url: '/report/:reportId',
   schema: {
     params: {
       type: 'object',
-      required: ['feedbackId'],
+      required: ['reportId'],
       properties: {
         feedback_id: { type: 'number' }
       }
     },
     body: {
       type: 'object',
-      required: ['name', 'effectRequest', 'testAgent'],
+      required: ['name', 'testAgent'],
       properties: {
         name: { type: 'string' },
         status: { type: api.Status },
         arch: { type: api.Arch },
         os: { type: api.OS },
-        effectRequest: { type: api.CIEffectRequest },
-        testAgent: { type: 'object' }
-      }
-    },
-    response: {
-      '2xx': {
-        type: 'object',
-        properties: {
-          testCallback: { type: 'string', format: 'uri' }
-        }
-      }
-    }
-  },
-  handler: async (request, reply) => {
-    const { feedbackId } = request.params
-
-    try {
-      // Find feedback created at the trigger stage for this Registrant.
-      const fb = await mFeedback.FindById(feedbackId)
-      const report: api.Report = request.body
-
-      // Create new Report instance from this Feedback.
-      const {
-        table: { id }
-      } = await mReport.NewFromFeedback(fb, report)
-
-      // Tell the Registrant where to post their granular test run data.
-      reply
-        .code(200)
-        .send({ testCallback: `http://localhost:${PORT}/test/${id}` })
-    } catch (err) {
-      reply.code(500).send(err)
-    }
-  }
-})
-
-fastify.route({
-  method: 'POST',
-  url: '/test/:reportId',
-  schema: {
-    params: {
-      type: 'object',
-      required: ['reportId'],
-      properties: {
-        reportId: { type: 'number' }
-      }
-    },
-    body: {
-      type: 'object',
-      properties: {
         id: { type: 'number' },
         reportId: { type: 'number' },
         sourceLink: { type: 'string' },
-        datetimeStart: { type: Date },
-        datetimeStop: { type: Date },
+        timeStart: { type: Date },
+        timeStop: { type: Date },
         totalReady: { type: 'number' },
         totalPassed: { type: 'number' },
         totalSkipped: { type: 'number' },
@@ -216,25 +162,21 @@ fastify.route({
         totalWarnings: { type: 'number' },
         totalFailed: { type: 'number' },
         workspaceGzipLink: { type: 'string' },
-        logfileLink: { type: 'string' }
+        logfileLink: { type: 'string' },
+        testAgent: { type: 'object' }
       }
     }
   },
   handler: async (request, reply) => {
     const { reportId } = request.params
 
-    try {
-      // Find Report generated by the Feedback.
-      const report = await mReport.FindById(reportId)
-      const test: api.TestData = request.body
+    const report = await mReport.FindById(reportId)
+    const test: api.TestData = request.body
 
-      // Create new TestData from the information in the request body.
-      await mTestData.NewFromReport(report, test)
+    // Create new TestData from the information in the request body.
+    await mTestData.NewFromReport(report, test)
 
-      reply.code(200).send('TestData successfully created')
-    } catch (err) {
-      reply.code(500).send(err)
-    }
+    reply.code(200).send('TestData successfully created and saved')
   }
 })
 
@@ -250,6 +192,8 @@ const start = async () => {
 }
 
 start()
+
+/* TEMPORARY HELPERS */
 
 let id = 0
 const getNextID = () => ++id

@@ -59,12 +59,11 @@ export class mReport {
    * @param feedback
    * @param defaults
    */
-  static async NewFromFeedback(feedback: mFeedback, defaults: any) {
-    const feedbackId = feedback.table.id
+  static async NewFromRequest(request: mRequest, registrant: mRegistrant) {
     return new mReport(
       await Tables.Report.create({
-        feedbackId,
-        ...defaults
+        requestId: request.table.id,
+        registrantId: registrant.table.id
       })
     )
   }
@@ -83,44 +82,6 @@ export class mReport {
       throw new Error(`Report id:${id} not found`)
     }
     return new mReport(record)
-  }
-}
-
-/**
- * A class that represents, on a per-registrant basis,
- * the aggregate set of results returned by CI runs on
- * a consumer app based on a release built from a given
- * commit in a PR of Electron.
- *
- * There will only every be 1 of these created for a given commit,
- * as a function of there only ever being one mRequest that spawns it.
- */
-export class mFeedback {
-  constructor(public table: Tables.Feedback) {}
-
-  static async NewFromRequest(req: mRequest, reg: mRegistrant) {
-    const requestId = req.table.id
-    const registrantId = reg.table.id
-
-    return new mFeedback(
-      await Tables.Feedback.create({ requestId, registrantId })
-    )
-  }
-
-  /**
-   * Find the Feedback associated with a given ID, if one
-   * has been previously created.
-   *
-   * @param id The ID of the Feedback instance to find.
-   *
-   * @returns An mFeedback corresponding to the passed ID.
-   */
-  static async FindById(id: number) {
-    const fb = await Tables.Feedback.findOne({ where: { id } })
-    if (!fb) {
-      throw new Error(`Feedback id:${id} not found`)
-    }
-    return new mFeedback(fb)
   }
 }
 

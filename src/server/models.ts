@@ -9,10 +9,6 @@ const {
  *    |
  *    | (has many)
  *    |
- * Feedback -  Per-app feedback for the release of electron (See mFeedback)
- *    |
- *    | (has many)
- *    |
  *  Report- Per-platform CI result status(es) (See mReport)
  *    |
  *    | (has many)
@@ -31,6 +27,7 @@ import {
   ENUM,
   DATE
 } from 'sequelize'
+import { api } from './api'
 
 export namespace Tables {
   export const sequelize = new Sequelize(DATABASE_URL!, {
@@ -80,49 +77,27 @@ export namespace Tables {
     }
   )
 
-  export enum FeedbackExpectReports {
+  export enum ReportExpectTests {
     YES = 'yes',
     NO = 'no',
     UNKNOWN = 'unknown'
   }
 
-  export class Feedback extends Model {
-    id!: number
-    requestId!: number
-    expectReports!: boolean
-    sessionToken!: string
-  }
-
-  Feedback.init(
-    {
-      /* foreign keys */
-      requestId: INTEGER,
-      registrantId: INTEGER,
-
-      /* data */
-      expectReports: BOOLEAN,
-      sessionToken: TEXT
-    },
-    {
-      sequelize,
-      tableName: 'Feedback'
-    }
-  )
-
   export class Report extends Model {
     id!: number
-    feedbackId!: number
+    registrantId!: number
+    requestId!: number
+    expectReports: boolean
+    sessionToken: string
   }
 
   Report.init(
     {
-      feedbackId: { type: INTEGER, allowNull: false },
+      registrantId: { type: INTEGER, allowNull: false },
+      requestId: { type: INTEGER, allowNull: false },
       name: { type: TEXT, allowNull: false },
-      status: ENUM('ready', 'run', 'pass', 'fail', 'abort', 'skip'),
-      effectRequest: ENUM('reject', 'approve', 'wait'),
-      arch: STRING,
-      os: STRING,
-      testAgent: JSONB
+      expectReports: { type: BOOLEAN, allowNull: false },
+      sessionToken: { type: STRING, allowNull: false }
     },
     {
       sequelize,
@@ -132,6 +107,10 @@ export namespace Tables {
 
   export class TestData extends Model {
     id!: number
+    status: api.Status
+    arch: api.Arch
+    os: api.OS
+    testAgent: api.TestAgent
     reportId!: number
     sourceLink!: string
     datetimeStart!: Date
@@ -148,16 +127,20 @@ export namespace Tables {
 
   TestData.init(
     {
+      status: ENUM('ready', 'run', 'pass', 'fail', 'abort', 'skip'),
+      arch: STRING,
+      os: STRING,
+      testAgent: JSONB,
       reportId: INTEGER,
       sourceLink: TEXT,
-      datetimeStart: DATE,
-      datetimeStop: DATE,
-      totalReady: { type: INTEGER },
-      totalPassed: { type: INTEGER },
-      totalSkipped: { type: INTEGER },
-      totalAborted: { type: INTEGER },
-      totalWarnings: { type: INTEGER },
-      totalFailed: { type: INTEGER },
+      timeStart: DATE,
+      timeStop: DATE,
+      totalReady: INTEGER,
+      totalPassed: INTEGER,
+      totalSkipped: INTEGER,
+      totalAborted: INTEGER,
+      totalWarnings: INTEGER,
+      totalFailed: INTEGER,
       workspace_gzip_link: TEXT,
       logfileLink: TEXT
     },
