@@ -1,0 +1,20 @@
+{
+  "development": {
+    "url": "postgres://postgres@localhost:5432/postgres",
+    "database": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": null,
+    "database": "database_test",
+    "host": "localhost",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": null,
+    "database": "database_production",
+    "host": "localhost",
+    "dialect": "postgres"
+  }
+}
