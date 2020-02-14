@@ -8,7 +8,7 @@ import { mRegistrant, mRequest, mReport, mTestData } from './database'
 const PORT = ((process.env.PORT as unknown) as number) || 3000
 const {
   HOST = '0.0.0.0',
-  REPORT_WEBHOOK = 'https://electron-sentinel.herokuapp.com/'
+  REPORT_WEBHOOK = 'http://localhost:3000' // 'https://electron-sentinel.herokuapp.com/'
 } = process.env
 
 // Valid platforms where CI may be run.
@@ -20,7 +20,9 @@ const platforms = [
   'darwin-x64',
   'mas-x64',
   'linux-armv7l',
-  'linux-arm64'
+  'linux-arm64',
+  'linux-ia32',
+  'linux-x64'
 ]
 
 const fastify = fast({ logger: true })
@@ -71,16 +73,16 @@ fastify.route({
       // with the new platform dist zip and feedback link.
       for (let reg of registrants) {
         const rp = await mReport.NewFromRequest(req, reg)
-        const reportCallback = `${REPORT_WEBHOOK}${rp.table.id}`
+        const reportCallback = `${REPORT_WEBHOOK}/report/${rp.table.id}`
 
         if (!platforms.includes(platform)) {
           throw new Error(`Invalid platform: ${platform}`)
         }
 
         // Check that the registrant has registered for this platform-specific webhook.
-        const platformWebhook = reg.table.webhook[platform]
+        const platformWebhook = reg.table.webhooks[platform]
         if (!platformWebhook) {
-          console.log(
+          console.warn(
             `${reg.table.name} is not registered for platform: ${platform}`
           )
           continue
@@ -101,24 +103,18 @@ fastify.route({
           body: JSON.stringify(reportRequest)
         })
 
-        // Destructure registrant report request response.
-        const {
-          reportsExpected,
-          sessionToken
-        } = (await resp.json()) as api.ReportRequestResponse
+        const res: api.ReportRequestResponse = await resp.json()
 
         // Ensure that requisite data has been sent back by the registrant.
-        if (!sessionToken) {
-          throw new Error('No session token found')
-        } else if (!reportsExpected) {
-          throw new Error(
-            'Invalid report expectation value: must be true or false.'
-          )
+        if (!res.reportsExpected) {
+          reply.code(500).send('Invalid report expectation value: must be a number >= 1')
+        } else if (!res.sessionToken) {
+          reply.code(500).send('No session token found')
         }
 
-        // Update expectation data for this per-registrant Feedback instance.
-        rp.table.reportsExpected = reportsExpected
-        rp.table.sessionToken = sessionToken
+        // Update expectation data for this per-registrant Report instance.
+        rp.table.reportsExpected = res.reportsExpected
+        rp.table.sessionToken = res.sessionToken
         await rp.table.save()
       }
 
@@ -142,8 +138,16 @@ fastify.route({
         reportId: { type: 'number' }
       }
     },
+    headers: {
+      type: 'object',
+      required: ['sessionId'],
+      properties: {
+        'sessionId': { type: 'string' }
+      }
+    },
     body: {
       type: 'object',
+      // TODO(codebytere): determine what we want to require from consumers
       // required: ['name', 'testAgent'],
       properties: {
         name: { type: 'string' },
@@ -153,7 +157,7 @@ fastify.route({
         id: { type: 'number' },
         reportId: { type: 'number' },
         sourceLink: { type: 'string' },
-        // TODO(codebytere): make timeStart and timeStop date-time types
+        // TODO(codebytere): make timeStart and timeStop date-time types?
         timeStart: { type: 'string' },
         timeStop: { type: 'string' },
         totalReady: { type: 'number' },
@@ -171,9 +175,16 @@ fastify.route({
   },
   handler: async (request, reply) => {
     const { reportId } = request.params
+    const { sessionId } = request.headers
 
     const report = await mReport.FindById(reportId)
     const test: api.TestData = request.body
+
+    // Validate that the session token matches the one for this registrant.
+    const token = report.table.sessionToken
+    if (sessionId !== token) {
+      reply.code(403).send(`${sessionId} does not match the required token for this report`)
+    }
 
     // Create new TestData from the information in the request body.
     await mTestData.NewFromReport(report, test)

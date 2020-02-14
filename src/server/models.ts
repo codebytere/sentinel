@@ -32,7 +32,7 @@ export namespace Tables {
   // See: http://docs.sequelizejs.com/manual/models-definition.html
 
   export class Registrant extends Model {
-    webhook!: Record<string, string>
+    webhooks!: Record<string, string>
     name!: string
     id!: number
   }
@@ -40,11 +40,11 @@ export namespace Tables {
   Registrant.init(
     {
       name: TEXT,
-      webhook: JSONB
+      webhooks: JSONB
     },
     {
       sequelize,
-      tableName: 'Registrant'
+      tableName: 'registrant'
     }
   )
 
@@ -63,7 +63,7 @@ export namespace Tables {
     },
     {
       sequelize,
-      tableName: 'Request'
+      tableName: 'request'
     }
   )
 
@@ -79,13 +79,13 @@ export namespace Tables {
     {
       registrantId: { type: INTEGER, allowNull: false },
       requestId: { type: INTEGER, allowNull: false },
-      name: { type: TEXT, allowNull: false },
-      reportsExpected: { type: INTEGER, allowNull: false },
-      sessionToken: { type: STRING, allowNull: false }
+      name: { type: TEXT },
+      reportsExpected: { type: INTEGER },
+      sessionToken: { type: STRING }
     },
     {
       sequelize,
-      tableName: 'Report'
+      tableName: 'report'
     }
   )
 
@@ -96,12 +96,11 @@ export namespace Tables {
     os: api.OS
     reportId!: number
     sourceLink!: string
-    datetimeStart!: Date
-    datetimeStop!: Date
+    timeStart!: Date
+    timeStop!: Date
     totalReady!: number
     totalPassed!: number
     totalSkipped!: number
-    totalAborted!: number
     totalWarnings!: number
     totalFailed!: number
     workspaceGzipLink!: string
@@ -122,22 +121,21 @@ export namespace Tables {
       totalReady: INTEGER,
       totalPassed: INTEGER,
       totalSkipped: INTEGER,
-      totalAborted: INTEGER,
       totalWarnings: INTEGER,
       totalFailed: INTEGER,
-      workspace_gzip_link: TEXT,
+      workspaceGzipLink: TEXT,
       logfileLink: TEXT,
       ciLink: STRING,
       testAgent: JSONB
     },
     {
       sequelize,
-      tableName: 'TestData'
+      tableName: 'testdata'
     }
   )
 
   export const random = () => sequelize.random()
   export async function sync() {
-    await sequelize.sync({ alter: true, force: true })
+    await sequelize.sync({ alter: true })
   }
 }

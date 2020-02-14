@@ -23,7 +23,7 @@ export namespace api {
 
   export interface ReportRequestResponse {
     // Must be included in future requests for this CI run.
-    sessionToken?: string
+    sessionToken: string
     // Whether or not Electron should expect to receive reports from an app
     reportsExpected: number
   }
@@ -38,7 +38,7 @@ export namespace api {
     os: OS
     sourceLink?: string
     timeStart?: Date
-    datetimeStop?: Date
+    timeStop?: Date
     totalPassed?: number
     totalSkipped?: number
     totalAborted?: number
@@ -60,6 +60,8 @@ export namespace api {
     x86 = 'x86',
     AMD64 = 'amd64'
   }
+
+  export enum Platform {}
 
   /**
    * The platform on which a test suite is being run.
