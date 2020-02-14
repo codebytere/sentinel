@@ -10,6 +10,9 @@ export namespace api {
     commitHash: string
   }
 
+  /**
+   * Information about the agent running CI.
+   */
   export interface TestAgent {
     arch: string
     platform: NodeJS.Platform
@@ -29,7 +32,7 @@ export namespace api {
   }
 
   /**
-   * Data
+   * The set of CI run result data.
    */
   export interface TestData {
     name: string
@@ -51,7 +54,7 @@ export namespace api {
   }
 
   /**
-   * Platform architecture.
+   * The platform architecture type.
    */
   export enum Arch {
     ARM = 'arm',
@@ -61,10 +64,8 @@ export namespace api {
     AMD64 = 'amd64'
   }
 
-  export enum Platform {}
-
   /**
-   * The platform on which a test suite is being run.
+   * The platform operating system.
    */
   export enum OS {
     MACOS = 'macos',
@@ -72,6 +73,9 @@ export namespace api {
     LINUX = 'linux'
   }
 
+  /**
+   * The test run status.
+   */
   export enum Status {
     READY_NOT_STARTED = 'ready',
     RUNNING_NOT_FINISHED = 'run',

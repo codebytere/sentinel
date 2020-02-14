@@ -69,12 +69,8 @@ fastify.route({
       // Fetch all current service registrants
       const registrants = await mRegistrant.FindAll()
 
-      // Fan out webhook to each registered AFP feedback user
-      // with the new platform dist zip and feedback link.
+      // Fan out platform webhooks to each registrant.
       for (let reg of registrants) {
-        const rp = await mReport.NewFromRequest(req, reg)
-        const reportCallback = `${REPORT_WEBHOOK}/report/${rp.table.id}`
-
         if (!platforms.includes(platform)) {
           throw new Error(`Invalid platform: ${platform}`)
         }
@@ -87,6 +83,10 @@ fastify.route({
           )
           continue
         }
+
+        // Create report only for registrants wishing to test this platform.
+        const rp = await mReport.NewFromRequest(req, reg)
+        const reportCallback = `${REPORT_WEBHOOK}/report/${rp.table.id}`
 
         const reportRequest: api.ReportRequest = {
           platformInstallData,
@@ -107,7 +107,9 @@ fastify.route({
 
         // Ensure that requisite data has been sent back by the registrant.
         if (!res.reportsExpected) {
-          reply.code(500).send('Invalid report expectation value: must be a number >= 1')
+          reply
+            .code(500)
+            .send('Invalid report expectation value: must be a number >= 0')
         } else if (!res.sessionToken) {
           reply.code(500).send('No session token found')
         }
@@ -142,7 +144,7 @@ fastify.route({
       type: 'object',
       required: ['sessionId'],
       properties: {
-        'sessionId': { type: 'string' }
+        sessionId: { type: 'string' }
       }
     },
     body: {
@@ -183,7 +185,9 @@ fastify.route({
     // Validate that the session token matches the one for this registrant.
     const token = report.table.sessionToken
     if (sessionId !== token) {
-      reply.code(403).send(`${sessionId} does not match the required token for this report`)
+      reply
+        .code(403)
+        .send(`${sessionId} does not match the required token for this report`)
     }
 
     // Create new TestData from the information in the request body.
@@ -205,22 +209,3 @@ const start = async () => {
 }
 
 start()
-
-/* TEMPORARY HELPERS */
-
-let id = 0
-const getNextID = () => ++id
-
-// Temp helper function to seed data.
-fastify.get('/ping', async (_request, reply) => {
-  try {
-    const reg = await mRegistrant.Create({
-      name: `Sally${getNextID()}`,
-      webhook: 'https://my-cool-webhook.com'
-    })
-    await reg.table.save()
-    reply.code(200).send({ registrant: reg })
-  } catch (err) {
-    reply.code(500).send(err)
-  }
-})

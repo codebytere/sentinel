@@ -1,12 +1,14 @@
 import fetch from 'node-fetch'
 import * as fast from 'fastify'
+import * as shortid from 'shortid'
 
 import { api } from '../src/server/api'
 import { testAgent } from '../src/server/utils/test_agent'
 
 const fastify = fast({ logger: true })
 
-fastify.post('/hello', async (req) => {
+fastify.post('/test-hook', async (req) => {
+  console.log('HI')
   const {
     commitHash,
     platformInstallData,
@@ -14,7 +16,7 @@ fastify.post('/hello', async (req) => {
     versionQualifier
   } = req.body as api.ReportRequest
 
-  const sessionToken = 'asdfghjkl' 
+  const sessionToken = shortid.generate()
 
   if (!versionQualifier.startsWith('9')) {
     const empty: api.ReportRequestResponse = {
@@ -29,12 +31,16 @@ fastify.post('/hello', async (req) => {
     sessionToken
   }
 
-  startCIRun(platformInstallData, reportCallback)
+  startCIRun(platformInstallData, reportCallback, sessionToken)
 
   return nonEmpty
 })
 
-async function startCIRun(platformData: { platform: string; link: string; }, reportCallback: string) {
+async function startCIRun(
+  platformData: { platform: string; link: string; },
+  reportCallback: string,
+  token: string
+) {
   const testData = {
     name:  `${platformData.platform}-${Date.now()}`,
     status: 'success',
@@ -57,6 +63,7 @@ async function startCIRun(platformData: { platform: string; link: string; }, rep
   await fetch(reportCallback, {
     method: 'POST',
     headers: {
+      'sessionId': token,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(testData)
