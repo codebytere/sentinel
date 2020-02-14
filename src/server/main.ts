@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import { api } from './api'
 import { Tables } from './models'
 import { mRegistrant, mRequest, mReport, mTestData } from './database'
+import { triggerSchema, reportSchema } from './utils/schemas'
 
 const PORT = ((process.env.PORT as unknown) as number) || 3000
 const {
@@ -34,24 +35,7 @@ fastify.get('/', (_req, reply) => {
 fastify.route({
   method: 'POST',
   url: '/trigger',
-  schema: {
-    body: {
-      type: 'object',
-      required: ['commitHash', 'versionQualifier', 'platformInstallData'],
-      properties: {
-        commitHash: { type: 'string' },
-        versionQualifier: { type: 'string' },
-        platformInstallData: {
-          type: 'object',
-          required: ['platform', 'link'],
-          properties: {
-            platform: { type: 'string' },
-            link: { type: 'string' }
-          }
-        }
-      }
-    }
-  },
+  schema: triggerSchema,
   handler: async (request, reply) => {
     const { platformInstallData, versionQualifier, commitHash } = request.body
 
@@ -111,7 +95,7 @@ fastify.route({
             .code(500)
             .send('Invalid report expectation value: must be a number >= 0')
         } else if (!res.sessionToken) {
-          reply.code(500).send('No session token found')
+          reply.code(500).send('Required session token not found')
         }
 
         // Update expectation data for this per-registrant Report instance.
@@ -132,49 +116,7 @@ fastify.route({
 fastify.route({
   method: 'POST',
   url: '/report/:reportId',
-  schema: {
-    params: {
-      type: 'object',
-      required: ['reportId'],
-      properties: {
-        reportId: { type: 'number' }
-      }
-    },
-    headers: {
-      type: 'object',
-      required: ['sessionId'],
-      properties: {
-        sessionId: { type: 'string' }
-      }
-    },
-    body: {
-      type: 'object',
-      // TODO(codebytere): determine what we want to require from consumers
-      // required: ['name', 'testAgent'],
-      properties: {
-        name: { type: 'string' },
-        status: { type: 'string' },
-        arch: { type: 'string' },
-        os: { type: 'string' },
-        id: { type: 'number' },
-        reportId: { type: 'number' },
-        sourceLink: { type: 'string' },
-        // TODO(codebytere): make timeStart and timeStop date-time types?
-        timeStart: { type: 'string' },
-        timeStop: { type: 'string' },
-        totalReady: { type: 'number' },
-        totalPassed: { type: 'number' },
-        totalSkipped: { type: 'number' },
-        totalAborted: { type: 'number' },
-        totalWarnings: { type: 'number' },
-        totalFailed: { type: 'number' },
-        workspaceGzipLink: { type: 'string' },
-        logfileLink: { type: 'string' },
-        ciLink: { type: 'string' },
-        testAgent: { type: 'object' }
-      }
-    }
-  },
+  schema: reportSchema,
   handler: async (request, reply) => {
     const { reportId } = request.params
     const { sessionId } = request.headers

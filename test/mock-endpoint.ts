@@ -8,7 +8,6 @@ import { testAgent } from '../src/server/utils/test_agent'
 const fastify = fast({ logger: true })
 
 fastify.post('/test-hook', async (req) => {
-  console.log('HI')
   const {
     commitHash,
     platformInstallData,
@@ -32,7 +31,6 @@ fastify.post('/test-hook', async (req) => {
   }
 
   startCIRun(platformInstallData, reportCallback, sessionToken)
-
   return nonEmpty
 })
 
@@ -41,11 +39,12 @@ async function startCIRun(
   reportCallback: string,
   token: string
 ) {
+  const sysData = platformData.platform.split('-')
   const testData = {
     name:  `${platformData.platform}-${Date.now()}`,
     status: 'success',
-    arch: 'x64',
-    os: 'linux',
+    os: sysData[0],
+    arch: sysData[1],
     sourceLink: 'www.example.com',
     timeStart: '1943-09-03 01:00:00-06',
     timeStop: '1943-09-03 01:00:00-06',
