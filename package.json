@@ -6,9 +6,9 @@
   "scripts": {
     "build": "next build && tsc --project tsconfig.server.json",
     "down": "sequelize-cli db:migrate:undo",
-    "prettier:write": "prettier --write \"src/**/*.ts\"",
+    "prettier:write": "prettier --write '**/*.{ts,tsx}'",
     "up": "sequelize-cli db:migrate",
-    "lint": "prettier --check \"src/**/*.ts\"",
+    "lint": "prettier --check '**/*.{ts,tsx}'",
     "start": "npm run build && node dist/main.js"
   },
   "repository": {
