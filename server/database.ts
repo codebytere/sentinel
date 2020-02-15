@@ -116,11 +116,8 @@ export class mRequest {
     commitHash: string
   }) {
     const record = await Tables.Request.findOne({
-      where: {
-        commitHash: opts.commitHash
-      }
+      where: { commitHash: opts.commitHash }
     })
-    console.log(record)
     if (record) {
       return new mRequest(record)
     } else {

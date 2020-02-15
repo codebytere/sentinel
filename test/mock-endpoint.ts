@@ -1,15 +1,23 @@
 import fetch from 'node-fetch'
-import * as fast from 'fastify'
+import fastify from 'fastify'
 import * as shortid from 'shortid'
+import { Server, IncomingMessage, ServerResponse } from 'http'
 
-import { api } from '../src/server/api'
-import { testAgent } from '../src/server/utils/test_agent'
+import { api } from '../server/api'
+import { testAgent } from '../server/utils/test_agent'
 
-const fastify = fast({ logger: true })
+const serverOptions: fastify.ServerOptions = {
+  logger: !!(process.env.NODE_ENV !== "development")
+}
 
-fastify.post('/test-hook', async (req) => {
+const fast: fastify.FastifyInstance<
+  Server,
+  IncomingMessage,
+  ServerResponse
+> = fastify(serverOptions);
+
+fast.post('/test-hook', async (req) => {
   const {
-    commitHash,
     platformInstallData,
     reportCallback,
     versionQualifier
@@ -71,10 +79,10 @@ async function startCIRun(
 
 const start = async () => {
   try {
-    await fastify.listen({ port: 8000 })
-    fastify.log.info(`server listening on 8000`)
+    await fast.listen({ port: 8000 })
+    fast.log.info(`server listening on 8000`)
   } catch (err) {
-    fastify.log.error(err)
+    fast.log.error(err)
     process.exit(1)
   }
 }

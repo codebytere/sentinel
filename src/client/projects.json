@@ -1,8 +1,0 @@
-{
-  "spectron": {
-    "repo": "electron-userland/spectron",
-    "tests": [
-      "test"
-    ]
-  }
-}
