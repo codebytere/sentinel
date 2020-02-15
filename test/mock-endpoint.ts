@@ -7,16 +7,16 @@ import { api } from '../server/api'
 import { testAgent } from '../server/utils/test_agent'
 
 const serverOptions: fastify.ServerOptions = {
-  logger: !!(process.env.NODE_ENV !== "development")
+  logger: !!(process.env.NODE_ENV !== 'development')
 }
 
 const fast: fastify.FastifyInstance<
   Server,
   IncomingMessage,
   ServerResponse
-> = fastify(serverOptions);
+> = fastify(serverOptions)
 
-fast.post('/test-hook', async (req) => {
+fast.post('/test-hook', async req => {
   const {
     platformInstallData,
     reportCallback,
@@ -43,13 +43,13 @@ fast.post('/test-hook', async (req) => {
 })
 
 async function startCIRun(
-  platformData: { platform: string; link: string; },
+  platformData: { platform: string; link: string },
   reportCallback: string,
   token: string
 ) {
   const sysData = platformData.platform.split('-')
   const testData = {
-    name:  `${platformData.platform}-${Date.now()}`,
+    name: `${platformData.platform}-${Date.now()}`,
     status: 'success',
     os: sysData[0],
     arch: sysData[1],
@@ -70,7 +70,7 @@ async function startCIRun(
   await fetch(reportCallback, {
     method: 'POST',
     headers: {
-      'sessionId': token,
+      sessionId: token,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(testData)

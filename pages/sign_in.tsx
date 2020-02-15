@@ -1,5 +1,5 @@
-import * as React from "react";
+import * as React from 'react'
 
-const SignIn = () => <h1>a</h1>;
+const SignIn = () => <h1>a</h1>
 
-export default SignIn;
+export default SignIn

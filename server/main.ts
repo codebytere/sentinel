@@ -9,14 +9,14 @@ import { mRegistrant, mRequest, mReport, mTestData } from './database'
 import { triggerSchema, reportSchema } from './utils/schemas'
 import { HOST, PORT, REPORT_WEBHOOK, PLATFORMS } from './constants'
 
-const isDev = !!(process.env.NODE_ENV !== "development")
+const isDev = !!(process.env.NODE_ENV !== 'development')
 const serverOptions: fastify.ServerOptions = { logger: isDev }
 
 const fast: fastify.FastifyInstance<
   Server,
   IncomingMessage,
   ServerResponse
-> = fastify(serverOptions);
+> = fastify(serverOptions)
 
 fast.register((fast, opts, next) => {
   const app = Next({ dev: isDev })
@@ -30,15 +30,19 @@ fast.register((fast, opts, next) => {
       })
 
       fast.get('/sign_in', (req, reply) => {
-        return app.render(req.req, reply.res, '/sign_in', req.query).then(() => {
-          reply.sent = true
-        })
+        return app
+          .render(req.req, reply.res, '/sign_in', req.query)
+          .then(() => {
+            reply.sent = true
+          })
       })
 
       fast.get('/sign_up', (req, reply) => {
-        return app.render(req.req, reply.res, '/sign_up', req.query).then(() => {
-          reply.sent = true
-        })
+        return app
+          .render(req.req, reply.res, '/sign_up', req.query)
+          .then(() => {
+            reply.sent = true
+          })
       })
 
       fast.route({
@@ -46,28 +50,32 @@ fast.register((fast, opts, next) => {
         url: '/trigger',
         schema: triggerSchema,
         handler: async (request, reply) => {
-          const { platformInstallData, versionQualifier, commitHash } = request.body
-      
+          const {
+            platformInstallData,
+            versionQualifier,
+            commitHash
+          } = request.body
+
           try {
             const req = await mRequest.FindOrCreate({
               commitHash,
               versionQualifier
             })
-      
+
             // Update platform install data with the platform/link that was passed.
             const { platform, link } = platformInstallData
             req.table.platformInstallData[platform] = link
             await req.table.save()
-      
+
             // Fetch all current service registrants
             const registrants = await mRegistrant.FindAll()
-      
+
             // Fan out platform webhooks to each registrant.
             for (let reg of registrants) {
               if (!PLATFORMS.includes(platform)) {
                 throw new Error(`Invalid platform: ${platform}`)
               }
-      
+
               // Check that the registrant has registered for this platform-specific webhook.
               const platformWebhook = reg.table.webhooks[platform]
               if (!platformWebhook) {
@@ -76,18 +84,18 @@ fast.register((fast, opts, next) => {
                 )
                 continue
               }
-      
+
               // Create report only for registrants wishing to test this platform.
               const rp = await mReport.NewFromRequest(req, reg)
               const reportCallback = `${REPORT_WEBHOOK}/report/${rp.table.id}`
-      
+
               const reportRequest: api.ReportRequest = {
                 platformInstallData,
                 versionQualifier,
                 reportCallback,
                 commitHash
               }
-      
+
               const resp = await fetch(platformWebhook, {
                 method: 'POST',
                 headers: {
@@ -95,33 +103,35 @@ fast.register((fast, opts, next) => {
                 },
                 body: JSON.stringify(reportRequest)
               })
-      
+
               const res: api.ReportRequestResponse = await resp.json()
-      
+
               // Ensure that requisite data has been sent back by the registrant.
               if (!res.reportsExpected) {
                 reply
                   .code(500)
-                  .send('Invalid report expectation value: must be a number >= 0')
+                  .send(
+                    'Invalid report expectation value: must be a number >= 0'
+                  )
               } else if (!res.sessionToken) {
                 reply.code(500).send('Required session token not found')
               }
-      
+
               // Update expectation data for this per-registrant Report instance.
               rp.table.reportsExpected = res.reportsExpected
               rp.table.sessionToken = res.sessionToken
               await rp.table.save()
             }
-      
+
             reply
               .code(200)
               .send(`Sent updated webhooks for ${platform} on ${commitHash}`)
-          } catch (err)  {
+          } catch (err) {
             reply.code(500).send(err)
           }
         }
       })
-      
+
       fast.route({
         method: 'POST',
         url: '/report/:reportId',
@@ -129,21 +139,23 @@ fast.register((fast, opts, next) => {
         handler: async (request, reply) => {
           const { reportId } = request.params
           const { sessionId } = request.headers
-      
+
           const report = await mReport.FindById(reportId)
           const test: api.TestData = request.body
-      
+
           // Validate that the session token matches the one for this registrant.
           const token = report.table.sessionToken
           if (sessionId !== token) {
             reply
               .code(403)
-              .send(`${sessionId} does not match the required token for this report`)
+              .send(
+                `${sessionId} does not match the required token for this report`
+              )
           }
-      
+
           // Create new TestData from the information in the request body.
           await mTestData.NewFromReport(report, test)
-      
+
           reply.code(200).send('TestData successfully created and saved')
         }
       })
@@ -155,7 +167,8 @@ fast.register((fast, opts, next) => {
       })
 
       next()
-    }).catch((err: Error) => next(err))
+    })
+    .catch((err: Error) => next(err))
 })
 
 const start = async () => {

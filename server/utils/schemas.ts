@@ -27,7 +27,7 @@ export const reportSchema = {
       reportId: { type: 'number' }
     }
   },
-  // Use sessionId to validate this report being 
+  // Use sessionId to validate this report being
   // sent by the correct registrant.
   headers: {
     type: 'object',
