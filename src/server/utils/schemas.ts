@@ -74,7 +74,6 @@ export const reportSchema = {
       // TODO(codebytere): make timeStart and timeStop date-time types?
       timeStart: { type: 'string' },
       timeStop: { type: 'string' },
-      totalReady: { type: 'number' },
       totalPassed: { type: 'number' },
       totalSkipped: { type: 'number' },
       totalAborted: { type: 'number' },

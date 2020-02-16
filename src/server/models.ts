@@ -102,7 +102,6 @@ export namespace Tables {
     sourceLink!: string
     timeStart!: Date
     timeStop!: Date
-    totalReady!: number
     totalPassed!: number
     totalSkipped!: number
     totalWarnings!: number
@@ -122,7 +121,6 @@ export namespace Tables {
       sourceLink: TEXT,
       timeStart: DATE,
       timeStop: DATE,
-      totalReady: INTEGER,
       totalPassed: INTEGER,
       totalSkipped: INTEGER,
       totalWarnings: INTEGER,

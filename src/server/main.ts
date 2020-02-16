@@ -126,7 +126,7 @@ fast.register((fast, opts, next) => {
               // Check that the registrant has registered for this platform-specific webhook.
               const platformWebhook = reg.table.webhooks[platform]
               if (!platformWebhook) {
-                console.warn(
+                fast.log.info(
                   `${reg.table.appName} is not registered for platform: ${platform}`
                 )
                 continue
@@ -154,7 +154,7 @@ fast.register((fast, opts, next) => {
               const res: api.ReportRequestResponse = await resp.json()
 
               // Ensure that requisite data has been sent back by the registrant.
-              if (!res.reportsExpected) {
+              if (res.reportsExpected === undefined) {
                 reply
                   .code(500)
                   .send(
@@ -172,7 +172,7 @@ fast.register((fast, opts, next) => {
 
             reply
               .code(200)
-              .send(`Sent updated webhooks for ${platform} on ${commitHash}`)
+              .send(`Sent updated webhooks for ${platform} on ${versionQualifier}`)
           } catch (err) {
             reply.code(500).send(err)
           }
@@ -191,8 +191,7 @@ fast.register((fast, opts, next) => {
           const test: api.TestData = request.body
 
           // Validate that the session token matches the one for this registrant.
-          const token = report.table.sessionToken
-          if (sessionId !== token) {
+          if (sessionId !== report.table.sessionToken) {
             reply
               .code(403)
               .send(
