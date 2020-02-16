@@ -1,6 +1,4 @@
-const {
-  DATABASE_URL = 'postgres://postgres@localhost:5432/postgres'
-} = process.env
+import { DATABASE_URL } from './constants'
 
 /**
  * HIERARCHY
@@ -28,8 +26,6 @@ export namespace Tables {
     },
     logging: false
   })
-
-  // See: http://docs.sequelizejs.com/manual/models-definition.html
 
   export class Registrant extends Model {
     webhooks!: Record<string, string>

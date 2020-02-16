@@ -2,7 +2,8 @@ export const PORT = ((process.env.PORT as unknown) as number) || 3000
 
 export const {
   HOST = '0.0.0.0',
-  REPORT_WEBHOOK = 'http://localhost:3000' // 'https://electron-sentinel.herokuapp.com/'
+  REPORT_WEBHOOK = 'http://localhost:3000', // 'https://electron-sentinel.herokuapp.com/'
+  DATABASE_URL = 'postgres://postgres@localhost:5432/postgres'
 } = process.env
 
 // Valid platforms where CI may be run.

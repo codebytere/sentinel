@@ -172,7 +172,9 @@ fast.register((fast, opts, next) => {
 
             reply
               .code(200)
-              .send(`Sent updated webhooks for ${platform} on ${versionQualifier}`)
+              .send(
+                `Sent updated webhooks for ${platform} on ${versionQualifier}`
+              )
           } catch (err) {
             reply.code(500).send(err)
           }

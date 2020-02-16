@@ -11,13 +11,18 @@ export const triggerSchema = {
         required: ['platform', 'link'],
         properties: {
           platform: { type: 'string' },
-          link: { type: 'string' }
+          link: {
+            type: 'string',
+            format: 'uri',
+            pattern: '^https?://'
+          }
         }
       }
     }
   }
 }
 
+// Schema for /register
 export const registerSchema = {
   body: {
     type: 'object',
@@ -26,11 +31,26 @@ export const registerSchema = {
       appName: { type: 'string' },
       userName: { type: 'string' },
       password: { type: 'string' },
-      webhooks: { type: 'object' }
+      webhooks: {
+        type: 'object',
+        properties: {
+          'win32-ia32': { type: 'string' },
+          'win32-x64': { type: 'string' },
+          'win32-arm64': { type: 'string' },
+          'win32-arm64-x64': { type: 'string' },
+          'darwin-x64': { type: 'string' },
+          'mas-x64': { type: 'string' },
+          'linux-armv7l': { type: 'string' },
+          'linux-arm64': { type: 'string' },
+          'linux-ia32': { type: 'string' },
+          'linux-x64': { type: 'string' }
+        }
+      }
     }
   }
 }
 
+// Schema for /login
 export const loginSchema = {
   body: {
     type: 'object',
@@ -51,8 +71,6 @@ export const reportSchema = {
       reportId: { type: 'number' }
     }
   },
-  // Use sessionId to validate this report being
-  // sent by the correct registrant.
   headers: {
     type: 'object',
     required: ['sessionId'],
@@ -70,8 +88,11 @@ export const reportSchema = {
       os: { type: 'string' },
       id: { type: 'number' },
       reportId: { type: 'number' },
-      sourceLink: { type: 'string' },
-      // TODO(codebytere): make timeStart and timeStop date-time types?
+      sourceLink: {
+        type: 'string',
+        format: 'uri',
+        pattern: '^https?://'
+      },
       timeStart: { type: 'string' },
       timeStop: { type: 'string' },
       totalPassed: { type: 'number' },
@@ -79,9 +100,21 @@ export const reportSchema = {
       totalAborted: { type: 'number' },
       totalWarnings: { type: 'number' },
       totalFailed: { type: 'number' },
-      workspaceGzipLink: { type: 'string' },
-      logfileLink: { type: 'string' },
-      ciLink: { type: 'string' },
+      workspaceGzipLink: {
+        type: 'string',
+        format: 'uri',
+        pattern: '^https?://'
+      },
+      logfileLink: {
+        type: 'string',
+        format: 'uri',
+        pattern: '^https?://'
+      },
+      ciLink: {
+        type: 'string',
+        format: 'uri',
+        pattern: '^https?://'
+      },
       testAgent: { type: 'object' }
     }
   }
