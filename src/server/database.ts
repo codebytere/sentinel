@@ -22,13 +22,23 @@ export class mRegistrant {
     return registrants.map(reg => new mRegistrant(reg))
   }
 
-  static async Authenticate(opts: { userName: string; password: string }) {
+  /**
+   * Authenticates a Sentinel registrant.
+   * // TODO(codebytere): auth token stuff.
+   *
+   * @param userName The username of the Sentinel registrant
+   * @param password The password the registrant is signing in with.
+   *
+   * @returns true if the username and password correspond to a valid
+   * registered account, else false.
+   */
+  static async Authenticate(userName: string, password: string) {
     const registrant = await Tables.Registrant.findOne({
-      where: { userName: opts.userName }
+      where: { userName }
     })
 
     if (!registrant) return false
-    return bcrypt.compareSync(opts.password, registrant.password)
+    return bcrypt.compareSync(password, registrant.password)
   }
 
   static async Create(opts: IRegistrantOpts) {
@@ -48,9 +58,12 @@ export class mTestData {
   constructor(public table: Tables.TestData) {}
 
   /**
+   * Creates and returns a new TestData instance.
    *
-   * @param report
-   * @param test
+   * @param report The report associated with this TestData.
+   * @param test The granular test data.
+   *
+   * @returns A new TestData instance.
    */
   static async NewFromReport(report: mReport, test: any) {
     const reportId = report.table.id
@@ -72,9 +85,13 @@ export class mReport {
   constructor(public table: Tables.Report) {}
 
   /**
+   * Creates a new Report unique to a Registrant for the
+   * passed request.
    *
-   * @param feedback
-   * @param defaults
+   * @param request The Electron-CI-mediated Sentinel run.
+   * @param registrant The Sentinel registrant.
+   *
+   * @returns A new mReport instance.
    */
   static async NewFromRequest(request: mRequest, registrant: mRegistrant) {
     return new mReport(

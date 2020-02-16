@@ -3,6 +3,7 @@ import 'react-bulma-components/dist/react-bulma-components.min.css'
 import React from 'react'
 import { positions, Provider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
+import Nav from '../src/components/nav'
 
 const options = {
   timeout: 5000,
@@ -22,6 +23,7 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props
     return (
       <Provider template={AlertTemplate} {...options}>
+        <Nav />
         <Container>
           <Component {...pageProps} />
         </Container>

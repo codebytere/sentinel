@@ -80,12 +80,7 @@ fast.register((fast, opts, next) => {
           const { userName, password } = req.body
 
           try {
-            const authed = await mRegistrant.Authenticate({
-              userName,
-              password
-            })
-            console.log(`AUTHED IS: `, authed)
-
+            const authed = await mRegistrant.Authenticate(userName, password)
             if (authed) {
               reply.code(200).send(`Successfully authed ${userName}`)
             } else {

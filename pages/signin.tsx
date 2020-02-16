@@ -1,4 +1,5 @@
 import React, { Component, FormEvent } from 'react'
+import Router from 'next/router'
 import {
   Container,
   Form,
@@ -18,7 +19,7 @@ class SignInContainer extends Component<
   { alert: AlertManager },
   { registrant: IRegistrantState }
 > {
-  constructor(props: any) {
+  constructor(props: { alert: AlertManager }) {
     super(props)
 
     this.state = {
@@ -60,6 +61,7 @@ class SignInContainer extends Component<
       .then(response => {
         if (response.status === 200) {
           alert.show(`Successfully Logged In ${userData.userName}`)
+          Router.push('/index')
         } else {
           alert.show(`Login Failed For ${userData.userName}`)
         }

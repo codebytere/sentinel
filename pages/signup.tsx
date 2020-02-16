@@ -1,4 +1,5 @@
 import React, { Component, FormEvent } from 'react'
+import Router from 'next/router'
 import {
   Container,
   Form,
@@ -20,7 +21,7 @@ class SignUpContainer extends Component<
   { alert: AlertManager },
   { newRegistrant: INewRegistrantState }
 > {
-  constructor(props: any) {
+  constructor(props: { alert: AlertManager }) {
     super(props)
 
     this.state = {
@@ -52,7 +53,7 @@ class SignUpContainer extends Component<
   handleFormSubmit() {
     const alert = this.props.alert
     let userData = this.state.newRegistrant
-    userData.webhooks = JSON.parse(JSON.stringify(userData.webhooks))
+    userData.webhooks = JSON.parse(userData.webhooks)
 
     fetch('/register', {
       method: 'POST',
@@ -65,6 +66,7 @@ class SignUpContainer extends Component<
       .then(response => {
         if (response.status === 200) {
           alert.show(`Successfully Registered ${userData.userName}`)
+          Router.push('/index')
         } else {
           alert.show(`Registration Failed For ${userData.userName}`)
         }
