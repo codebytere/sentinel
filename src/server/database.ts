@@ -1,4 +1,12 @@
 import { Tables } from './models'
+import bcrypt from 'bcrypt'
+
+interface IRegistrantOpts {
+  appName: string
+  userName: string
+  password: string
+  webhooks: Record<string, string>
+}
 
 /**
  * A class that represents a single Sentinel service registrant.
@@ -14,7 +22,16 @@ export class mRegistrant {
     return registrants.map(reg => new mRegistrant(reg))
   }
 
-  static async Create(opts: { name: string; webhook: string }) {
+  static async Authenticate(opts: { userName: string; password: string }) {
+    const registrant = await Tables.Registrant.findOne({
+      where: { userName: opts.userName }
+    })
+
+    if (!registrant) return false
+    return bcrypt.compareSync(opts.password, registrant.password)
+  }
+
+  static async Create(opts: IRegistrantOpts) {
     const registrant = await Tables.Registrant.create(opts)
     return new mRegistrant(registrant)
   }

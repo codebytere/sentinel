@@ -1,7 +1,10 @@
 export namespace api {
   export interface ReportRequest {
     // Location of installable Electron build
-    platformInstallData: { platform: string; link: string }
+    platformInstallData: {
+      platform: string
+      link: string
+    }
     // Representation of the current Electron version.
     versionQualifier: string
     // Unique per-commit url that an app will post back CI status information to.
@@ -16,7 +19,11 @@ export namespace api {
   export interface TestAgent {
     arch: string
     platform: NodeJS.Platform
-    cpus: { cores: number; model: string; speed: number }
+    cpus: {
+      cores: number
+      model: string
+      speed: number
+    }
     freeMem: number
     release: string
     totalMem: number

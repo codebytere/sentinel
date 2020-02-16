@@ -33,13 +33,17 @@ export namespace Tables {
 
   export class Registrant extends Model {
     webhooks!: Record<string, string>
-    name!: string
+    userName!: string
+    appName!: string
+    password: string
     id!: number
   }
 
   Registrant.init(
     {
-      name: TEXT,
+      userName: TEXT,
+      appName: TEXT,
+      password: TEXT,
       webhooks: JSONB
     },
     {

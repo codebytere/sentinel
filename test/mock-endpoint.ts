@@ -3,8 +3,8 @@ import fastify from 'fastify'
 import * as shortid from 'shortid'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 
-import { api } from '../server/api'
-import { testAgent } from '../server/utils/test_agent'
+import { api } from '../src/server/api'
+import { testAgent } from '../src/server/utils/test_agent'
 
 const serverOptions: fastify.ServerOptions = {
   logger: !!(process.env.NODE_ENV !== 'development')
@@ -43,7 +43,10 @@ fast.post('/test-hook', async req => {
 })
 
 async function startCIRun(
-  platformData: { platform: string; link: string },
+  platformData: {
+    platform: string
+    link: string
+  },
   reportCallback: string,
   token: string
 ) {

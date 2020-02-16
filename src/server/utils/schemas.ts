@@ -18,6 +18,30 @@ export const triggerSchema = {
   }
 }
 
+export const registerSchema = {
+  body: {
+    type: 'object',
+    required: ['appName', 'userName', 'password'],
+    properties: {
+      appName: { type: 'string' },
+      userName: { type: 'string' },
+      password: { type: 'string' },
+      webhooks: { type: 'object' }
+    }
+  }
+}
+
+export const loginSchema = {
+  body: {
+    type: 'object',
+    required: ['userName', 'password'],
+    properties: {
+      userName: { type: 'string' },
+      password: { type: 'string' }
+    }
+  }
+}
+
 // Schema for /report/:reportId
 export const reportSchema = {
   params: {

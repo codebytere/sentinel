@@ -4,12 +4,12 @@ import Link from 'next/link'
 export default () => (
   <ul>
     <li>
-      <Link href="/sign_in" as="/sign_in">
+      <Link href="/signin" as="/signin">
         <a>Sign In</a>
       </Link>
     </li>
     <li>
-      <Link href="/sign_up" as="/sign_up">
+      <Link href="/signup" as="/signup">
         <a>Sign Up</a>
       </Link>
     </li>

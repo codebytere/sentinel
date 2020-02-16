@@ -1,12 +1,18 @@
 import fastify from 'fastify'
 import fetch from 'node-fetch'
+import bcrypt from 'bcrypt'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 const Next = require('next')
 
 import { api } from './api'
 import { Tables } from './models'
 import { mRegistrant, mRequest, mReport, mTestData } from './database'
-import { triggerSchema, reportSchema } from './utils/schemas'
+import {
+  triggerSchema,
+  reportSchema,
+  registerSchema,
+  loginSchema
+} from './utils/schemas'
 import { HOST, PORT, REPORT_WEBHOOK, PLATFORMS } from './constants'
 
 const isDev = !!(process.env.NODE_ENV !== 'development')
@@ -29,20 +35,66 @@ fast.register((fast, opts, next) => {
         })
       })
 
-      fast.get('/sign_in', (req, reply) => {
-        return app
-          .render(req.req, reply.res, '/sign_in', req.query)
-          .then(() => {
-            reply.sent = true
-          })
+      fast.get('/signin', (req, reply) => {
+        return app.render(req.req, reply.res, '/signin', req.query).then(() => {
+          reply.sent = true
+        })
       })
 
-      fast.get('/sign_up', (req, reply) => {
-        return app
-          .render(req.req, reply.res, '/sign_up', req.query)
-          .then(() => {
-            reply.sent = true
-          })
+      fast.get('/signup', (req, reply) => {
+        return app.render(req.req, reply.res, '/signup', req.query).then(() => {
+          reply.sent = true
+        })
+      })
+
+      fast.route({
+        method: 'POST',
+        url: '/register',
+        schema: registerSchema,
+        handler: async (req, reply) => {
+          const { appName, userName, webhooks } = req.body
+
+          const hash = bcrypt.hashSync(req.body.password, 10)
+
+          try {
+            await mRegistrant.Create({
+              appName,
+              userName,
+              password: hash,
+              webhooks
+            })
+            reply.code(200).send(`Successfully created account for ${appName}`)
+          } catch (err) {
+            reply
+              .code(500)
+              .send(`Could not create account for ${appName}: ${err}`)
+          }
+        }
+      })
+
+      fast.route({
+        method: 'POST',
+        url: '/login',
+        schema: loginSchema,
+        handler: async (req, reply) => {
+          const { userName, password } = req.body
+
+          try {
+            const authed = await mRegistrant.Authenticate({
+              userName,
+              password
+            })
+            console.log(`AUTHED IS: `, authed)
+
+            if (authed) {
+              reply.code(200).send(`Successfully authed ${userName}`)
+            } else {
+              reply.code(401).send(`Failed to authorize ${userName}`)
+            }
+          } catch (err) {
+            reply.code(500).send(err)
+          }
+        }
       })
 
       fast.route({
@@ -80,7 +132,7 @@ fast.register((fast, opts, next) => {
               const platformWebhook = reg.table.webhooks[platform]
               if (!platformWebhook) {
                 console.warn(
-                  `${reg.table.name} is not registered for platform: ${platform}`
+                  `${reg.table.appName} is not registered for platform: ${platform}`
                 )
                 continue
               }
