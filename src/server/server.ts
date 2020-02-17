@@ -29,32 +29,46 @@ fast.register((fast, opts, next) => {
   app
     .prepare()
     .then(() => {
-      fast.get('/*', (req, reply) => {
-        return app.render(req.req, reply.res, '/index', req.query).then(() => {
-          reply.sent = true
-        })
+      fast.get('/*', (request, reply) => {
+        return app
+          .render(request.req, reply.res, '/index', request.query)
+          .then(() => {
+            reply.sent = true
+          })
       })
 
-      fast.get('/signin', (req, reply) => {
-        return app.render(req.req, reply.res, '/signin', req.query).then(() => {
-          reply.sent = true
-        })
+      fast.get('/signin', (request, reply) => {
+        return app
+          .render(request.req, reply.res, '/signin', request.query)
+          .then(() => {
+            reply.sent = true
+          })
       })
 
-      fast.get('/signup', (req, reply) => {
-        return app.render(req.req, reply.res, '/signup', req.query).then(() => {
-          reply.sent = true
-        })
+      fast.get('/signup', (request, reply) => {
+        return app
+          .render(request.req, reply.res, '/signup', request.query)
+          .then(() => {
+            reply.sent = true
+          })
+      })
+
+      fast.get('/home', (request, reply) => {
+        return app
+          .render(request.req, reply.res, '/home', request.query)
+          .then(() => {
+            reply.sent = true
+          })
       })
 
       fast.route({
         method: 'POST',
         url: '/register',
         schema: registerSchema,
-        handler: async (req, reply) => {
-          const { appName, userName, webhooks } = req.body
+        handler: async (request, reply) => {
+          const { appName, userName, webhooks } = request.body
 
-          const hash = bcrypt.hashSync(req.body.password, 10)
+          const hash = bcrypt.hashSync(request.body.password, 10)
 
           try {
             await mRegistrant.Create({
@@ -76,8 +90,8 @@ fast.register((fast, opts, next) => {
         method: 'POST',
         url: '/login',
         schema: loginSchema,
-        handler: async (req, reply) => {
-          const { userName, password } = req.body
+        handler: async (request, reply) => {
+          const { userName, password } = request.body
 
           try {
             const authed = await mRegistrant.Authenticate(userName, password)

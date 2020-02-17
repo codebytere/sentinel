@@ -1,4 +1,4 @@
-import App, { Container } from 'next/app'
+import App from 'next/app'
 import 'react-bulma-components/dist/react-bulma-components.min.css'
 import React from 'react'
 import { positions, Provider } from 'react-alert'
@@ -11,22 +11,12 @@ const options = {
 }
 
 export default class MyApp extends App {
-  static async getInitialProps({ Component, router, ctx }) {
-    let pageProps = {}
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx)
-    }
-    return { pageProps }
-  }
-
   render() {
     const { Component, pageProps } = this.props
     return (
       <Provider template={AlertTemplate} {...options}>
         <Nav />
-        <Container>
-          <Component {...pageProps} />
-        </Container>
+        <Component {...pageProps} />
       </Provider>
     )
   }

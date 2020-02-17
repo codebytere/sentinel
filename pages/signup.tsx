@@ -9,6 +9,7 @@ import {
   Box
 } from 'react-bulma-components'
 import { withAlert, AlertManager } from 'react-alert'
+//import { PLATFORMS } from '../src/server/constants'
 
 interface INewRegistrantState {
   userName: string
@@ -16,6 +17,15 @@ interface INewRegistrantState {
   password: string
   webhooks: string
 }
+
+// const columns = [
+//   { key: 'platform', name: 'Platform' },
+//   { key: 'webhook', name: 'Webhook' }
+// ]
+
+// const rows = PLATFORMS.map(p => {
+//   return { platform: p, webhook: ''}
+// })
 
 class SignUpContainer extends Component<
   { alert: AlertManager },
