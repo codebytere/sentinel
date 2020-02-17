@@ -14,7 +14,7 @@ class NavBar extends React.Component<{}, { open: boolean }> {
     }
 
     return (
-      <Navbar>
+      <Navbar fixed={'top'}>
         <Navbar.Brand>
           <a className="navbar-item" href="/">
             <img
