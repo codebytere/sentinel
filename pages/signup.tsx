@@ -6,26 +6,19 @@ import {
   Button,
   Hero,
   Columns,
-  Box
+  Box,
+  Table
 } from 'react-bulma-components'
 import { withAlert, AlertManager } from 'react-alert'
-//import { PLATFORMS } from '../src/server/constants'
+import converter from 'html-table-to-json'
+import { PLATFORMS } from '../src/server/constants'
 
 interface INewRegistrantState {
   userName: string
   appName: string
   password: string
-  webhooks: string
+  webhooks?: Record<string, string>
 }
-
-// const columns = [
-//   { key: 'platform', name: 'Platform' },
-//   { key: 'webhook', name: 'Webhook' }
-// ]
-
-// const rows = PLATFORMS.map(p => {
-//   return { platform: p, webhook: ''}
-// })
 
 class SignUpContainer extends React.Component<
   { alert: AlertManager },
@@ -38,8 +31,7 @@ class SignUpContainer extends React.Component<
       newRegistrant: {
         userName: '',
         appName: '',
-        password: '',
-        webhooks: ''
+        password: ''
       }
     }
 
@@ -62,12 +54,15 @@ class SignUpContainer extends React.Component<
 
   handleFormSubmit() {
     const alert = this.props.alert
-    let userData = this.state.newRegistrant
-    userData.webhooks = JSON.parse(userData.webhooks)
+    let reg = this.state.newRegistrant
+
+    const rawTableHTML = document.getElementById('webhook-table')!
+    const rawTableString = rawTableHTML.outerHTML.toString()
+    reg.webhooks = this.convertTableToJSON(rawTableString)
 
     fetch('/register', {
       method: 'POST',
-      body: JSON.stringify(userData),
+      body: JSON.stringify(reg),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
@@ -75,10 +70,10 @@ class SignUpContainer extends React.Component<
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully Registered ${userData.userName}`)
+          alert.show(`Successfully Registered ${reg.userName}`)
           Router.push('/index')
         } else {
-          alert.show(`Registration Failed For ${userData.userName}`)
+          alert.show(`Registration Failed For ${reg.userName}`)
         }
       })
       .catch(err => {
@@ -86,18 +81,57 @@ class SignUpContainer extends React.Component<
       })
   }
 
-  handleClearForm(e: FormEvent<HTMLInputElement>) {
+  private handleClearForm(e: FormEvent<HTMLInputElement>) {
     e.preventDefault()
     this.setState({
       newRegistrant: {
         userName: '',
         appName: '',
-        password: '',
-        // TODO(codebytere): this should be an actual form table
-        // with all platforms filled out.
-        webhooks: ''
+        password: ''
       }
     })
+  }
+
+  private convertTableToJSON(data: any) {
+    const webhookData = {}
+    const { results: json } = converter.parse(data)
+    json[0].forEach(hook => {
+      const [platform, link] = [hook['Platform'], hook['Webhook']]
+      if (link !== '') {
+        webhookData[platform] = link
+      }
+    })
+    return webhookData
+  }
+
+  private renderWebHookTable() {
+    const hooks = PLATFORMS.map(p => {
+      return { platform: p, link: '' }
+    })
+
+    const hookData = hooks.map(w => {
+      const { platform, link } = w
+      return (
+        <tr>
+          <td>{platform}</td>
+          <td contentEditable={true} suppressContentEditableWarning={true}>
+            {link}
+          </td>
+        </tr>
+      )
+    })
+
+    return (
+      <Table bordered className={'is-narrow'} id={'webhook-table'}>
+        <tbody>
+          <tr>
+            <th>Platform</th>
+            <th>Webhook</th>
+          </tr>
+          {hookData}
+        </tbody>
+      </Table>
+    )
   }
 
   render() {
@@ -106,7 +140,7 @@ class SignUpContainer extends React.Component<
         <Hero.Body>
           <Container>
             <Columns className={'is-centered'}>
-              <Columns.Column size={4}>
+              <Columns.Column size={6}>
                 <Box>
                   <Form.Field>
                     <Form.Input
@@ -136,15 +170,7 @@ class SignUpContainer extends React.Component<
                       onChange={this.handleInput}
                     />{' '}
                   </Form.Field>
-                  <Form.Field>
-                    <Form.Input
-                      title={'Platforms'}
-                      name={'webhooks'}
-                      value={this.state.newRegistrant.webhooks}
-                      placeholder={'Enter webhooks'}
-                      onChange={this.handleInput}
-                    />{' '}
-                  </Form.Field>
+                  <Form.Field>{this.renderWebHookTable()}</Form.Field>
                   <Form.Field>
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear

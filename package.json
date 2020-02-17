@@ -31,6 +31,8 @@
     "cross-env": "^7.0.0",
     "fastify": "^2.11.0",
     "fastify-nextjs": "^4.1.1",
+    "html-table-to-json": "^1.0.0",
+    "jwt-decode": "^2.2.0",
     "next": "^9.2.1",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.13.1",
@@ -43,7 +45,7 @@
     "sequelize": "^5.21.3",
     "styled-components": "^5.0.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.0-beta"
   },
   "devDependencies": {
     "next-plugin-transpile-modules": "^2.0.0",
