@@ -1,4 +1,4 @@
-import React, { Component, FormEvent } from 'react'
+import React, { FormEvent } from 'react'
 import Router from 'next/router'
 import {
   Container,
@@ -27,7 +27,7 @@ interface INewRegistrantState {
 //   return { platform: p, webhook: ''}
 // })
 
-class SignUpContainer extends Component<
+class SignUpContainer extends React.Component<
   { alert: AlertManager },
   { newRegistrant: INewRegistrantState }
 > {
