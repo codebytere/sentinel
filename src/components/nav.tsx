@@ -1,10 +1,40 @@
 import { Navbar } from 'react-bulma-components'
 import React from 'react'
+import Router from 'next/router'
+import { withAlert, AlertManager } from 'react-alert'
 
-class NavBar extends React.Component<{}, { open: boolean }> {
+class NavBar extends React.Component<
+  { alert: AlertManager },
+  { open: boolean }
+> {
   constructor(props: any) {
     super(props)
     this.state = { open: false }
+
+    this.handleLogout = this.handleLogout.bind(this)
+  }
+
+  handleLogout() {
+    const alert = this.props.alert
+
+    fetch('/logout', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.status === 200) {
+          alert.show('Successfully logged out')
+          Router.push('/')
+        } else {
+          alert.show('Logout failed')
+        }
+      })
+      .catch(err => {
+        console.log('ERROR: ', err)
+      })
   }
 
   render() {
@@ -39,7 +69,7 @@ class NavBar extends React.Component<{}, { open: boolean }> {
             </a>
           </Navbar.Container>
           <Navbar.Container position="end">
-            <a className="navbar-item" href="/logout">
+            <a className="navbar-item" onClick={this.handleLogout}>
               Log Out
             </a>
           </Navbar.Container>
@@ -49,4 +79,4 @@ class NavBar extends React.Component<{}, { open: boolean }> {
   }
 }
 
-export default NavBar
+export default withAlert()(NavBar)
