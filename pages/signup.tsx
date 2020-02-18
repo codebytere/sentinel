@@ -9,22 +9,16 @@ import {
   Box,
   Table
 } from 'react-bulma-components'
-import { withAlert, AlertManager } from 'react-alert'
+import { withAlert } from 'react-alert'
 import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
-
-interface INewRegistrantState {
-  username: string
-  appName: string
-  password: string
-  webhooks?: Record<string, string>
-}
+import { IAlertProps, IRegistrant } from 'src/server/interfaces'
 
 class SignUpContainer extends React.Component<
-  { alert: AlertManager },
-  { newRegistrant: INewRegistrantState }
+  IAlertProps,
+  { newRegistrant: IRegistrant }
 > {
-  constructor(props: { alert: AlertManager }) {
+  constructor(props: IAlertProps) {
     super(props)
 
     this.state = {
@@ -40,7 +34,7 @@ class SignUpContainer extends React.Component<
     this.handleInput = this.handleInput.bind(this)
   }
 
-  handleInput(e: FormEvent<HTMLInputElement>) {
+  private handleInput(e: FormEvent<HTMLInputElement>) {
     const prop = e.currentTarget.name
     const value = e.currentTarget.value
 
@@ -52,7 +46,7 @@ class SignUpContainer extends React.Component<
     }))
   }
 
-  handleFormSubmit() {
+  private handleFormSubmit() {
     const alert = this.props.alert
     let reg = this.state.newRegistrant
 
@@ -134,7 +128,7 @@ class SignUpContainer extends React.Component<
     )
   }
 
-  render() {
+  public render() {
     return (
       <Hero color={'primary'} size={'fullheight'}>
         <Hero.Body>

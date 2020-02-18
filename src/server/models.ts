@@ -27,6 +27,7 @@ export namespace Tables {
     logging: false
   })
 
+  // Represented as mRegistrant
   export class Registrant extends Model {
     webhooks!: Record<string, string>
     username!: string
@@ -48,6 +49,7 @@ export namespace Tables {
     }
   )
 
+  // Represented as mRequest
   export class Request extends Model {
     id!: number
     platformInstallData!: Record<string, string>
@@ -67,6 +69,7 @@ export namespace Tables {
     }
   )
 
+  // Represented as mReport
   export class Report extends Model {
     id!: number
     registrantId!: number
@@ -89,6 +92,7 @@ export namespace Tables {
     }
   )
 
+  // Represented as mTestData
   export class TestData extends Model {
     id!: number
     status: api.Status

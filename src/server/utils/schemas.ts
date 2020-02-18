@@ -80,7 +80,6 @@ export const reportSchema = {
   },
   body: {
     type: 'object',
-    // TODO(codebytere): determine what we want to require from consumers?
     properties: {
       name: { type: 'string' },
       status: { type: 'string' },

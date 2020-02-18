@@ -1,12 +1,6 @@
 import { Tables } from './models'
 import bcrypt from 'bcrypt'
-
-interface IRegistrantOpts {
-  appName: string
-  username: string
-  password: string
-  webhooks: Record<string, string>
-}
+import { IRegistrant } from './interfaces'
 
 /**
  * A class that represents a single Sentinel service registrant.
@@ -24,9 +18,8 @@ export class mRegistrant {
 
   /**
    * Authenticates a Sentinel registrant.
-   * // TODO(codebytere): auth token stuff.
    *
-   * @param username The username of the Sentinel registrant
+   * @param username The username of the Sentinel registrant.
    * @param password The password the registrant is signing in with.
    *
    * @returns true if the username and password correspond to a valid
@@ -38,11 +31,22 @@ export class mRegistrant {
     })
 
     if (!registrant) return false
-    console.log(bcrypt.compareSync(password, registrant.password))
     return bcrypt.compareSync(password, registrant.password)
   }
 
-  static async Create(opts: IRegistrantOpts) {
+  /**
+   * Creates and returns a new mRegistrant.
+   *
+   * @param opts
+   * @param appName The name of the app being tested with Sentinel.
+   * @param username The Registrant's chosen username.
+   * @param password The Registrant's hashed password.
+   * @param webhooks The set of callback urls for the testing platforms
+   * this Registrant is opting into.
+   *
+   * @returns A new mRegistrant instance.
+   */
+  static async Create(opts: IRegistrant) {
     const registrant = await Tables.Registrant.create(opts)
     return new mRegistrant(registrant)
   }
@@ -128,11 +132,6 @@ export class mReport {
 export class mRequest {
   constructor(public table: Tables.Request) {}
 
-  static async FindAll() {
-    const requests = await Tables.Request.findAll()
-    return requests.map(req => new mRequest(req))
-  }
-
   /**
    * Find or create a new Request instance if none exists yet, using the
    * commit hash as the primary key. If one has already been created, that
@@ -141,8 +140,8 @@ export class mRequest {
    * the new platform information.
    *
    * @param opts
-   * @param version_qualifier a version-ish string used as a determinant by each registrant.
-   * @param commit_hash commit hash corresponding to a commit sha in a PR.
+   * @param version_qualifier A version-ish string used as a determinant by each registrant.
+   * @param commit_hash Commit hash corresponding to a commit sha in a PR.
    *
    * @returns A newly created or existing mRequest associated with a commit hash.
    */

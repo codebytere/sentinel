@@ -1,20 +1,19 @@
 import { Navbar } from 'react-bulma-components'
 import React from 'react'
 import Router from 'next/router'
-import { withAlert, AlertManager } from 'react-alert'
+import { withAlert } from 'react-alert'
+import { SENTINEL_LOGO } from '../server/constants'
+import { IAlertProps, INavBarState } from 'src/server/interfaces'
 
-class NavBar extends React.Component<
-  { alert: AlertManager },
-  { open: boolean }
-> {
-  constructor(props: any) {
+class NavBar extends React.Component<IAlertProps, INavBarState> {
+  constructor(props: IAlertProps) {
     super(props)
     this.state = { open: false }
 
     this.handleLogout = this.handleLogout.bind(this)
   }
 
-  handleLogout() {
+  private handleLogout() {
     const alert = this.props.alert
 
     fetch('/logout', {
@@ -37,7 +36,7 @@ class NavBar extends React.Component<
       })
   }
 
-  render() {
+  public render() {
     const open = this.state.open ? 'is-active' : ''
     const toggleMenu = () => {
       this.setState({ open: !this.state.open })
@@ -48,8 +47,8 @@ class NavBar extends React.Component<
         <Navbar.Brand>
           <a className="navbar-item" href="/">
             <img
-              src="https://user-images.githubusercontent.com/2036040/74618739-dcc84000-50e7-11ea-9b90-bd9d16ff623e.png"
-              alt="sentinel icon"
+              src={SENTINEL_LOGO}
+              alt="sentinel robot icon"
               width={28}
               height={28}
             />

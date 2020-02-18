@@ -7,6 +7,9 @@ export const {
   SESSION_SECRET = 'myverylongsupersecretthatisloadedfromenv'
 } = process.env
 
+export const SENTINEL_LOGO =
+  'https://user-images.githubusercontent.com/2036040/74618739-dcc84000-50e7-11ea-9b90-bd9d16ff623e.png'
+
 // Valid platforms where CI may be run.
 export const PLATFORMS = [
   'win32-ia32',

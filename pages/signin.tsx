@@ -8,18 +8,11 @@ import {
   Columns,
   Box
 } from 'react-bulma-components'
-import { withAlert, AlertManager } from 'react-alert'
+import { withAlert } from 'react-alert'
+import { IAlertProps, IRegistrantState } from 'src/server/interfaces'
 
-interface IRegistrantState {
-  username: string
-  password: string
-}
-
-class SignInContainer extends Component<
-  { alert: AlertManager },
-  { registrant: IRegistrantState }
-> {
-  constructor(props: { alert: AlertManager }) {
+class SignInContainer extends Component<IAlertProps, IRegistrantState> {
+  constructor(props: IAlertProps) {
     super(props)
 
     this.state = {
@@ -34,7 +27,7 @@ class SignInContainer extends Component<
     this.handleInput = this.handleInput.bind(this)
   }
 
-  handleInput(e: FormEvent<HTMLInputElement>) {
+  private handleInput(e: FormEvent<HTMLInputElement>) {
     const prop = e.currentTarget.name
     const value = e.currentTarget.value
 
@@ -46,7 +39,7 @@ class SignInContainer extends Component<
     }))
   }
 
-  handleFormSubmit() {
+  private handleFormSubmit() {
     const alert = this.props.alert
     const userData = this.state.registrant
 
@@ -71,7 +64,7 @@ class SignInContainer extends Component<
       })
   }
 
-  handleClearForm(e: FormEvent<HTMLInputElement>) {
+  private handleClearForm(e: FormEvent<HTMLInputElement>) {
     e.preventDefault()
     this.setState({
       registrant: {
@@ -81,7 +74,7 @@ class SignInContainer extends Component<
     })
   }
 
-  render() {
+  public render() {
     return (
       <Hero color={'link'} size={'fullheight'}>
         <Hero.Body>
