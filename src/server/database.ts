@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 
 interface IRegistrantOpts {
   appName: string
-  userName: string
+  username: string
   password: string
   webhooks: Record<string, string>
 }
@@ -26,18 +26,19 @@ export class mRegistrant {
    * Authenticates a Sentinel registrant.
    * // TODO(codebytere): auth token stuff.
    *
-   * @param userName The username of the Sentinel registrant
+   * @param username The username of the Sentinel registrant
    * @param password The password the registrant is signing in with.
    *
    * @returns true if the username and password correspond to a valid
    * registered account, else false.
    */
-  static async Authenticate(userName: string, password: string) {
+  static async Authenticate(username: string, password: string) {
     const registrant = await Tables.Registrant.findOne({
-      where: { userName }
+      where: { username }
     })
 
     if (!registrant) return false
+    console.log(bcrypt.compareSync(password, registrant.password))
     return bcrypt.compareSync(password, registrant.password)
   }
 

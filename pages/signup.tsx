@@ -14,7 +14,7 @@ import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
 
 interface INewRegistrantState {
-  userName: string
+  username: string
   appName: string
   password: string
   webhooks?: Record<string, string>
@@ -29,7 +29,7 @@ class SignUpContainer extends React.Component<
 
     this.state = {
       newRegistrant: {
-        userName: '',
+        username: '',
         appName: '',
         password: ''
       }
@@ -70,10 +70,10 @@ class SignUpContainer extends React.Component<
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully Registered ${reg.userName}`)
-          Router.push('/index')
+          alert.show(`Successfully Registered ${reg.username}`)
+          Router.push('/home')
         } else {
-          alert.show(`Registration Failed For ${reg.userName}`)
+          alert.show(`Registration Failed For ${reg.username}`)
         }
       })
       .catch(err => {
@@ -85,7 +85,7 @@ class SignUpContainer extends React.Component<
     e.preventDefault()
     this.setState({
       newRegistrant: {
-        userName: '',
+        username: '',
         appName: '',
         password: ''
       }
@@ -145,8 +145,8 @@ class SignUpContainer extends React.Component<
                   <Form.Field>
                     <Form.Input
                       title={'User Name'}
-                      name={'userName'}
-                      value={this.state.newRegistrant.userName}
+                      name={'username'}
+                      value={this.state.newRegistrant.username}
                       placeholder={'Enter your name'}
                       onChange={this.handleInput}
                     />{' '}

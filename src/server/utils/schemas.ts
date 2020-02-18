@@ -26,10 +26,10 @@ export const triggerSchema = {
 export const registerSchema = {
   body: {
     type: 'object',
-    required: ['appName', 'userName', 'password'],
+    required: ['appName', 'username', 'password'],
     properties: {
       appName: { type: 'string' },
-      userName: { type: 'string' },
+      username: { type: 'string' },
       password: { type: 'string' },
       webhooks: {
         type: 'object',
@@ -54,9 +54,9 @@ export const registerSchema = {
 export const loginSchema = {
   body: {
     type: 'object',
-    required: ['userName', 'password'],
+    required: ['username', 'password'],
     properties: {
-      userName: { type: 'string' },
+      username: { type: 'string' },
       password: { type: 'string' }
     }
   }

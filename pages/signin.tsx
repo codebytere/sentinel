@@ -11,7 +11,7 @@ import {
 import { withAlert, AlertManager } from 'react-alert'
 
 interface IRegistrantState {
-  userName: string
+  username: string
   password: string
 }
 
@@ -24,7 +24,7 @@ class SignInContainer extends Component<
 
     this.state = {
       registrant: {
-        userName: '',
+        username: '',
         password: ''
       }
     }
@@ -60,10 +60,10 @@ class SignInContainer extends Component<
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully Logged In ${userData.userName}`)
-          Router.push('/index')
+          alert.show(`Successfully Logged In ${userData.username}`)
+          Router.push('/home')
         } else {
-          alert.show(`Login Failed For ${userData.userName}`)
+          alert.show(`Login Failed For ${userData.username}`)
         }
       })
       .catch(err => {
@@ -75,7 +75,7 @@ class SignInContainer extends Component<
     e.preventDefault()
     this.setState({
       registrant: {
-        userName: '',
+        username: '',
         password: ''
       }
     })
@@ -83,7 +83,7 @@ class SignInContainer extends Component<
 
   render() {
     return (
-      <Hero color={'primary'} size={'fullheight'}>
+      <Hero color={'link'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns className={'is-centered'}>
@@ -92,8 +92,8 @@ class SignInContainer extends Component<
                   <Form.Field>
                     <Form.Input
                       title={'User Name'}
-                      name={'userName'}
-                      value={this.state.registrant.userName}
+                      name={'username'}
+                      value={this.state.registrant.username}
                       placeholder={'Enter your username'}
                       onChange={this.handleInput}
                     />{' '}

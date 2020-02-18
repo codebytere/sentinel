@@ -3,7 +3,7 @@ module.exports = {
     return queryInterface.bulkInsert('registrant', [
       {
         appName: 'Manta',
-        userName: 'manta',
+        username: 'manta',
         password: 'manta',
         webhooks: '{ "linux-x64": "http://localhost:8000/manta" }',
         createdAt: new Date(),
@@ -11,7 +11,7 @@ module.exports = {
       },
       {
         appName: 'VSCode',
-        userName: 'vscode',
+        username: 'vscode',
         password: 'vscode',
         webhooks: '{ "linux-x64": "http://localhost:8000/vscode", "darwin-x64": "http://localhost:8000/vscode" }',
         createdAt: new Date(),
@@ -19,7 +19,7 @@ module.exports = {
       },
       {
         appName: 'WebTorrent',
-        userName: 'webtorrent',
+        username: 'webtorrent',
         password: 'webtorrent',
         webhooks: '{ "win32-x64": "http://localhost:8000/webtorrent", "darwin-x64": "http://localhost:8000/webtorrent" }',
         createdAt: new Date(),
@@ -27,7 +27,7 @@ module.exports = {
       },
       {
         appName: 'Signal',
-        userName: 'signal',
+        username: 'signal',
         password: 'signal',
         webhooks: '{ "mas-x64": "http://localhost:8000/signal", "linux-armv7l": "http://localhost:8000/signal", "linux-x64": "http://localhost:8000/signal" }',
         createdAt: new Date(),
