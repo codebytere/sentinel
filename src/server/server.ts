@@ -23,7 +23,7 @@ import {
   SESSION_SECRET
 } from './constants'
 
-const isDev = !!(process.env.NODE_ENV !== 'development')
+const isDev = process.env.NODE_ENV !== 'production'
 const serverOptions: fastify.ServerOptions = { logger: isDev }
 
 const fast: fastify.FastifyInstance<
