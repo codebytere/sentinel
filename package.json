@@ -8,7 +8,11 @@
     "format": "prettier --write '**/*.{ts,tsx}'",
     "up": "sequelize-cli db:migrate",
     "lint": "prettier --check '**/*.{ts,tsx}'",
-    "start": "npm run build && node dist/server.js"
+    "start": "node dist/server.js",
+    "postinstall": "next build && tsc --project tsconfig.server.json"
+  },
+  "engines": {
+    "nodejs": "^12"
   },
   "repository": {
     "type": "git",
@@ -34,6 +38,7 @@
     "fastify-nextjs": "^4.1.1",
     "fastify-session": "^3.3.0",
     "html-table-to-json": "^1.0.0",
+    "isomorphic-unfetch": "^3.0.0",
     "jwt-decode": "^2.2.0",
     "next": "^9.2.1",
     "node-fetch": "^2.6.0",
