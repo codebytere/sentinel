@@ -31,8 +31,11 @@ export class mRegistrant {
       where: { username }
     })
 
-    if (!registrant) return false
-    return bcrypt.compareSync(password, registrant.password)
+    if (!registrant || !bcrypt.compareSync(password, registrant.password)) {
+      return false
+    }
+
+    return new mRegistrant(registrant)
   }
 
   /**
@@ -93,9 +96,9 @@ export class mTestData {
         }
       }
     })
-  
+
     return testDataSets.map(data => new mTestData(data))
-  } 
+  }
 }
 
 /**

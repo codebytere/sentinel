@@ -46,7 +46,7 @@ fast
     app
       .prepare()
       .then(() => {
-        fast.get('/*', (request, reply) => {
+        fast.get('/', (request, reply) => {
           return app
             .render(request.req, reply.res, '/index', request.query)
             .then(() => {
@@ -55,19 +55,27 @@ fast
         })
 
         fast.get('/signin', (request, reply) => {
-          return app
-            .render(request.req, reply.res, '/signin', request.query)
-            .then(() => {
-              reply.sent = true
-            })
+          if (request.session.authenticated) {
+            reply.redirect('/home')
+          } else {
+            return app
+              .render(request.req, reply.res, '/signin', request.query)
+              .then(() => {
+                reply.sent = true
+              })
+          }
         })
 
         fast.get('/signup', (request, reply) => {
-          return app
-            .render(request.req, reply.res, '/signup', request.query)
-            .then(() => {
-              reply.sent = true
-            })
+          if (request.session.authenticated) {
+            reply.redirect('/home')
+          } else {
+            return app
+              .render(request.req, reply.res, '/signup', request.query)
+              .then(() => {
+                reply.sent = true
+              })
+          }
         })
 
         fast.route({
@@ -118,7 +126,7 @@ fast
             const hash = bcrypt.hashSync(request.body.password, 10)
 
             try {
-              await mRegistrant.Create({
+              const user = await mRegistrant.Create({
                 appName,
                 username,
                 password: hash,
@@ -126,6 +134,10 @@ fast
               })
 
               request.session.authenticated = true
+              request.session.user = {
+                name: user.table.username,
+                id: user.table.id
+              }
               reply.redirect('/home')
             } catch (err) {
               reply
@@ -147,6 +159,12 @@ fast
           }
         })
 
+        fast.get('/checkAuth', async (request, reply) => {
+          if (request.session.authenticated) {
+            reply.send(request.session.user)
+          }
+        })
+
         fast.route({
           method: 'POST',
           url: '/login',
@@ -155,10 +173,14 @@ fast
             const { username, password } = request.body
 
             try {
-              const authed = await mRegistrant.Authenticate(username, password)
-              if (authed) {
+              const user = await mRegistrant.Authenticate(username, password)
+              if (user) {
                 request.session.authenticated = true
-                reply.redirect('/home')
+                request.session.user = {
+                  name: user.table.username,
+                  id: user.table.id
+                }
+                reply.send(request.session.user).redirect('/home')
               } else {
                 reply.code(401).send(`Failed to authorize ${username}`)
               }

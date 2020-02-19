@@ -13,6 +13,10 @@ export interface IAlertProps {
 
 export interface INavBarState {
   open: boolean
+  user?: {
+    name: string
+    id: number
+  }
 }
 
 export interface ISignupProps {

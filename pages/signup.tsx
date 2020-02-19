@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react'
+import { FormEvent, Component } from 'react'
 import Router from 'next/router'
 import {
   Container,
@@ -13,11 +13,13 @@ import { withAlert } from 'react-alert'
 import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
 import { IAlertProps, IRegistrant } from 'src/server/interfaces'
+import { IAuthProviderState, AuthContext } from '../src/contexts/auth'
 
-class SignUpContainer extends React.Component<
+class SignUpContainer extends Component<
   IAlertProps,
   { newRegistrant: IRegistrant }
 > {
+  static contextType = AuthContext
   constructor(props: IAlertProps) {
     super(props)
 
@@ -46,7 +48,7 @@ class SignUpContainer extends React.Component<
     }))
   }
 
-  private handleFormSubmit() {
+  private handleFormSubmit(auth: IAuthProviderState) {
     const alert = this.props.alert
     let reg = this.state.newRegistrant
 
@@ -65,6 +67,7 @@ class SignUpContainer extends React.Component<
       .then(response => {
         if (response.status === 200) {
           alert.show(`Successfully Registered ${reg.username}`)
+          auth.signIn({ name: 'manta', id: 124 })
           Router.push('/home')
         } else {
           alert.show(`Registration Failed For ${reg.username}`)
@@ -75,8 +78,8 @@ class SignUpContainer extends React.Component<
       })
   }
 
-  private handleClearForm(e: FormEvent<HTMLInputElement>) {
-    e.preventDefault()
+  private handleClearForm(event: FormEvent<HTMLInputElement>) {
+    event.preventDefault()
     this.setState({
       newRegistrant: {
         username: '',
@@ -169,9 +172,14 @@ class SignUpContainer extends React.Component<
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear
                     </Button>{' '}
-                    <Button onClick={this.handleFormSubmit} color={'success'}>
-                      Sign Up
-                    </Button>
+                    {(auth: IAuthProviderState) => (
+                      <Button
+                        onClick={() => this.handleFormSubmit(auth)}
+                        color={'success'}
+                      >
+                        Sign Up
+                      </Button>
+                    )}
                   </Form.Field>
                 </Box>
               </Columns.Column>

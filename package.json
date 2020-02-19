@@ -8,7 +8,7 @@
     "format": "prettier --write '**/*.{ts,tsx}'",
     "up": "sequelize-cli db:migrate",
     "lint": "prettier --check '**/*.{ts,tsx}'",
-    "start": "node dist/server.js"
+    "start": "npm run build && node dist/server.js"
   },
   "engines": {
     "nodejs": "^12"

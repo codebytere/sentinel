@@ -1,4 +1,4 @@
-import React, { Component, FormEvent } from 'react'
+import { Component, FormEvent } from 'react'
 import Router from 'next/router'
 import {
   Container,
@@ -10,8 +10,11 @@ import {
 } from 'react-bulma-components'
 import { withAlert } from 'react-alert'
 import { IAlertProps, IRegistrantState } from 'src/server/interfaces'
+import { IAuthProviderState, AuthContext } from '../src/contexts/auth'
 
 class SignInContainer extends Component<IAlertProps, IRegistrantState> {
+  static contextType = AuthContext
+
   constructor(props: IAlertProps) {
     super(props)
 
@@ -39,13 +42,13 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
     }))
   }
 
-  private handleFormSubmit() {
+  private handleFormSubmit(auth: IAuthProviderState) {
     const alert = this.props.alert
-    const userData = this.state.registrant
+    const reg = this.state.registrant
 
     fetch('/login', {
       method: 'POST',
-      body: JSON.stringify(userData),
+      body: JSON.stringify(reg),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
@@ -53,14 +56,18 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully Logged In ${userData.username}`)
-          Router.push('/home')
+          alert.show(`Successfully Logged In ${reg.username}`)
         } else {
-          alert.show(`Login Failed For ${userData.username}`)
+          alert.show(`Login Failed For ${reg.username}`)
         }
+        return response.json()
+      })
+      .then(user => {
+        auth.signIn(user)
+        Router.push('/home')
       })
       .catch(err => {
-        console.log('ERROR: ', err)
+        console.log(err)
       })
   }
 
@@ -105,9 +112,18 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear
                     </Button>{' '}
-                    <Button onClick={this.handleFormSubmit} color={'success'}>
-                      Sign In
-                    </Button>
+                    <AuthContext.Consumer>
+                      {(auth: IAuthProviderState) => (
+                        <Button
+                          onClick={() => {
+                            this.handleFormSubmit(auth)
+                          }}
+                          color={'success'}
+                        >
+                          Sign In
+                        </Button>
+                      )}
+                    </AuthContext.Consumer>
                   </Form.Field>
                 </Box>
               </Columns.Column>
