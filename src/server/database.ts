@@ -1,6 +1,7 @@
 import { Tables } from './models'
 import bcrypt from 'bcrypt'
 import { IRegistrant } from './interfaces'
+import { Op } from 'sequelize'
 
 /**
  * A class that represents a single Sentinel service registrant.
@@ -76,6 +77,25 @@ export class mTestData {
     const t = await Tables.TestData.create({ reportId, ...test })
     return new mTestData(t)
   }
+
+  /**
+   * Returns the granular TestData for a given Report.
+   *
+   * @param reportId The id of the Report corresponding to this TestData.
+   */
+  static async GetFromReport(reportId: number) {
+    const oneWeekAgo = +new Date() - 7 * 24 * 60 * 60 * 1000
+    const testDataSets = await Tables.TestData.findAll({
+      where: {
+        reportId,
+        createdAt: {
+          [Op.gt]: new Date(oneWeekAgo)
+        }
+      }
+    })
+  
+    return testDataSets.map(data => new mTestData(data))
+  } 
 }
 
 /**
@@ -83,8 +103,8 @@ export class mTestData {
  * the specific platform on which the CI was run.
  *
  * There will be multiple reports created for each feedback
- * instance, one per platform & architecture (e.g. Linux x64 and
- * ia32 would constitute two individual reports.)
+ * instance, one per platform & architecture (e.g. linux-x64 and
+ * linux-ia32 would constitute two individual reports.)
  */
 export class mReport {
   constructor(public table: Tables.Report) {}
@@ -105,6 +125,25 @@ export class mReport {
         registrantId: registrant.table.id
       })
     )
+  }
+
+  /**
+   * Returns all the Reports associated with a Registrant.
+   *
+   * @param registrantId The id of the Registrant.
+   */
+  static async FindForRegistrant(registrantId: number) {
+    const oneWeekAgo = +new Date() - 7 * 24 * 60 * 60 * 1000
+    const reports = await Tables.Report.findAll({
+      where: {
+        registrantId,
+        createdAt: {
+          [Op.gt]: new Date(oneWeekAgo)
+        }
+      }
+    })
+
+    return reports.map(report => new mReport(report))
   }
 
   /**

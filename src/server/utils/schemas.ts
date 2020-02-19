@@ -62,8 +62,30 @@ export const loginSchema = {
   }
 }
 
+// Schema for /report/:registrantId
+export const getReportsSchema = {
+  params: {
+    type: 'object',
+    required: ['registrantId'],
+    properties: {
+      registrantId: { type: 'number' }
+    }
+  }
+}
+
+// Schema for /testdata/:reportId
+export const getTestDataSchema = {
+  params: {
+    type: 'object',
+    required: ['registrantId'],
+    properties: {
+      registrantId: { type: 'number' }
+    }
+  }
+}
+
 // Schema for /report/:reportId
-export const reportSchema = {
+export const newReportSchema = {
   params: {
     type: 'object',
     required: ['reportId'],

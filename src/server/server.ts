@@ -1,7 +1,7 @@
 import fastify from 'fastify'
 import fastifySession from 'fastify-session'
 import fastifyCookie from 'fastify-cookie'
-import fetch from 'node-fetch'
+import fetch from 'isomorphic-unfetch'
 import bcrypt from 'bcrypt'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 const Next = require('next')
@@ -11,19 +11,22 @@ import { Tables } from './models'
 import { mRegistrant, mRequest, mReport, mTestData } from './database'
 import {
   triggerSchema,
-  reportSchema,
+  newReportSchema,
   registerSchema,
-  loginSchema
+  loginSchema,
+  getTestDataSchema,
+  getReportsSchema
 } from './utils/schemas'
 import {
   HOST,
   PORT,
   REPORT_WEBHOOK,
   PLATFORMS,
-  SESSION_SECRET
+  SESSION_SECRET,
+  NODE_ENV
 } from './constants'
 
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = NODE_ENV !== 'production'
 const serverOptions: fastify.ServerOptions = { logger: isDev }
 
 const fast: fastify.FastifyInstance<
@@ -65,6 +68,44 @@ fast
             .then(() => {
               reply.sent = true
             })
+        })
+
+        fast.route({
+          method: 'GET',
+          url: '/reports/:registrantId',
+          schema: getReportsSchema,
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              const { registrantId } = request.params
+              const reports = await mReport.FindForRegistrant(registrantId)
+              if (reports) {
+                reply.send(reports)
+              } else {
+                reply.send(`No reports found.`)
+              }
+            } else {
+              reply.code(401)
+            }
+          }
+        })
+
+        fast.route({
+          method: 'GET',
+          url: '/testdata/:reportId',
+          schema: getTestDataSchema,
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              const { reportId } = request.params
+              const testDataSets = await mTestData.GetFromReport(reportId)
+              if (testDataSets) {
+                reply.send(testDataSets)
+              } else {
+                reply.send(`No test data sets found.`)
+              }
+            } else {
+              reply.code(401)
+            }
+          }
         })
 
         fast.route({
@@ -237,7 +278,7 @@ fast
         fast.route({
           method: 'POST',
           url: '/report/:reportId',
-          schema: reportSchema,
+          schema: newReportSchema,
           handler: async (request, reply) => {
             const { reportId } = request.params
             const { sessionId } = request.headers

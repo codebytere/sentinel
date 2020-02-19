@@ -4,7 +4,8 @@ export const {
   HOST = '0.0.0.0',
   REPORT_WEBHOOK = 'http://localhost:3000', // 'https://electron-sentinel.herokuapp.com/'
   DATABASE_URL = 'postgres://postgres@localhost:5432/postgres',
-  SESSION_SECRET = 'myverylongsupersecretthatisloadedfromenv'
+  SESSION_SECRET = 'myverylongsupersecretthatisloadedfromenv',
+  NODE_ENV
 } = process.env
 
 export const SENTINEL_LOGO =
