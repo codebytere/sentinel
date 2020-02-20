@@ -20,6 +20,7 @@ import { IAuthProviderState, AuthContext } from '../src/contexts/auth'
 
 class SignUpContainer extends Component<ISignupProps, ISignupState> {
   static contextType = AuthContext
+
   constructor(props: ISignupProps) {
     super(props)
 
@@ -34,104 +35,6 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleClearForm = this.handleClearForm.bind(this)
     this.handleInput = this.handleInput.bind(this)
-  }
-
-  private handleInput(e: FormEvent<HTMLInputElement>) {
-    const prop = e.currentTarget.name
-    const value = e.currentTarget.value
-
-    this.setState(prevState => ({
-      newRegistrant: {
-        ...prevState.newRegistrant,
-        [prop]: value
-      }
-    }))
-  }
-
-  private handleFormSubmit(auth: IAuthProviderState) {
-    const alert = this.props.alert
-    let reg = this.state.newRegistrant
-
-    const rawTableHTML = document.getElementById('webhook-table')!
-    const rawTableString = rawTableHTML.outerHTML.toString()
-    reg.webhooks = this.convertTableToJSON(rawTableString)
-
-    fetch('/register', {
-      method: 'POST',
-      body: JSON.stringify(reg),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.status === 200) {
-          alert.show(`Successfully Registered ${reg.username}`)
-        } else {
-          alert.show(`Registration Failed For ${reg.username}`)
-        }
-        return response.json()
-      })
-      .then(user => {
-        auth.signIn(user)
-        Router.push('/home')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  private handleClearForm(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault()
-    this.setState({
-      newRegistrant: {
-        username: '',
-        appName: '',
-        password: ''
-      }
-    })
-  }
-
-  private convertTableToJSON(data: any) {
-    const webhookData = {}
-    const { results: json } = converter.parse(data)
-    json[0].forEach(hook => {
-      const [platform, link] = [hook['Platform'], hook['Webhook']]
-      if (link !== '') {
-        webhookData[platform] = link
-      }
-    })
-    return webhookData
-  }
-
-  private renderWebHookTable() {
-    const hooks = PLATFORMS.map(p => {
-      return { platform: p, link: '' }
-    })
-
-    const hookData = hooks.map(w => {
-      const { platform, link } = w
-      return (
-        <tr>
-          <td>{platform}</td>
-          <td contentEditable={true} suppressContentEditableWarning={true}>
-            {link}
-          </td>
-        </tr>
-      )
-    })
-
-    return (
-      <Table bordered className={'is-narrow'} id={'webhook-table'}>
-        <tbody>
-          <tr>
-            <th>Platform</th>
-            <th>Webhook</th>
-          </tr>
-          {hookData}
-        </tbody>
-      </Table>
-    )
   }
 
   public render() {
@@ -190,6 +93,106 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
           </Container>
         </Hero.Body>
       </Hero>
+    )
+  }
+
+  /* PRIVATE METHODS */
+
+  private handleInput(e: FormEvent<HTMLInputElement>) {
+    const prop = e.currentTarget.name
+    const value = e.currentTarget.value
+
+    this.setState(prevState => ({
+      newRegistrant: {
+        ...prevState.newRegistrant,
+        [prop]: value
+      }
+    }))
+  }
+
+  private handleFormSubmit(auth: IAuthProviderState) {
+    const alert = this.props.alert
+    const reg = this.state.newRegistrant
+
+    const rawTableHTML = document.getElementById('webhook-table')!
+    const rawTableString = rawTableHTML.outerHTML.toString()
+    reg.webhooks = this.convertTableToJSON(rawTableString)
+
+    fetch('/register', {
+      method: 'POST',
+      body: JSON.stringify(reg),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.status === 200) {
+          alert.show(`Successfully Registered ${reg.username}`)
+        } else {
+          alert.show(`Registration Failed For ${reg.username}`)
+        }
+        return response.json()
+      })
+      .then(user => {
+        auth.signIn(user)
+        Router.push('/home')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  private handleClearForm(event: FormEvent<HTMLInputElement>) {
+    event.preventDefault()
+    this.setState({
+      newRegistrant: {
+        username: '',
+        appName: '',
+        password: ''
+      }
+    })
+  }
+
+  private convertTableToJSON(data: string) {
+    const webhookData: Record<string, string> = {}
+    const { results: json } = converter.parse(data)
+    json[0].forEach((hook: { Platform: string; Webhook: string }) => {
+      const [platform, link] = [hook.Platform, hook.Webhook]
+      if (link !== '') {
+        webhookData[platform] = link
+      }
+    })
+    return webhookData
+  }
+
+  private renderWebHookTable() {
+    const hooks = PLATFORMS.map(p => {
+      return { platform: p, link: '' }
+    })
+
+    const hookData = hooks.map(w => {
+      const { platform, link } = w
+      return (
+        <tr>
+          <td>{platform}</td>
+          <td contentEditable={true} suppressContentEditableWarning={true}>
+            {link}
+          </td>
+        </tr>
+      )
+    })
+
+    return (
+      <Table bordered className={'is-narrow'} id={'webhook-table'}>
+        <tbody>
+          <tr>
+            <th>Platform</th>
+            <th>Webhook</th>
+          </tr>
+          {hookData}
+        </tbody>
+      </Table>
     )
   }
 }

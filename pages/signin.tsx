@@ -30,57 +30,6 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
     this.handleInput = this.handleInput.bind(this)
   }
 
-  private handleInput(e: FormEvent<HTMLInputElement>) {
-    const prop = e.currentTarget.name
-    const value = e.currentTarget.value
-
-    this.setState(prevState => ({
-      registrant: {
-        ...prevState.registrant,
-        [prop]: value
-      }
-    }))
-  }
-
-  private handleFormSubmit(auth: IAuthProviderState) {
-    const alert = this.props.alert
-    const reg = this.state.registrant
-
-    fetch('/login', {
-      method: 'POST',
-      body: JSON.stringify(reg),
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.status === 200) {
-          alert.show(`Successfully Logged In ${reg.username}`)
-        } else {
-          alert.show(`Login Failed For ${reg.username}`)
-        }
-        return response.json()
-      })
-      .then(user => {
-        auth.signIn(user)
-        Router.push('/home')
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  private handleClearForm(e: FormEvent<HTMLInputElement>) {
-    e.preventDefault()
-    this.setState({
-      registrant: {
-        username: '',
-        password: ''
-      }
-    })
-  }
-
   public render() {
     return (
       <Hero color={'link'} size={'fullheight'}>
@@ -132,6 +81,59 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
         </Hero.Body>
       </Hero>
     )
+  }
+
+  /* PRIVATE METHODS */
+
+  private handleInput(e: FormEvent<HTMLInputElement>) {
+    const prop = e.currentTarget.name
+    const value = e.currentTarget.value
+
+    this.setState(prevState => ({
+      registrant: {
+        ...prevState.registrant,
+        [prop]: value
+      }
+    }))
+  }
+
+  private handleFormSubmit(auth: IAuthProviderState) {
+    const alert = this.props.alert
+    const reg = this.state.registrant
+
+    fetch('/login', {
+      method: 'POST',
+      body: JSON.stringify(reg),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.status === 200) {
+          alert.show(`Successfully Logged In ${reg.username}`)
+        } else {
+          alert.show(`Login Failed For ${reg.username}`)
+        }
+        return response.json()
+      })
+      .then(user => {
+        auth.signIn(user)
+        Router.push('/home')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  private handleClearForm(e: FormEvent<HTMLInputElement>) {
+    e.preventDefault()
+    this.setState({
+      registrant: {
+        username: '',
+        password: ''
+      }
+    })
   }
 }
 

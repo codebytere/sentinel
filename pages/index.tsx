@@ -6,7 +6,7 @@ class Home extends Component<{}, {}> {
     super(props)
   }
 
-  render() {
+  public render() {
     return (
       <Hero color={'info'} size={'fullheight'}>
         <Hero.Body>

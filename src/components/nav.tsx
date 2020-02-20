@@ -18,30 +18,6 @@ class NavBar extends Component<IAlertProps, INavBarState> {
     this.handleLogout = this.handleLogout.bind(this)
   }
 
-  private handleLogout(auth: IAuthProviderState) {
-    const alert = this.props.alert
-
-    fetch('/logout', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(response => {
-        if (response.status === 200) {
-          alert.show('Successfully logged out')
-          auth.signOut()
-          Router.push('/')
-        } else {
-          alert.show('Logout failed')
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
   public render() {
     const open = this.state.open ? 'is-active' : ''
     const toggleMenu = () => {
@@ -93,6 +69,32 @@ class NavBar extends Component<IAlertProps, INavBarState> {
         </Navbar.Menu>
       </Navbar>
     )
+  }
+
+  /* PRIVATE METHODS */
+
+  private handleLogout(auth: IAuthProviderState) {
+    const alert = this.props.alert
+
+    fetch('/logout', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => {
+        if (response.status === 200) {
+          alert.show('Successfully logged out')
+          auth.signOut()
+          Router.push('/')
+        } else {
+          alert.show('Logout failed')
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 

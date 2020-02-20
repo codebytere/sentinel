@@ -16,42 +16,7 @@ class Home extends Component<{}, HomeState> {
     this.renderLoading = this.renderLoading.bind(this)
   }
 
-  componentDidMount() {
-    // TODO(codebytere): this feels very bad. can it be improved?
-    fetch('/checkAuth')
-      .then(response => response.json())
-      .then(user => {
-        fetch(`/reports/${user.id}`)
-          .then(response => response.json())
-          .then(reports => {
-            reports = reports.map(r => r.table)
-            this.setState({ loading: false, reports })
-          })
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  private renderReports = () => {
-    const reports = this.state.reports
-    return <ReportList reports={reports} changeReport={this.selectNewReport} />
-  }
-
-  private renderLoading = () => {
-    return 'LOADING'
-  }
-
-  private selectNewReport = (id: string) => {
-    if (id) {
-      this.setState({
-        ...this.state,
-        selectedReport: id
-      })
-    }
-  }
-
-  render() {
+  public render() {
     return (
       <Hero color={'primary'} size={'fullheight'}>
         <Hero.Body>
@@ -69,6 +34,43 @@ class Home extends Component<{}, HomeState> {
         </Hero.Body>
       </Hero>
     )
+  }
+
+  public componentDidMount() {
+    // TODO(codebytere): this feels very bad. can it be improved?
+    fetch('/checkAuth')
+      .then(response => response.json())
+      .then(user => {
+        fetch(`/reports/${user.id}`)
+          .then(response => response.json())
+          .then(reports => {
+            reports = reports.map(r => r.table)
+            this.setState({ loading: false, reports })
+          })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
+  /* PRIVATE METHODS */
+
+  private renderReports = () => {
+    const reports = this.state.reports
+    return <ReportList reports={reports} changeReport={this.selectNewReport} />
+  }
+
+  private renderLoading = () => {
+    return 'LOADING'
+  }
+
+  private selectNewReport = (id: string) => {
+    if (id) {
+      this.setState({
+        ...this.state,
+        selectedReport: id
+      })
+    }
   }
 }
 

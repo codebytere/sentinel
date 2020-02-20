@@ -36,7 +36,7 @@ class ReportList extends Component<
     this.setState({ reports: this.props.reports })
   }
 
-  /* PRIVATE INSTANCE METHODS */
+  /* PRIVATE METHODS */
 
   private filterReports(e: FormEvent<HTMLInputElement>) {
     let updated: IReportInfo[] = []

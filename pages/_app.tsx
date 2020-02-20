@@ -14,7 +14,7 @@ const options = {
 }
 
 export default class Sentinel extends App {
-  render() {
+  public render() {
     const { Component, pageProps } = this.props
     return (
       <Provider template={AlertTemplate} {...options}>
