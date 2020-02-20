@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Hero, Columns, Box, Container } from 'react-bulma-components'
 import { AuthContext } from '../src/contexts/auth'
 import ReportList from '../src/components/report-list'
+import Report from '../src/components/report'
 import { HomeState } from '../src/server/interfaces'
 
 class Home extends Component<{}, HomeState> {
@@ -13,6 +14,8 @@ class Home extends Component<{}, HomeState> {
     this.state = { loading: true }
 
     this.renderReports = this.renderReports.bind(this)
+    this.renderReport = this.renderReport.bind(this)
+    this.selectNewReport = this.selectNewReport.bind(this)
     this.renderLoading = this.renderLoading.bind(this)
   }
 
@@ -28,6 +31,7 @@ class Home extends Component<{}, HomeState> {
                     ? this.renderLoading()
                     : this.renderReports()}
                 </Box>
+                {this.state.selectedReport ? this.renderReport() : ''}
               </Columns.Column>
             </Columns>
           </Container>
@@ -37,9 +41,8 @@ class Home extends Component<{}, HomeState> {
   }
 
   public componentDidMount() {
-    // TODO(codebytere): this feels very bad. can it be improved?
-    fetch('/checkAuth')
-      .then(response => response.json())
+    this.context
+      .fetchAuthedUser()
       .then(user => {
         fetch(`/reports/${user.id}`)
           .then(response => response.json())
@@ -55,21 +58,25 @@ class Home extends Component<{}, HomeState> {
 
   /* PRIVATE METHODS */
 
-  private renderReports = () => {
-    const reports = this.state.reports
-    return <ReportList reports={reports} changeReport={this.selectNewReport} />
-  }
-
-  private renderLoading = () => {
+  private renderLoading() {
     return 'LOADING'
   }
 
-  private selectNewReport = (id: string) => {
+  private renderReports() {
+    const { reports } = this.state
+    return <ReportList reports={reports} changeReport={this.selectNewReport} />
+  }
+
+  private renderReport() {
+    const { selectedReport } = this.state
+    if (selectedReport) {
+      return <Report id={selectedReport} />
+    }
+  }
+
+  private selectNewReport(id: string) {
     if (id) {
-      this.setState({
-        ...this.state,
-        selectedReport: id
-      })
+      this.setState({ selectedReport: id })
     }
   }
 }

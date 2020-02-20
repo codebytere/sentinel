@@ -42,7 +42,7 @@ export namespace api {
    * The set of CI run result data.
    */
   export interface TestData {
-    name: string
+    id: number
     status: Status
     arch: Arch
     os: OS

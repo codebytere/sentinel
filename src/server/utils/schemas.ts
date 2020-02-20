@@ -77,9 +77,9 @@ export const getReportsSchema = {
 export const getTestDataSchema = {
   params: {
     type: 'object',
-    required: ['registrantId'],
+    required: ['reportId'],
     properties: {
-      registrantId: { type: 'number' }
+      reportId: { type: 'number' }
     }
   }
 }

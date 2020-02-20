@@ -5,11 +5,13 @@ export interface IAuthProviderState {
   user?: SentinelUser
   signIn: (user: SentinelUser) => void
   signOut: () => void
+  fetchAuthedUser: () => void
 }
 
 export const AuthContext = createContext({
   signIn: (user: SentinelUser) => {},
-  signOut: () => {}
+  signOut: () => {},
+  fetchAuthedUser: () => {}
 })
 
 export default class AuthProvider extends Component<{}, IAuthProviderState> {
@@ -18,13 +20,13 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
 
     this.state = {
       signIn: this.signIn,
-      signOut: this.signOut
+      signOut: this.signOut,
+      fetchAuthedUser: this.fetchAuthedUser
     }
   }
 
   componentDidMount() {
-    fetch('/checkAuth')
-      .then(response => response.json())
+    this.fetchAuthedUser()
       .then(user => {
         this.setState({ user })
       })
@@ -39,6 +41,10 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
         {this.props.children}
       </AuthContext.Provider>
     )
+  }
+
+  private fetchAuthedUser = () => {
+    return fetch('/checkAuth').then(response => response.json())
   }
 
   private signIn = (user: SentinelUser) => {

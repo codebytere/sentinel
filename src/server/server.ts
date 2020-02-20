@@ -83,15 +83,10 @@ fast
           url: '/reports/:registrantId',
           schema: getReportsSchema,
           handler: async (request, reply) => {
-            console.log('HELLO')
             if (request.session.authenticated) {
               const { registrantId } = request.params
               const reports = await mReport.FindForRegistrant(registrantId)
-              if (reports) {
-                reply.send(reports)
-              } else {
-                reply.send(`No reports found.`)
-              }
+              reply.send(reports ? reports : 'No reports found.')
             } else {
               reply.code(401)
             }
@@ -106,11 +101,9 @@ fast
             if (request.session.authenticated) {
               const { reportId } = request.params
               const testDataSets = await mTestData.GetFromReport(reportId)
-              if (testDataSets) {
-                reply.send(testDataSets)
-              } else {
-                reply.send(`No test data sets found.`)
-              }
+              reply.send(
+                testDataSets ? testDataSets : 'No test data sets found.'
+              )
             } else {
               reply.code(401)
             }

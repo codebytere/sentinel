@@ -3,10 +3,11 @@ import { Component, FormEvent } from 'react'
 import { Panel } from 'react-bulma-components'
 import { IReportListProps, IReportInfo } from '../server/interfaces'
 
-class ReportList extends Component<
-  IReportListProps,
-  { reports: IReportInfo[] }
-> {
+interface IReportListState {
+  reports: IReportInfo[]
+}
+
+class ReportList extends Component<IReportListProps, IReportListState> {
   constructor(props: IReportListProps) {
     super(props)
 
@@ -55,7 +56,6 @@ class ReportList extends Component<
   }
 
   private renderReport(r: IReportInfo) {
-    console.log(r)
     return (
       <Panel.Block>
         <a id={r.id.toString()} onClick={this.performChange}>
