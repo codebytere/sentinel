@@ -67,11 +67,14 @@ class SignUpContainer extends Component<
       .then(response => {
         if (response.status === 200) {
           alert.show(`Successfully Registered ${reg.username}`)
-          auth.signIn({ name: 'manta', id: 124 })
-          Router.push('/home')
         } else {
           alert.show(`Registration Failed For ${reg.username}`)
         }
+        return response.json()
+      })
+      .then(user => {
+        auth.signIn(user)
+        Router.push('/home')
       })
       .catch(err => {
         console.log(err)

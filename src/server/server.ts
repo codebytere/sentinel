@@ -46,7 +46,7 @@ fast
     app
       .prepare()
       .then(() => {
-        fast.get('/', (request, reply) => {
+        fast.get('/*', (request, reply) => {
           return app
             .render(request.req, reply.res, '/index', request.query)
             .then(() => {
@@ -83,6 +83,7 @@ fast
           url: '/reports/:registrantId',
           schema: getReportsSchema,
           handler: async (request, reply) => {
+            console.log('HELLO')
             if (request.session.authenticated) {
               const { registrantId } = request.params
               const reports = await mReport.FindForRegistrant(registrantId)

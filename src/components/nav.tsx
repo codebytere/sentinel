@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { withAlert } from 'react-alert'
 import { SENTINEL_LOGO } from '../server/constants'
 import { IAlertProps, INavBarState } from 'src/server/interfaces'
-// import dynamic from 'next/dynamic'
 
 import { AuthContext, IAuthProviderState } from '../contexts/auth'
 
@@ -17,11 +16,6 @@ class NavBar extends Component<IAlertProps, INavBarState> {
     this.state = { open: false }
 
     this.handleLogout = this.handleLogout.bind(this)
-  }
-
-  componentDidMount() {
-    // TODO(codebytere): this does not seem optimal.
-    this.context.checkSignIn()
   }
 
   private handleLogout(auth: IAuthProviderState) {
@@ -79,7 +73,9 @@ class NavBar extends Component<IAlertProps, INavBarState> {
                   <Link href="/home">
                     <a className="navbar-item">Home</a>
                   </Link>
-                  <p className="navbar-item">Logged in as:&nbsp;<b>{auth.user.name}</b></p>
+                  <p className="navbar-item">
+                    Logged in as:&nbsp;<b>{auth.user.name}</b>
+                  </p>
                   <Navbar.Container position="end">
                     <a
                       className="navbar-item"

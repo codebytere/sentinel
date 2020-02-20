@@ -25,6 +25,17 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
     }
   }
 
+  componentDidMount() {
+    fetch('/checkAuth')
+      .then(response => response.json())
+      .then(user => {
+        this.setState({ user })
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
+
   public render() {
     return (
       <AuthContext.Provider value={this.state}>
