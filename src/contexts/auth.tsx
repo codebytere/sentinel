@@ -4,14 +4,12 @@ type SentinelUser = { name: string; id: number }
 export interface IAuthProviderState {
   user?: SentinelUser
   signIn: (user: SentinelUser) => void
-  checkSignIn: () => void
-  onSignOut: () => void
+  signOut: () => void
 }
 
 export const AuthContext = createContext({
   signIn: (user: SentinelUser) => {},
-  checkSignIn: () => {},
-  onSignOut: () => {}
+  signOut: () => {}
 })
 
 export default class AuthProvider extends Component<{}, IAuthProviderState> {
@@ -20,8 +18,7 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
 
     this.state = {
       signIn: this.signIn,
-      checkSignIn: this.checkSignIn,
-      onSignOut: this.onSignOut
+      signOut: this.signOut
     }
   }
 
@@ -48,18 +45,7 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
     this.setState({ user })
   }
 
-  private checkSignIn = () => {
-    fetch('/checkAuth')
-      .then(response => response.json())
-      .then(user => {
-        this.setState({ user })
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }
-
-  private onSignOut = () => {
+  private signOut = () => {
     this.setState({ user: undefined })
   }
 }

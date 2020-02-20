@@ -1,22 +1,7 @@
 import { Component, FormEvent } from 'react'
 
 import { Panel } from 'react-bulma-components'
-
-interface IReportInfo {
-  id: number
-  registrantId: number
-  requestId: number
-  name: string
-  reportsExpected: number
-  sessionToken: string
-  createdAt: Date
-  updatedAt: Date
-}
-
-interface IReportListProps {
-  reports: IReportInfo[];
-  changeReport: (id: string) => void;
-}
+import { IReportListProps, IReportInfo } from '../server/interfaces'
 
 class ReportList extends Component<
   IReportListProps,

@@ -31,7 +31,7 @@ class NavBar extends Component<IAlertProps, INavBarState> {
       .then(response => {
         if (response.status === 200) {
           alert.show('Successfully logged out')
-          auth.onSignOut()
+          auth.signOut()
           Router.push('/')
         } else {
           alert.show('Logout failed')

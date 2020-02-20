@@ -12,15 +12,15 @@ import {
 import { withAlert } from 'react-alert'
 import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
-import { IAlertProps, IRegistrant } from 'src/server/interfaces'
+import {
+  IAlertProps as ISignupProps,
+  ISignupState
+} from 'src/server/interfaces'
 import { IAuthProviderState, AuthContext } from '../src/contexts/auth'
 
-class SignUpContainer extends Component<
-  IAlertProps,
-  { newRegistrant: IRegistrant }
-> {
+class SignUpContainer extends Component<ISignupProps, ISignupState> {
   static contextType = AuthContext
-  constructor(props: IAlertProps) {
+  constructor(props: ISignupProps) {
     super(props)
 
     this.state = {

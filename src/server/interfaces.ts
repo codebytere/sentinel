@@ -19,7 +19,7 @@ export interface INavBarState {
   }
 }
 
-export interface ISignupProps {
+export interface ISignupState {
   newRegistrant: IRegistrant
 }
 
@@ -28,4 +28,26 @@ export interface IRegistrantState {
     username: string
     password: string
   }
+}
+
+export interface IReportInfo {
+  id: number
+  registrantId: number
+  requestId: number
+  name: string
+  reportsExpected: number
+  sessionToken: string
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface IReportListProps {
+  reports: IReportInfo[]
+  changeReport: (id: string) => void
+}
+
+export interface HomeState {
+  reports?: any
+  loading: boolean
+  selectedReport?: string
 }
