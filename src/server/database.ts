@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt'
 import { IRegistrant } from './interfaces'
 import { Op } from 'sequelize'
 
+const ONE_WEEK_AGO = +new Date() - 7 * 24 * 60 * 60 * 1000
+
 /**
  * A class that represents a single Sentinel service registrant.
  */
@@ -87,12 +89,11 @@ export class mTestData {
    * @param reportId The id of the Report corresponding to this TestData.
    */
   static async GetFromReport(reportId: number) {
-    const oneWeekAgo = +new Date() - 7 * 24 * 60 * 60 * 1000
     const testDataSets = await Tables.TestData.findAll({
       where: {
         reportId,
         createdAt: {
-          [Op.gt]: new Date(oneWeekAgo)
+          [Op.gt]: new Date(ONE_WEEK_AGO)
         }
       }
     })
@@ -105,9 +106,7 @@ export class mTestData {
  * A class representing CI results and metadata for
  * the specific platform on which the CI was run.
  *
- * There will be multiple reports created for each feedback
- * instance, one per platform & architecture (e.g. linux-x64 and
- * linux-ia32 would constitute two individual reports.)
+ * There will one report created for each Registrant per Request.
  */
 export class mReport {
   constructor(public table: Tables.Report) {}
@@ -131,17 +130,32 @@ export class mReport {
   }
 
   /**
+   * @returns An array of all Reports associated with this Request.
+   */
+  static async GetTestData() {
+    // @ts-ignore (the sequelize typings are incomplete)
+    const testdata = Tables.Report.getTestData({
+      where: {
+        createdAt: {
+          [Op.gt]: new Date(ONE_WEEK_AGO)
+        }
+      }
+    })
+
+    return testdata.map(t => new mTestData(t))
+  }
+
+  /**
    * Returns all the Reports associated with a Registrant.
    *
    * @param registrantId The id of the Registrant.
    */
   static async FindForRegistrant(registrantId: number) {
-    const oneWeekAgo = +new Date() - 7 * 24 * 60 * 60 * 1000
     const reports = await Tables.Report.findAll({
       where: {
         registrantId,
         createdAt: {
-          [Op.gt]: new Date(oneWeekAgo)
+          [Op.gt]: new Date(ONE_WEEK_AGO)
         }
       }
     })
@@ -173,6 +187,37 @@ export class mReport {
  */
 export class mRequest {
   constructor(public table: Tables.Request) {}
+
+  /**
+   * @returns An array of all Requests created in the last week.
+   */
+  static async FindAll() {
+    const requests = await Tables.Request.findAll({
+      where: {
+        createdAt: {
+          [Op.gt]: new Date(ONE_WEEK_AGO)
+        }
+      }
+    })
+
+    return requests.map(r => new mRequest(r))
+  }
+
+  /**
+   * @returns An array of all Reports associated with this Request.
+   */
+  static async GetReports() {
+    // @ts-ignore (the sequelize typings are incomplete)
+    const reports = Tables.Request.getReports({
+      where: {
+        createdAt: {
+          [Op.gt]: new Date(ONE_WEEK_AGO)
+        }
+      }
+    })
+
+    return reports.map(r => new mReport(r))
+  }
 
   /**
    * Find or create a new Request instance if none exists yet, using the

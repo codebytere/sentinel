@@ -76,6 +76,7 @@ export namespace Tables {
     requestId!: number
     reportsExpected: number
     sessionToken: string
+    name: string
   }
 
   Report.init(
@@ -91,6 +92,9 @@ export namespace Tables {
       tableName: 'report'
     }
   )
+
+  Request.hasMany(Report)
+  Report.belongsTo(Request, { foreignKey: 'requestId' })
 
   // Represented as mTestData
   export class TestData extends Model {
@@ -135,6 +139,9 @@ export namespace Tables {
       tableName: 'testdata'
     }
   )
+
+  Report.hasMany(TestData)
+  TestData.belongsTo(Report, { foreignKey: 'reportId' })
 
   export const random = () => sequelize.random()
   export async function sync() {
