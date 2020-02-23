@@ -274,7 +274,7 @@ fast
                 }
 
                 // Create report only for registrants wishing to test this platform.
-                const rp = await mReport.NewFromRequest(req, reg)
+                const rp = await mReport.FindOrCreateFromRequest(req, reg)
                 const reportCallback = `${REPORT_WEBHOOK}/report/${rp.table.id}`
 
                 const reportRequest: api.ReportRequest = {

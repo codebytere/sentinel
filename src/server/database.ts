@@ -120,13 +120,26 @@ export class mReport {
    *
    * @returns A new mReport instance.
    */
-  static async NewFromRequest(request: mRequest, registrant: mRegistrant) {
-    return new mReport(
-      await Tables.Report.create({
+  static async FindOrCreateFromRequest(
+    request: mRequest,
+    registrant: mRegistrant
+  ) {
+    const report = await Tables.Report.findOne({
+      where: {
         requestId: request.table.id,
         registrantId: registrant.table.id
-      })
-    )
+      }
+    })
+    if (report) {
+      return new mReport(report)
+    } else {
+      return new mReport(
+        await Tables.Report.create({
+          requestId: request.table.id,
+          registrantId: registrant.table.id
+        })
+      )
+    }
   }
 
   /**
@@ -172,11 +185,11 @@ export class mReport {
    * @returns An mReport corresponding to the passed ID.
    */
   static async FindById(id: number) {
-    const record = await Tables.Report.findOne({ where: { id } })
-    if (!record) {
+    const report = await Tables.Report.findOne({ where: { id } })
+    if (!report) {
       throw new Error(`Report id:${id} not found`)
     }
-    return new mReport(record)
+    return new mReport(report)
   }
 }
 
@@ -238,11 +251,11 @@ export class mRequest {
     commitHash: string
     installLink: Record<string, string>
   }) {
-    const record = await Tables.Request.findOne({
+    const request = await Tables.Request.findOne({
       where: { commitHash: opts.commitHash }
     })
-    if (record) {
-      return new mRequest(record)
+    if (request) {
+      return new mRequest(request)
     } else {
       return new mRequest(
         await Tables.Request.create({
