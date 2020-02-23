@@ -62,6 +62,14 @@ fast
             })
         })
 
+        fast.get('/request/*', (request, reply) => {
+          return app
+            .render(request.req, reply.res, '/reports', request.query)
+            .then(() => {
+              reply.sent = true
+            })
+        })
+
         fast.get('/signin', (request, reply) => {
           if (request.session.authenticated) {
             reply.redirect('/home')
@@ -117,25 +125,14 @@ fast
           url: '/testdata/:reportId',
           schema: getTestDataSchema,
           handler: async (request, reply) => {
-            if (request.session.authenticated) {
-              const { reportId } = request.params
-              const testDataSets = await mTestData.GetFromReport(reportId)
-              reply.send(
-                testDataSets ? testDataSets : 'No test data sets found.'
-              )
-            } else {
-              reply.code(401)
-            }
+            const { reportId } = request.params
+            const testDataSets = await mTestData.GetFromReport(reportId)
+            reply.send(testDataSets)
           }
         })
 
-        fast.get('/requests/*', async (request, reply) => {
-          // const { requestId } = request.params
-          console.log(request.params)
-          let response
-
-          response = await mRequest.FindAll()
-
+        fast.get('/requests', async (request, reply) => {
+          const response = await mRequest.FindAll()
           reply.send(response)
         })
 

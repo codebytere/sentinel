@@ -1,34 +1,59 @@
 import { Component } from 'react'
 
 import { Table, Hero, Container, Columns } from 'react-bulma-components'
-import { IReportListProps } from '../src/server/interfaces'
 import { api } from '../src/server/api'
 
-interface INightliesState {
-  loading: boolean
-  // TODO: fix types
-  requests?: any //  mRequest[]
+interface IRequest {
+  table: api.Request
+  reports: IReport[]
 }
 
-class Nightlies extends Component<{}, INightliesState> {
-  constructor(props: IReportListProps) {
-    super(props)
+interface IReport {
+  table: api.Report
+  testData?: { table: api.TestData[] }
+}
 
-    this.state = { loading: true }
+const asyncForEach = async (array: any[], callback: Function) => {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array)
+  }
+}
+
+class Nightlies extends Component<{ requests: IRequest[] }, {}> {
+  static async getInitialProps({ req }) {
+    const result: IRequest[] = []
+
+    //TODO(codebytere): make this less nasty?
+    const baseURL =
+      req.headers.host === 'localhost:3000'
+        ? 'http://localhost:3000'
+        : `https://${req.headers.host}`
+
+    const rawRequests = await fetch(`${baseURL}/requests`)
+    const requests = await rawRequests.json()
+
+    await asyncForEach(requests, async (req: IRequest) => {
+      const raw = await fetch(`${baseURL}/reports/${req.table.id}`)
+      const reports = await raw.json()
+      result.push({ table: req.table, reports })
+    })
+
+    return { requests: result }
+  }
+
+  constructor(props: any) {
+    super(props)
 
     this.renderRequests = this.renderRequests.bind(this)
   }
 
   public render() {
-    console.log(this.state.loading)
     return (
       <Hero color={'info'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns className={'is-centered'}>
-              <Columns.Column>
-                {this.state.loading ? 'LOADING' : this.renderRequests()}
-              </Columns.Column>
+              <Columns.Column>{this.renderRequests()}</Columns.Column>
             </Columns>
           </Container>
         </Hero.Body>
@@ -36,39 +61,15 @@ class Nightlies extends Component<{}, INightliesState> {
     )
   }
 
-  public componentDidMount() {
-    const asyncForEach = async (array: any[], callback: Function) => {
-      for (let index = 0; index < array.length; index++) {
-        await callback(array[index], index, array)
-      }
-    }
-
-    // TODO: fix types
-    let result: any[] = []
-    fetch('/requests/all')
-      .then(response => response.json())
-      .then(async requests => {
-        await asyncForEach(requests, async req => {
-          const raw = await fetch(`/reports/${req.table.id}`)
-          const reports = await raw.json()
-          result.push({ ...req.table, reports })
-        })
-      })
-      .then(() => {
-        this.setState({ loading: false, requests: result })
-      })
-  }
-
   /* PRIVATE METHODS */
 
   private renderRequests() {
-    // TODO: fix types
-    const requestData = this.state.requests!.map(r => {
-      const { versionQualifier, id, reports } = r
+    const requestData = this.props.requests.map(r => {
+      const { versionQualifier, id } = r.table
       const releaseLink = `https://github.com/electron/nightlies/releases/tag/v${versionQualifier}`
 
-      const numReports = reports.length
-      const numPassed = reports.filter(
+      const numReports = r.reports.length
+      const numPassed = r.reports.filter(
         rep => rep.table.status === api.Status.PASSED
       ).length
 
@@ -80,13 +81,18 @@ class Nightlies extends Component<{}, INightliesState> {
             <a href={releaseLink}>GitHub Release</a>
           </td>
           <td>
-            <a href={`/request/${id}`}>See Reports</a>
+            {numReports > 0 ? (
+              <a href={`/request/${id}`}>See Reports</a>
+            ) : (
+              'No Reports'
+            )}
           </td>
         </tr>
       )
     })
 
     return (
+      // TODO(codebytere): style this
       <Table bordered id={'nightlies-table'}>
         <tbody>
           <tr>

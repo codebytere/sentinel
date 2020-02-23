@@ -1,21 +1,14 @@
 export namespace api {
   export interface ReportRequest {
-    // Location of installable Electron build
     platformInstallData: {
       platform: string
       link: string
     }
-    // Representation of the current Electron version.
     versionQualifier: string
-    // Unique per-commit url that an app will post back CI status information to.
     reportCallback: string
-    // Commit hash corresponding to a PR's HEAD sha.
     commitHash: string
   }
 
-  /**
-   * Information about the agent running CI.
-   */
   export interface TestAgent {
     arch: string
     platform: NodeJS.Platform
@@ -32,17 +25,35 @@ export namespace api {
   }
 
   export interface ReportRequestResponse {
-    // Must be included in future requests for this CI run.
     sessionToken: string
-    // Whether or not Electron should expect to receive reports from an app
     reportsExpected: number
-    // The name of this report
     name: string
   }
 
-  /**
-   * The set of CI run result data.
-   */
+  export interface Request {
+    id: number
+    platformInstallData: {
+      platform: string
+      link: string
+    }
+    versionQualifier: string
+    commitHash: string
+    createdAt: Date
+    updatedAt: Date
+  }
+
+  export interface Report {
+    id: number
+    registrantId: number
+    name: string
+    status: Status
+    reportsExpected: number
+    sessionToken: string
+    createdAt: Date
+    updatedAt: Date
+    requestId: number
+  }
+
   export interface TestData {
     id: number
     status: Status
@@ -62,9 +73,6 @@ export namespace api {
     testAgent: TestAgent
   }
 
-  /**
-   * The platform architecture type.
-   */
   export enum Arch {
     ARM = 'arm',
     ARM64 = 'arm64',
@@ -73,18 +81,12 @@ export namespace api {
     AMD64 = 'amd64'
   }
 
-  /**
-   * The platform operating system.
-   */
   export enum OS {
     MACOS = 'macos',
     WINDOWS = 'windows',
     LINUX = 'linux'
   }
 
-  /**
-   * The test run status.
-   */
   export enum Status {
     NOT_STARTED = 'ready',
     PASSED = 'passed',

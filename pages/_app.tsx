@@ -14,6 +14,14 @@ const options = {
 }
 
 export default class Sentinel extends App {
+  static async getInitialProps({ Component, ctx }) {
+    let pageProps = {}
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx)
+    }
+    return { pageProps }
+  }
+
   public render() {
     const { Component, pageProps } = this.props
     return (
