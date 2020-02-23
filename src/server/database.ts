@@ -236,6 +236,7 @@ export class mRequest {
   static async FindOrCreate(opts: {
     versionQualifier: string
     commitHash: string
+    installLink: Record<string, string>
   }) {
     const record = await Tables.Request.findOne({
       where: { commitHash: opts.commitHash }
@@ -247,7 +248,7 @@ export class mRequest {
         await Tables.Request.create({
           versionQualifier: opts.versionQualifier,
           commitHash: opts.commitHash,
-          platformInstallData: {}
+          platformInstallData: opts.installLink
         })
       )
     }

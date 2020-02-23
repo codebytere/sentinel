@@ -93,6 +93,7 @@ export namespace api {
     FAILED = 'failed',
     ABORTED = 'aborted',
     PENDING = 'pending',
-    SKIPPED = 'skipped'
+    SKIPPED = 'skipped',
+    NOT_RUN = 'not_run'
   }
 }

@@ -240,16 +240,18 @@ fast
             } = request.body
 
             try {
+              const { platform, link } = platformInstallData
+
               const req = await mRequest.FindOrCreate({
+                installLink: { [link]: platform },
                 commitHash,
                 versionQualifier
               })
 
-              // Update platform install data with the platform/link that was passed.
-              const { platform, link } = platformInstallData
-              req.table.platformInstallData[platform] = link
+              // @ts-ignore - nested json is not saved automatically and 
+              // the types wrongly assume that only the high-level key is valid.
+              await req.table.set(`platformInstallData.${platform}`, link)
               await req.table.save()
-              console.log('platformInstallData IS: ', req.table)
 
               // Fetch all current service registrants
               const registrants = await mRegistrant.FindAll()
@@ -309,6 +311,8 @@ fast
                 // Only set a test run status if reports are expected.
                 if (res.reportsExpected > 0) {
                   rp.table.status = api.Status.PENDING
+                } else {
+                  rp.table.status = api.Status.NOT_RUN
                 }
 
                 await rp.table.save()
