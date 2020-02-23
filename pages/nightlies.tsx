@@ -41,7 +41,7 @@ class Nightlies extends Component<{ requests: IRequest[] }, {}> {
     return { requests: result }
   }
 
-  constructor(props: any) {
+  constructor(props: { requests: IRequest[] }) {
     super(props)
 
     this.renderRequests = this.renderRequests.bind(this)

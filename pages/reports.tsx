@@ -37,7 +37,7 @@ class Reports extends Component<{ reports: IReport[] }, {}> {
     return { reports: result }
   }
 
-  constructor(props: any) {
+  constructor(props: { reports: IReport[] }) {
     super(props)
 
     this.renderReports = this.renderReports.bind(this)
