@@ -242,9 +242,14 @@ fast
               commitHash
             } = request.body
 
-            try {
-              const { platform, link } = platformInstallData
+            const { platform, link } = platformInstallData
 
+            if (!PLATFORMS.includes(platform)) {
+              fast.log.error(`Invalid platform: ${platform}`)
+              reply.code(500).send({ error: `Invalid platform: ${platform}` })
+            }
+
+            try {
               const req = await mRequest.FindOrCreate({
                 installLink: { [link]: platform },
                 commitHash,
@@ -261,11 +266,6 @@ fast
 
               // Fan out platform webhooks to each registrant.
               for (let reg of registrants) {
-                if (!PLATFORMS.includes(platform)) {
-                  fast.log.error(`Invalid platform: ${platform}`)
-                }
-
-                // Check that the registrant has registered for this platform-specific webhook.
                 const platformWebhook = reg.table.webhooks[platform]
                 if (!platformWebhook) {
                   fast.log.info(
@@ -285,15 +285,27 @@ fast
                   commitHash
                 }
 
-                const resp = await fetch(platformWebhook, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify(reportRequest)
-                })
+                let regResponse
+                try {
+                  regResponse = await fetch(platformWebhook, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reportRequest)
+                  })
+                } catch (err) {
+                  fast.log.error(
+                    `Registrant ${reg.table.appName} failed to receive webhook: `,
+                    err
+                  )
 
-                const res: api.ReportRequestResponse = await resp.json()
+                  // Remove corrupt report from the database.
+                  await rp.table.destroy()
+                  continue
+                }
+
+                const res: api.ReportRequestResponse = await regResponse.json()
 
                 // Ensure that requisite data has been sent back by the registrant.
                 if (res.reportsExpected === undefined) {
@@ -325,6 +337,9 @@ fast
               fast.log.info(
                 `Sent updated webhooks for ${platform} on ${versionQualifier}`
               )
+              reply.send({
+                success: `Webhooks sent to registrants on ${platform}`
+              })
             } catch (err) {
               reply.code(500).send(err)
             }
@@ -357,7 +372,7 @@ fast
               await report.table.save()
             }
 
-            fast.log.info('TestData successfully created and saved')
+            reply.send({ success: 'TestData created and saved' })
           }
         })
 
