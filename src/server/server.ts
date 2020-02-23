@@ -15,7 +15,8 @@ import {
   registerSchema,
   loginSchema,
   getTestDataSchema,
-  getReportsSchema
+  getReportsSchema,
+  getReportSchema
 } from './utils/schemas'
 import {
   HOST,
@@ -112,6 +113,7 @@ fast
         fast.route({
           method: 'GET',
           url: '/reports/:requestId',
+          schema: getReportSchema,
           handler: async (request, reply) => {
             const { requestId } = request.params
             const reports = await mRequest.GetReports(requestId)
@@ -248,7 +250,7 @@ fast
                 versionQualifier
               })
 
-              // @ts-ignore - nested json is not saved automatically and 
+              // @ts-ignore - nested json is not saved automatically and
               // the types wrongly assume that only the high-level key is valid.
               await req.table.set(`platformInstallData.${platform}`, link)
               await req.table.save()
