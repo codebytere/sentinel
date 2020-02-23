@@ -88,12 +88,12 @@ export namespace api {
   }
 
   export enum Status {
-    NOT_STARTED = 'ready',
-    PASSED = 'passed',
-    FAILED = 'failed',
-    ABORTED = 'aborted',
-    PENDING = 'pending',
-    SKIPPED = 'skipped',
-    NOT_RUN = 'not_run'
+    NOT_STARTED = 'Ready',
+    PASSED = 'Passed',
+    FAILED = 'Failed',
+    ABORTED = 'Aborted',
+    PENDING = 'Pending',
+    SKIPPED = 'Skipped',
+    NOT_RUN = 'Not Run'
   }
 }

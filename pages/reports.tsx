@@ -5,7 +5,7 @@ import { api } from '../src/server/api'
 
 interface IReport {
   table: api.Report
-  testData?: { table: api.TestData[] }
+  testData: { table: api.TestData[] }[]
 }
 
 const asyncForEach = async (array: any[], callback: Function) => {
@@ -68,6 +68,8 @@ class Reports extends Component<{ reports: IReport[] }, {}> {
         <tr>
           <td>{name}</td>
           <td>{status}</td>
+          <td>{r.testData.length}</td>
+          <td>TBD</td>
         </tr>
       )
     })
@@ -78,6 +80,8 @@ class Reports extends Component<{ reports: IReport[] }, {}> {
           <tr>
             <th>Registrant</th>
             <th>Status</th>
+            <th># Platforms Tested</th>
+            <th>See Test Data</th>
           </tr>
           {reportData}
         </tbody>

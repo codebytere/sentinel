@@ -103,9 +103,9 @@ fast
             if (request.session.authenticated) {
               const { registrantId } = request.params
               const reports = await mReport.FindForRegistrant(registrantId)
-              reply.send(reports ? reports : 'No reports found.')
+              reply.send(reports)
             } else {
-              reply.code(401)
+              reply.code(401).send({ error: 'Not Authorized' })
             }
           }
         })
@@ -117,7 +117,6 @@ fast
           handler: async (request, reply) => {
             const { requestId } = request.params
             const reports = await mRequest.GetReports(requestId)
-
             reply.send(reports)
           }
         })
@@ -168,9 +167,9 @@ fast
               }
               reply.redirect('/home')
             } catch (err) {
-              reply
-                .code(500)
-                .send(`Could not create account for ${appName}: ${err}`)
+              reply.code(500).send({
+                error: `Could not create account for ${appName}: ${err}`
+              })
             }
           }
         })
@@ -204,7 +203,9 @@ fast
                 }
                 reply.send(request.session.user).redirect('/home')
               } else {
-                reply.code(401).send(`Failed to authorize ${username}`)
+                reply
+                  .code(401)
+                  .send({ error: `Failed to authorize ${username}` })
               }
             } catch (err) {
               reply.code(500).send(err)
@@ -261,7 +262,7 @@ fast
               // Fan out platform webhooks to each registrant.
               for (let reg of registrants) {
                 if (!PLATFORMS.includes(platform)) {
-                  throw new Error(`Invalid platform: ${platform}`)
+                  fast.log.error(`Invalid platform: ${platform}`)
                 }
 
                 // Check that the registrant has registered for this platform-specific webhook.
@@ -296,13 +297,14 @@ fast
 
                 // Ensure that requisite data has been sent back by the registrant.
                 if (res.reportsExpected === undefined) {
+                  reply.code(500).send({
+                    error:
+                      'Invalid report expectation value: must be a number >= 0'
+                  })
+                } else if (!res.sessionToken) {
                   reply
                     .code(500)
-                    .send(
-                      'Invalid report expectation value: must be a number >= 0'
-                    )
-                } else if (!res.sessionToken) {
-                  reply.code(500).send('Required session token not found')
+                    .send({ error: 'Required session token not found' })
                 }
 
                 // Update expectation data for this per-registrant Report instance.
@@ -320,11 +322,9 @@ fast
                 await rp.table.save()
               }
 
-              reply
-                .code(200)
-                .send(
-                  `Sent updated webhooks for ${platform} on ${versionQualifier}`
-                )
+              fast.log.info(
+                `Sent updated webhooks for ${platform} on ${versionQualifier}`
+              )
             } catch (err) {
               reply.code(500).send(err)
             }
@@ -344,11 +344,9 @@ fast
 
             // Validate that the session token matches the one for this registrant.
             if (sessionId !== report.table.sessionToken) {
-              reply
-                .code(403)
-                .send(
-                  `${sessionId} does not match the required token for this report`
-                )
+              reply.code(403).send({
+                error: `${sessionId} does not match the required token for this report`
+              })
             }
 
             // Create new TestData from the information in the request body.
@@ -359,7 +357,7 @@ fast
               await report.table.save()
             }
 
-            reply.code(200).send('TestData successfully created and saved')
+            fast.log.info('TestData successfully created and saved')
           }
         })
 
@@ -371,7 +369,7 @@ fast
 
         fast.setErrorHandler((err, _req, reply) => {
           if (err.statusCode === 401) {
-            reply.code(401).send({ was: 'unauthorized' })
+            reply.code(401).send({ error: 'Not Authorized' })
           }
           reply.send(err)
         })
