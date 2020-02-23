@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Hero, Columns, Box, Container } from 'react-bulma-components'
+import { Hero, Columns, Container } from 'react-bulma-components'
 import { AuthContext } from '../src/contexts/auth'
 import ReportList from '../src/components/report-list'
 import Report from '../src/components/report'
@@ -16,7 +16,7 @@ class Home extends Component<{}, HomeState> {
     this.renderReports = this.renderReports.bind(this)
     this.renderReport = this.renderReport.bind(this)
     this.selectNewReport = this.selectNewReport.bind(this)
-    this.renderLoading = this.renderLoading.bind(this)
+    this.fetchReportListData = this.fetchReportListData.bind(this)
   }
 
   public render() {
@@ -26,11 +26,7 @@ class Home extends Component<{}, HomeState> {
           <Container>
             <Columns className={'is-centered'}>
               <Columns.Column size={9}>
-                <Box>
-                  {this.state.loading
-                    ? this.renderLoading()
-                    : this.renderReports()}
-                </Box>
+                {this.state.loading ? 'LOADING' : this.renderReports()}
                 {this.state.selectedReport ? this.renderReport() : ''}
               </Columns.Column>
             </Columns>
@@ -41,10 +37,16 @@ class Home extends Component<{}, HomeState> {
   }
 
   public componentDidMount() {
+    this.fetchReportListData()
+  }
+
+  /* PRIVATE METHODS */
+
+  private fetchReportListData() {
     this.context
       .fetchAuthedUser()
       .then(user => {
-        fetch(`/reports/${user.id}`)
+        fetch(`/reports/registrant/${user.id}`)
           .then(response => response.json())
           .then(reports => {
             reports = reports.map(r => r.table)
@@ -54,12 +56,6 @@ class Home extends Component<{}, HomeState> {
       .catch(err => {
         console.log(err)
       })
-  }
-
-  /* PRIVATE METHODS */
-
-  private renderLoading() {
-    return 'LOADING'
   }
 
   private renderReports() {

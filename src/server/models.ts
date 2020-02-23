@@ -1,4 +1,6 @@
 import { DATABASE_URL } from './constants'
+import { INTEGER, JSONB, Model, Sequelize, TEXT, STRING, DATE } from 'sequelize'
+import { api } from './api'
 
 /**
  * HIERARCHY
@@ -13,9 +15,6 @@ import { DATABASE_URL } from './constants'
  *    |
  * TestData - Per platform granular data about the CI run (See mTest)
  */
-
-import { INTEGER, JSONB, Model, Sequelize, TEXT, STRING, DATE } from 'sequelize'
-import { api } from './api'
 
 export namespace Tables {
   export const sequelize = new Sequelize(DATABASE_URL!, {
@@ -73,8 +72,8 @@ export namespace Tables {
   export class Report extends Model {
     id!: number
     registrantId!: number
-    requestId!: number
     reportsExpected: number
+    status?: api.Status
     sessionToken: string
     name: string
   }
@@ -82,8 +81,8 @@ export namespace Tables {
   Report.init(
     {
       registrantId: { type: INTEGER, allowNull: false },
-      requestId: { type: INTEGER, allowNull: false },
       name: { type: TEXT },
+      status: { type: TEXT },
       reportsExpected: { type: INTEGER },
       sessionToken: { type: STRING }
     },
@@ -93,7 +92,7 @@ export namespace Tables {
     }
   )
 
-  Request.hasMany(Report)
+  // Request.hasMany(Report, )
   Report.belongsTo(Request, { foreignKey: 'requestId' })
 
   // Represented as mTestData
@@ -102,7 +101,6 @@ export namespace Tables {
     status: api.Status
     arch: api.Arch
     os: api.OS
-    reportId!: number
     sourceLink!: string
     timeStart!: Date
     timeStop!: Date
@@ -121,7 +119,6 @@ export namespace Tables {
       status: STRING,
       arch: STRING,
       os: STRING,
-      reportId: INTEGER,
       sourceLink: TEXT,
       timeStart: DATE,
       timeStop: DATE,
@@ -140,7 +137,7 @@ export namespace Tables {
     }
   )
 
-  Report.hasMany(TestData)
+  // Report.hasMany(TestData, )
   TestData.belongsTo(Report, { foreignKey: 'reportId' })
 
   export const random = () => sequelize.random()

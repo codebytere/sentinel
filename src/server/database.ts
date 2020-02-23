@@ -132,10 +132,10 @@ export class mReport {
   /**
    * @returns An array of all Reports associated with this Request.
    */
-  static async GetTestData() {
-    // @ts-ignore (the sequelize typings are incomplete)
-    const testdata = Tables.Report.getTestData({
+  static async GetTestData(reportId: number) {
+    const testdata = await Tables.TestData.findAll({
       where: {
+        reportId,
         createdAt: {
           [Op.gt]: new Date(ONE_WEEK_AGO)
         }
@@ -206,14 +206,15 @@ export class mRequest {
   /**
    * @returns An array of all Reports associated with this Request.
    */
-  static async GetReports() {
-    // @ts-ignore (the sequelize typings are incomplete)
-    const reports = Tables.Request.getReports({
+  static async GetReports(requestId: number): Promise<mReport[]> {
+    const reports = await Tables.Report.findAll({
       where: {
+        requestId,
         createdAt: {
           [Op.gt]: new Date(ONE_WEEK_AGO)
         }
-      }
+      },
+      include: [Tables.Request]
     })
 
     return reports.map(r => new mReport(r))

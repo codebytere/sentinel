@@ -62,7 +62,7 @@ export const loginSchema = {
   }
 }
 
-// Schema for /report/:registrantId
+// Schema for /report/registrant/:registrantId
 export const getReportsSchema = {
   params: {
     type: 'object',

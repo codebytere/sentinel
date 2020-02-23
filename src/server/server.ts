@@ -54,6 +54,14 @@ fast
             })
         })
 
+        fast.get('/nightlies', (request, reply) => {
+          return app
+            .render(request.req, reply.res, '/nightlies', request.query)
+            .then(() => {
+              reply.sent = true
+            })
+        })
+
         fast.get('/signin', (request, reply) => {
           if (request.session.authenticated) {
             reply.redirect('/home')
@@ -80,7 +88,7 @@ fast
 
         fast.route({
           method: 'GET',
-          url: '/reports/:registrantId',
+          url: '/reports/registrant/:registrantId',
           schema: getReportsSchema,
           handler: async (request, reply) => {
             if (request.session.authenticated) {
@@ -90,6 +98,17 @@ fast
             } else {
               reply.code(401)
             }
+          }
+        })
+
+        fast.route({
+          method: 'GET',
+          url: '/reports/:requestId',
+          handler: async (request, reply) => {
+            const { requestId } = request.params
+            const reports = await mRequest.GetReports(requestId)
+
+            reply.send(reports)
           }
         })
 
@@ -107,6 +126,22 @@ fast
             } else {
               reply.code(401)
             }
+          }
+        })
+
+        fast.get('/requests/*', async (request, reply) => {
+          // const { requestId } = request.params
+          console.log(request.params)
+          let response
+
+          response = await mRequest.FindAll()
+
+          reply.send(response)
+        })
+
+        fast.get('/checkAuth', async (request, reply) => {
+          if (request.session.authenticated) {
+            reply.send(request.session.user)
           }
         })
 
@@ -150,12 +185,6 @@ fast
             } else {
               reply.redirect('/signin')
             }
-          }
-        })
-
-        fast.get('/checkAuth', async (request, reply) => {
-          if (request.session.authenticated) {
-            reply.send(request.session.user)
           }
         })
 
@@ -223,6 +252,7 @@ fast
               const { platform, link } = platformInstallData
               req.table.platformInstallData[platform] = link
               await req.table.save()
+              console.log('platformInstallData IS: ', req.table)
 
               // Fetch all current service registrants
               const registrants = await mRegistrant.FindAll()
@@ -277,6 +307,13 @@ fast
                 // Update expectation data for this per-registrant Report instance.
                 rp.table.reportsExpected = res.reportsExpected
                 rp.table.sessionToken = res.sessionToken
+                rp.table.name = reg.table.appName
+
+                // Only set a test run status if reports are expected.
+                if (res.reportsExpected > 0) {
+                  rp.table.status = api.Status.PENDING
+                }
+
                 await rp.table.save()
               }
 
@@ -313,6 +350,11 @@ fast
 
             // Create new TestData from the information in the request body.
             await mTestData.NewFromReport(report, test)
+
+            if (report.table.status !== test.status) {
+              report.table.status = test.status
+              await report.table.save()
+            }
 
             reply.code(200).send('TestData successfully created and saved')
           }

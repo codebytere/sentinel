@@ -47,6 +47,7 @@ export interface IReportListProps {
 }
 
 export interface HomeState {
+  registrantId?: number
   reports?: any
   loading: boolean
   selectedReport?: string

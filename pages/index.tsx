@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Hero, Columns, Box, Container } from 'react-bulma-components'
+import { Hero, Columns, Container, Box } from 'react-bulma-components'
 
-class Home extends Component<{}, {}> {
+class Index extends Component<{}, {}> {
   constructor(props: any) {
     super(props)
   }
@@ -13,12 +13,7 @@ class Home extends Component<{}, {}> {
           <Container>
             <Columns className={'is-centered'}>
               <Columns.Column size={4}>
-                <Box>
-                  <img
-                    src="https://user-images.githubusercontent.com/2036040/74618739-dcc84000-50e7-11ea-9b90-bd9d16ff623e.png"
-                    alt="Sentinel Robot Logo"
-                  />
-                </Box>
+                <Box>TODO</Box>
               </Columns.Column>
             </Columns>
           </Container>
@@ -28,4 +23,4 @@ class Home extends Component<{}, {}> {
   }
 }
 
-export default Home
+export default Index

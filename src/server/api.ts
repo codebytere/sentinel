@@ -36,6 +36,8 @@ export namespace api {
     sessionToken: string
     // Whether or not Electron should expect to receive reports from an app
     reportsExpected: number
+    // The name of this report
+    name: string
   }
 
   /**
@@ -84,11 +86,11 @@ export namespace api {
    * The test run status.
    */
   export enum Status {
-    READY_NOT_STARTED = 'ready',
-    RUNNING_NOT_FINISHED = 'run',
-    FINISHED_PASSED = 'pass',
-    FINISHED_FAILED = 'fail',
-    ABORTED_UNKNOWN = 'abort',
-    SKIPPED = 'skip'
+    NOT_STARTED = 'ready',
+    PASSED = 'passed',
+    FAILED = 'failed',
+    ABORTED = 'aborted',
+    PENDING = 'pending',
+    SKIPPED = 'skipped'
   }
 }
