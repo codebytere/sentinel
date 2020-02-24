@@ -32,7 +32,7 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
 
   public render() {
     return (
-      <Hero color={'link'} size={'fullheight'}>
+      <Hero color={'light'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns className={'is-centered'}>

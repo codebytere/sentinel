@@ -39,7 +39,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
 
   public render() {
     return (
-      <Hero color={'primary'} size={'fullheight'}>
+      <Hero color={'light'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns className={'is-centered'}>
@@ -78,14 +78,16 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear
                     </Button>{' '}
-                    {(auth: IAuthProviderState) => (
-                      <Button
-                        onClick={() => this.handleFormSubmit(auth)}
-                        color={'success'}
-                      >
-                        Sign Up
-                      </Button>
-                    )}
+                    <AuthContext.Consumer>
+                      {(auth: IAuthProviderState) => (
+                        <Button
+                          onClick={() => this.handleFormSubmit(auth)}
+                          color={'success'}
+                        >
+                          Sign Up
+                        </Button>
+                      )}
+                    </AuthContext.Consumer>
                   </Form.Field>
                 </Box>
               </Columns.Column>
