@@ -60,11 +60,10 @@ export namespace api {
     arch: Arch
     os: OS
     sourceLink?: string
-    timeStart?: Date
-    timeStop?: Date
+    timeStart: Date
+    timeStop: Date
     totalPassed?: number
     totalSkipped?: number
-    totalAborted?: number
     totalWarnings?: number
     totalFailed?: number
     workspaceGzipLink?: string
@@ -91,7 +90,6 @@ export namespace api {
     NOT_STARTED = 'Ready',
     PASSED = 'Passed',
     FAILED = 'Failed',
-    ABORTED = 'Aborted',
     PENDING = 'Pending',
     SKIPPED = 'Skipped',
     NOT_RUN = 'Not Run'

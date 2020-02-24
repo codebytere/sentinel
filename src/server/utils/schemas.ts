@@ -129,7 +129,6 @@ export const newReportSchema = {
       timeStop: { type: 'string' },
       totalPassed: { type: 'number' },
       totalSkipped: { type: 'number' },
-      totalAborted: { type: 'number' },
       totalWarnings: { type: 'number' },
       totalFailed: { type: 'number' },
       workspaceGzipLink: {

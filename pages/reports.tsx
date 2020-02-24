@@ -1,7 +1,8 @@
 import { Component, Fragment } from 'react'
 import Dropdown, { Option } from 'react-dropdown'
-import { Container, Tile, Section, Level } from 'react-bulma-components'
+import { Box, Container, Tile, Section, Level } from 'react-bulma-components'
 import { api } from '../src/server/api'
+import TestBreakdown from '../src/components/test-breakdown'
 
 interface IReport {
   table: api.Report
@@ -11,7 +12,7 @@ interface IReport {
 interface IReportState {
   platformOptions: string[]
   registrants: string[]
-  currentPlatformData: { table: api.TestData }
+  currentPlatformData?: { table: api.TestData }
   currentReport: IReport
 }
 
@@ -54,7 +55,7 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
     this.props.reports.forEach(r => {
       registrants.push(r.table.name)
     })
-    
+
     const platformOptions: string[] = []
     currentReport.testData.forEach(d => {
       const platform = `${d.table.os}-${d.table.arch}`
@@ -70,71 +71,23 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
 
     this.changePlatform = this.changePlatform.bind(this)
     this.changeReport = this.changeReport.bind(this)
-    
+
     this.renderDropdowns = this.renderDropdowns.bind(this)
   }
 
   public render() {
-    const { currentReport, currentPlatformData } = this.state
+    const { currentReport } = this.state
+    console.log(currentReport)
 
     return (
       <Fragment>
+        <Section>{this.renderDropdowns()}</Section>
         <Section>
-          {this.renderDropdowns()}
-        </Section>
-        <Section>
-          <Container>
-            <Tile kind={'ancestor'}>
-              <Tile className=" is-vertical is-8">
-                <Tile>
-                  <Tile vertical kind={'parent'}>
-                    <Tile kind={'child'} notification color={'primary'}>
-                      <p className="title">Status</p>
-                      <p className="subtitle">{currentReport.table.status}</p>
-                    </Tile>
-                    <Tile kind={'child'} notification color={'warning'}>
-                      <p className="title">...tiles</p>
-                      <p className="subtitle">Bottom tile</p>
-                    </Tile>
-                  </Tile>
-                  <Tile kind={'parent'}>
-                    <Tile kind={'child'} notification color={'info'}>
-                      <p className="title">Middle tile</p>
-                      <p className="subtitle">With an image</p>
-                      <figure className="image is-4by3">
-                        <img src="https://bulma.io/images/placeholders/640x480.png" />
-                      </figure>
-                    </Tile>
-                  </Tile>
-                </Tile>
-                <Tile vertical kind={'parent'}>
-                  <Tile kind={'child'} notification color={'danger'}>
-                    <p className="title">Links</p>
-                    <a href={currentPlatformData.table.sourceLink}>Source</a>
-                    <a href={currentPlatformData.table.ciLink}>Continuous Integration</a>
-                    <a href={currentPlatformData.table.workspaceGzipLink}>Workspace GZip</a>
-                    <p className="subtitle">Aligned with the right tile</p>
-                    <div className="content">CONTENT</div>
-                  </Tile>
-                </Tile>
-              </Tile>
-              <Tile kind={'parent'}>
-                <Tile kind={'child'} notification color={'success'}>
-                  <div className="content">
-                    <p className="title">Test Breakdown</p>
-                    <p className="subtitle">With even more content</p>
-                    <div className="content">
-                      <p className="subtitle">Total Passed: {currentPlatformData.table.totalPassed}</p>
-                      <p className="subtitle">Total Failed: {currentPlatformData.table.totalFailed}</p>
-                      <p className="subtitle">Total Skipped: {currentPlatformData.table.totalSkipped}</p>
-                      <p className="subtitle">Total Aborted: {currentPlatformData.table.totalAborted}</p>
-                      <p className="subtitle">Total Warnings: {currentPlatformData.table.totalWarnings}</p>
-                    </div>
-                  </div>
-                </Tile>
-              </Tile>
-            </Tile>
-          </Container>
+          {currentReport.testData.length > 0 ? (
+            this.renderTestData()
+          ) : (
+            <Box>NO DATA</Box>
+          )}
         </Section>
       </Fragment>
     )
@@ -143,26 +96,147 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
   /* PRIVATE METHODS */
 
   private renderDropdowns() {
-    const { currentReport, registrants, currentPlatformData, platformOptions } = this.state
-    const { os, arch } = currentPlatformData.table
+    const {
+      currentReport,
+      registrants,
+      currentPlatformData,
+      platformOptions
+    } = this.state
+
+    let defaultPlatform = 'No Platforms'
+    if (currentPlatformData) {
+      const { os, arch } = currentPlatformData.table
+      defaultPlatform = `${os}-${arch}`
+    }
 
     return (
       <Container>
         <Level>
           <Level.Side align={'left'}>
             <Level.Item>
-              <Dropdown options={registrants} onChange={this.changeReport} value={currentReport.table.name} placeholder="Select a Platform" />
+              <Dropdown
+                options={registrants}
+                onChange={this.changeReport}
+                value={currentReport.table.name}
+                placeholder="Select a Platform"
+              />
             </Level.Item>
           </Level.Side>
-
           <Level.Side align={'right'}>
             <Level.Item>
-            <Dropdown options={platformOptions} onChange={this.changePlatform} value={`${os}-${arch}`} placeholder="Select a Platform" />
+              <Dropdown
+                options={platformOptions}
+                onChange={this.changePlatform}
+                value={defaultPlatform}
+                placeholder="Select a Platform"
+              />
             </Level.Item>
           </Level.Side>
         </Level>
       </Container>
     )
+  }
+
+  private renderTestData() {
+    const { currentReport, currentPlatformData } = this.state
+
+    const time = this.getTimeData()
+
+    return (
+      <Container>
+        <Tile kind={'ancestor'}>
+          <Tile vertical className={'is-7'}>
+            <Tile>
+              <Tile vertical kind={'parent'}>
+                <Tile kind={'child'} notification color={'primary'}>
+                  <p className="title">Status</p>
+                  <Box>
+                    <p className={'subtitle'}>{currentReport.table.status}</p>
+                  </Box>
+                </Tile>
+                <Tile kind={'child'} notification color={'danger'}>
+                  <p className={'title'}>Timestamp</p>
+                  <Box>
+                    <ul>
+                      <li>
+                        <strong>Started at:</strong> {time.start}
+                      </li>
+                      <li>
+                        <strong>Ended at:</strong> {time.end}
+                      </li>
+                      <li>
+                        <strong>Total Elapsed:</strong> {time.total}
+                      </li>
+                    </ul>
+                  </Box>
+                </Tile>
+              </Tile>
+              <Tile kind={'parent'}>
+                <Tile kind={'child'} notification color={'info'}>
+                  <p className={'title'}>Links</p>
+                  <Box>
+                    <a
+                      className={'subtitle'}
+                      href={currentPlatformData!.table.sourceLink}
+                    >
+                      Source Files
+                    </a>
+                  </Box>
+                  <Box>
+                    <a
+                      className={'subtitle'}
+                      href={currentPlatformData!.table.ciLink}
+                    >
+                      CI Output
+                    </a>
+                  </Box>
+                  <Box>
+                    <a
+                      className={'subtitle'}
+                      href={currentPlatformData!.table.workspaceGzipLink}
+                    >
+                      Workspace Zipfile
+                    </a>
+                  </Box>
+                  <Box>
+                    <a
+                      className={'subtitle'}
+                      href={currentPlatformData!.table.logfileLink}
+                    >
+                      Logfile
+                    </a>
+                  </Box>
+                </Tile>
+              </Tile>
+            </Tile>
+          </Tile>
+          <Tile kind={'parent'}>
+            <Tile kind={'child'} notification color={'success'}>
+              <p className={'title'}>Test Breakdown</p>
+              <Box>
+                <TestBreakdown data={currentPlatformData!.table} />
+              </Box>
+            </Tile>
+          </Tile>
+        </Tile>
+      </Container>
+    )
+  }
+
+  private getTimeData() {
+    const { currentPlatformData } = this.state
+
+    const timeStart = new Date(currentPlatformData!.table.timeStart)
+    const timeEnd = new Date(currentPlatformData!.table.timeStop)
+    const diff = Math.abs(+timeStart - +timeEnd)
+
+    const minutes = Math.floor(diff / 1000 / 60)
+
+    return {
+      start: timeStart.toISOString(),
+      end: timeEnd.toISOString(),
+      total: minutes
+    }
   }
 
   private changePlatform(option: Option) {
@@ -187,7 +261,14 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
       platformOptions.push(platform)
     })
 
-    this.setState({ currentReport, platformOptions })
+    const hasData = currentReport.testData.length > 0
+    const currentPlatformData = hasData ? currentReport.testData[0] : undefined
+
+    this.setState({
+      currentReport,
+      platformOptions,
+      currentPlatformData
+    })
   }
 }
 

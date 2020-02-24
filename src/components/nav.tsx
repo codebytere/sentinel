@@ -25,9 +25,9 @@ class NavBar extends Component<IAlertProps, INavBarState> {
     }
 
     return (
-      <Navbar fixed={'top'}>
+      <Navbar fixed={'top'} color={'link'}>
         <Navbar.Brand>
-          <a className="navbar-item" href="/">
+          <a className={'navbar-item'} href={'/'}>
             <img src={SENTINEL_LOGO} alt="sentinel robot icon" width={28} />
           </a>
           <Navbar.Burger className={open} onClick={toggleMenu} />
@@ -36,25 +36,27 @@ class NavBar extends Component<IAlertProps, INavBarState> {
           <AuthContext.Consumer>
             {(auth: IAuthProviderState) =>
               !auth.user ? (
-                <Fragment>
-                  <Link href="/signup">
-                    <a className="navbar-item">Sign Up</a>
-                  </Link>
-                  <Link href="/signin">
-                    <a className="navbar-item">Sign In</a>
-                  </Link>
-                </Fragment>
+                <Navbar.Container position={'start'}>
+                  <a href={'/signup'} className={'navbar-item'}>
+                    Sign Up
+                  </a>
+                  <a href={'/signin'} className={'navbar-item'}>
+                    Sign In
+                  </a>
+                </Navbar.Container>
               ) : (
                 <Fragment>
-                  <Link href="/home">
-                    <a className="navbar-item">Home</a>
-                  </Link>
-                  <p className="navbar-item">
-                    Logged in as:&nbsp;<b>{auth.user.name}</b>
-                  </p>
-                  <Navbar.Container position="end">
+                  <Navbar.Container position={'start'}>
+                    <Link href={'/home'}>
+                      <a className={'navbar-item'}>Home</a>
+                    </Link>
+                    <p className={'navbar-item'}>
+                      Logged in as:&nbsp;<b>{auth.user.name}</b>
+                    </p>
+                  </Navbar.Container>
+                  <Navbar.Container position={'end'}>
                     <a
-                      className="navbar-item"
+                      className={'navbar-item'}
                       onClick={() => {
                         this.handleLogout(auth)
                       }}
