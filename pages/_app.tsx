@@ -1,10 +1,12 @@
 import App from 'next/app'
 import dynamic from 'next/dynamic'
-import 'react-bulma-components/dist/react-bulma-components.min.css'
 import React from 'react'
 import { positions, Provider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import AuthProvider from '../src/contexts/auth'
+
+import 'react-bulma-components/dist/react-bulma-components.min.css'
+import 'react-dropdown/style.css'
 
 const Nav = dynamic(() => import('../src/components/nav'), { ssr: false })
 
