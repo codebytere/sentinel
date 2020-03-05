@@ -106,7 +106,7 @@ export const newReportSchema = {
   },
   headers: {
     type: 'object',
-    required: ['sessionId'],
+    required: ['sessionid'],
     properties: {
       sessionId: { type: 'string' }
     }

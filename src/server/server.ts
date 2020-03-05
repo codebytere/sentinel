@@ -351,16 +351,19 @@ fast
           url: '/report/:reportId',
           schema: newReportSchema,
           handler: async (request, reply) => {
+            console.info(request.params)
             const { reportId } = request.params
-            const { sessionId } = request.headers
+            const { authorization } = request.headers
 
             const report = await mReport.FindById(reportId)
             const test: api.TestData = request.body
 
+            console.info(request.body)
+
             // Validate that the session token matches the one for this registrant.
-            if (sessionId !== report.table.sessionToken) {
+            if (authorization !== report.table.sessionToken) {
               reply.code(403).send({
-                error: `${sessionId} does not match the required token for this report`
+                error: `${authorization} does not match the required token for this report`
               })
             }
 
