@@ -100,11 +100,15 @@ fast
           url: '/reports/registrant/:registrantId',
           schema: getReportsSchema,
           handler: async (request, reply) => {
+            const { registrantId } = request.params
+
             if (request.session.authenticated) {
-              const { registrantId } = request.params
               const reports = await mReport.FindForRegistrant(registrantId)
               reply.send(reports)
             } else {
+              fast.log.info(
+                `User not authorized to access /reports/registrant/${registrantId}`
+              )
               reply.code(401).send({ error: 'Not Authorized' })
             }
           }
@@ -116,6 +120,9 @@ fast
           schema: getReportSchema,
           handler: async (request, reply) => {
             const { requestId } = request.params
+
+            fast.log.info(`Fetching Reports for request: ${requestId}`)
+
             const reports = await mRequest.GetReports(requestId)
             reply.send(reports)
           }
@@ -127,6 +134,9 @@ fast
           schema: getTestDataSchema,
           handler: async (request, reply) => {
             const { reportId } = request.params
+
+            fast.log.info(`Fetching TestData sets for report: ${reportId}`)
+
             const testDataSets = await mTestData.GetFromReport(reportId)
             reply.send(testDataSets)
           }
@@ -149,6 +159,9 @@ fast
           schema: registerSchema,
           handler: async (request, reply) => {
             const { appName, username, webhooks } = request.body
+            fast.log.info(
+              `Creating new account for username: ${username} and app: ${appName}`
+            )
 
             const hash = bcrypt.hashSync(request.body.password, 10)
 
@@ -160,6 +173,8 @@ fast
                 webhooks
               })
 
+              fast.log.info(`Successfully created new account for ${username}`)
+
               request.session.authenticated = true
               request.session.user = {
                 name: user.table.username,
@@ -167,8 +182,9 @@ fast
               }
               reply.redirect('/home')
             } catch (err) {
+              fast.log.error(`Failed to create account for ${appName}: ${err}`)
               reply.code(500).send({
-                error: `Could not create account for ${appName}: ${err}`
+                error: `Failed to create account for ${appName}: ${err}`
               })
             }
           }
@@ -194,8 +210,12 @@ fast
             const { username, password } = request.body
 
             try {
+              fast.log.info(`Logging in ${username}`)
+
               const user = await mRegistrant.Authenticate(username, password)
               if (user) {
+                fast.log.info(`Successfully authorized ${username}`)
+
                 request.session.authenticated = true
                 request.session.user = {
                   name: user.table.username,
@@ -203,6 +223,8 @@ fast
                 }
                 reply.send(request.session.user).redirect('/home')
               } else {
+                fast.log.error(`Failed to authorize ${username}`)
+
                 reply
                   .code(401)
                   .send({ error: `Failed to authorize ${username}` })
@@ -218,6 +240,8 @@ fast
           url: '/logout',
           handler: async (request, reply) => {
             if (request.session.authenticated) {
+              fast.log.info('Logging out current user')
+
               request.destroySession(err => {
                 if (err) {
                   reply.code(500).send('Internal Server Error')
@@ -264,6 +288,10 @@ fast
               // Fetch all current service registrants
               const registrants = await mRegistrant.FindAll()
 
+              fast.log.info(
+                `Sending webhook data to ${registrants.length} registrants`
+              )
+
               // Fan out platform webhooks to each registrant.
               for (let reg of registrants) {
                 const platformWebhook = reg.table.webhooks[platform]
@@ -309,11 +337,15 @@ fast
 
                 // Ensure that requisite data has been sent back by the registrant.
                 if (res.reportsExpected === undefined) {
+                  fast.log.error(
+                    'Invalid report expectation value: must be a number >= 0'
+                  )
                   reply.code(500).send({
                     error:
                       'Invalid report expectation value: must be a number >= 0'
                   })
                 } else if (!res.sessionToken) {
+                  fast.log.error('Required session token not found')
                   reply
                     .code(500)
                     .send({ error: 'Required session token not found' })
@@ -359,6 +391,9 @@ fast
 
             // Validate that the session token matches the one for this registrant.
             if (authorization !== report.table.sessionToken) {
+              fast.log.info(
+                `${authorization} does not match the required token for this report`
+              )
               reply.code(403).send({
                 error: `${authorization} does not match the required token for this report`
               })
@@ -375,6 +410,7 @@ fast
               await report.table.save()
             }
 
+            fast.log.info('TestData created and saved')
             reply.send({ success: 'TestData created and saved' })
           }
         })
