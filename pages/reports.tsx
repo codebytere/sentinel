@@ -138,7 +138,7 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
   }
 
   private renderTestData() {
-    const { currentReport, currentPlatformData } = this.state
+    const { currentPlatformData } = this.state
 
     const time = this.getTimeData()
 
@@ -151,7 +151,9 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
                 <Tile kind={'child'} notification color={'primary'}>
                   <p className="title">Status</p>
                   <Box>
-                    <p className={'subtitle'}>{currentReport.table.status}</p>
+                    <p className={'subtitle'}>
+                      {currentPlatformData!.table.status}
+                    </p>
                   </Box>
                 </Tile>
                 <Tile kind={'child'} notification color={'danger'}>
@@ -232,9 +234,17 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
 
     const minutes = Math.floor(diff / 1000 / 60)
 
+    const formatString = (d: Date) => {
+      return d
+        .toISOString()
+        .slice(0, 19)
+        .replace(/-/g, '/')
+        .replace('T', ' ')
+    }
+
     return {
-      start: timeStart.toISOString(),
-      end: timeEnd.toISOString(),
+      start: formatString(timeStart),
+      end: formatString(timeEnd),
       total: minutes
     }
   }
