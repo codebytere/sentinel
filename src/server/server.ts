@@ -351,14 +351,11 @@ fast
           url: '/report/:reportId',
           schema: newReportSchema,
           handler: async (request, reply) => {
-            console.info(request.params)
             const { reportId } = request.params
             const { authorization } = request.headers
 
             const report = await mReport.FindById(reportId)
-            const test: api.TestData = request.body
-
-            console.info(request.body)
+            fast.log.info(`Received new TestData from ${report.table.name}`)
 
             // Validate that the session token matches the one for this registrant.
             if (authorization !== report.table.sessionToken) {
@@ -368,9 +365,12 @@ fast
             }
 
             // Create new TestData from the information in the request body.
+            const test: api.TestData = request.body
+            fast.log.info(`Creating new TestData for ${test.os}-${test.arch}`)
             await mTestData.NewFromReport(report, test)
 
             if (report.table.status !== test.status) {
+              fast.log.info(`Status for this TestData was: ${test.status}`)
               report.table.status = test.status
               await report.table.save()
             }

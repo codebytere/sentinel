@@ -106,9 +106,9 @@ export const newReportSchema = {
   },
   headers: {
     type: 'object',
-    required: ['sessionid'],
+    required: ['authorization'],
     properties: {
-      sessionId: { type: 'string' }
+      authorization: { type: 'string' }
     }
   },
   body: {
