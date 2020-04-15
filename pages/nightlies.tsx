@@ -23,11 +23,10 @@ class Nightlies extends Component<{ requests: IRequest[] }, {}> {
   static async getInitialProps({ req }) {
     const result: IRequest[] = []
 
-    //TODO(codebytere): make this less nasty?
-    const baseURL =
-      req.headers.host === 'localhost:3000'
-        ? 'http://localhost:3000'
-        : `https://${req.headers.host}`
+    const isLocalHost = req.headers.host === 'localhost:3000'
+    const baseURL = isLocalHost
+      ? 'http://localhost:3000'
+      : `https://${req.headers.host}`
 
     const rawRequests = await fetch(`${baseURL}/requests`)
     const requests = await rawRequests.json()

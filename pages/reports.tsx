@@ -195,14 +195,6 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
                   <Box>
                     <a
                       className={'subtitle'}
-                      href={currentPlatformData!.table.workspaceGzipLink}
-                    >
-                      Workspace Zipfile
-                    </a>
-                  </Box>
-                  <Box>
-                    <a
-                      className={'subtitle'}
                       href={currentPlatformData!.table.logfileLink}
                     >
                       Logfile

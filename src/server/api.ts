@@ -66,7 +66,6 @@ export namespace api {
     totalSkipped?: number
     totalWarnings?: number
     totalFailed?: number
-    workspaceGzipLink?: string
     logfileLink?: string
     ciLink?: string
     testAgent: TestAgent

@@ -131,11 +131,6 @@ export const newReportSchema = {
       totalSkipped: { type: 'number' },
       totalWarnings: { type: 'number' },
       totalFailed: { type: 'number' },
-      workspaceGzipLink: {
-        type: 'string',
-        format: 'uri',
-        pattern: '^https?://'
-      },
       logfileLink: {
         type: 'string',
         format: 'uri',

@@ -108,7 +108,6 @@ export namespace Tables {
     totalSkipped!: number
     totalWarnings!: number
     totalFailed!: number
-    workspaceGzipLink!: string
     logfileLink!: string
     ciLink?: string
     testAgent: api.TestAgent
@@ -126,7 +125,6 @@ export namespace Tables {
       totalSkipped: INTEGER,
       totalWarnings: INTEGER,
       totalFailed: INTEGER,
-      workspaceGzipLink: TEXT,
       logfileLink: TEXT,
       ciLink: STRING,
       testAgent: JSONB
