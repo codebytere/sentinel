@@ -401,8 +401,10 @@ fast
 
             // Create new TestData from the information in the request body.
             const test: api.TestData = request.body
+
+            // Update existing TestData if one exists, otherwise create a new one.
             fast.log.info(`Creating new TestData for ${test.os}-${test.arch}`)
-            await mTestData.NewFromReport(report, test)
+            await mTestData.CreateOrUpdateFromReport(report, test)
 
             if (report.table.status !== test.status) {
               fast.log.info(`Status for this TestData was: ${test.status}`)
@@ -410,8 +412,8 @@ fast
               await report.table.save()
             }
 
-            fast.log.info('TestData created and saved')
-            reply.send({ success: 'TestData created and saved' })
+            fast.log.info('TestData saved')
+            reply.send({ success: 'TestData saved' })
           }
         })
 

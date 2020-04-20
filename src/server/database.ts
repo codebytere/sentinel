@@ -2,6 +2,7 @@ import { Tables } from './models'
 import bcrypt from 'bcrypt'
 import { IRegistrant } from './interfaces'
 import { Op } from 'sequelize'
+import { api } from './api'
 
 const ONE_WEEK_AGO = +new Date() - 7 * 24 * 60 * 60 * 1000
 
@@ -69,18 +70,40 @@ export class mTestData {
   constructor(public table: Tables.TestData) {}
 
   /**
-   * Creates and returns a new TestData instance.
+   * Creates or updates and returns a new TestData instance.
    *
    * @param report The report associated with this TestData.
    * @param test The granular test data.
    *
    * @returns A new TestData instance.
    */
-  static async NewFromReport(report: mReport, test: any) {
+  static async CreateOrUpdateFromReport(report: mReport, test: api.TestData) {
     const reportId = report.table.id
 
-    const t = await Tables.TestData.create({ reportId, ...test })
-    return new mTestData(t)
+    const testData = await Tables.TestData.findAll({
+      where: {
+        reportId
+      }
+    })
+
+    const filtered = testData.filter(td => {
+      const sameOS = td.os === test.os
+      const sameArch = td.arch === test.arch
+      return sameOS && sameArch
+    })
+
+    let td
+    if (filtered.length === 1) {
+      const existing = filtered[0]
+      td = await await Tables.TestData.update(
+        { ...test },
+        { where: { id: existing.id } }
+      )
+    } else {
+      td = await Tables.TestData.create({ reportId, ...test })
+    }
+
+    return new mTestData(td)
   }
 
   /**
