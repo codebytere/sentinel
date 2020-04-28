@@ -275,7 +275,7 @@ fast
 
             try {
               const req = await mRequest.FindOrCreate({
-                installLink: { [link]: platform },
+                installLink: { [platform]: link },
                 commitHash,
                 versionQualifier
               })

@@ -264,8 +264,9 @@ export class mRequest {
    * the new platform information.
    *
    * @param opts
-   * @param version_qualifier A version-ish string used as a determinant by each registrant.
-   * @param commit_hash Commit hash corresponding to a commit sha in a PR.
+   * @param versionQualifier A version-ish string used as a determinant by each registrant.
+   * @param commitHash Commit hash corresponding to a commit sha in a PR.
+   * @param installLink: the platform/link object to add to this Request's platform install data.
    *
    * @returns A newly created or existing mRequest associated with a commit hash.
    */
@@ -275,7 +276,10 @@ export class mRequest {
     installLink: Record<string, string>
   }) {
     const request = await Tables.Request.findOne({
-      where: { commitHash: opts.commitHash }
+      where: {
+        commitHash: opts.commitHash,
+        versionQualifier: opts.versionQualifier
+      }
     })
     if (request) {
       return new mRequest(request)
