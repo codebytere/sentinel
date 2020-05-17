@@ -6,9 +6,11 @@
     "build": "next build && tsc --project tsconfig.server.json",
     "down": "sequelize-cli db:migrate:undo",
     "format": "prettier --write '**/*.{ts,tsx}'",
-    "up": "sequelize-cli db:migrate",
+    "seed": "sequelize-cli db:seed:all",
+    "unseed": "sequelize-cli db:seed:undo:all",
     "lint": "prettier --check '**/*.{ts,tsx}'",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "start-db": "./script/start.sh"
   },
   "engines": {
     "nodejs": "^12"

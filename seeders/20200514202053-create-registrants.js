@@ -1,3 +1,5 @@
+'use strict';
+
 const bcrypt = require('bcrypt')
 
 module.exports = {
@@ -28,19 +30,17 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        appName: 'Signal',
-        username: 'signal',
-        password: bcrypt.hashSync('signal', 10),
-        webhooks: '{ "mas-x64": "http://localhost:8000/signal", "linux-armv7l": "http://localhost:8000/signal", "linux-x64": "http://localhost:8000/signal" }',
+        appName: 'Fiddle',
+        username: 'fiddle',
+        password: bcrypt.hashSync('fiddle', 10),
+        webhooks: '{ "mas-x64": "http://localhost:8000/fiddle", "linux-armv7l": "http://localhost:8000/fiddle", "linux-x64": "http://localhost:8000/fiddle" }',
         createdAt: new Date(),
         updatedAt: new Date()
       },
     ])
   },
+
   down: (queryInterface, Sequelize) => {
-    queryInterface.bulkDelete('registrant', null, {})
-    queryInterface.bulkDelete('testdata', null, {})
-    queryInterface.bulkDelete('request', null, {})
-    return queryInterface.bulkDelete('report', null, {})
+    return queryInterface.bulkDelete('registrant', null, {})
   }
-}
+};
