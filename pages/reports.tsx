@@ -28,11 +28,12 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
 
     const result: IReport[] = []
 
-    //TODO(codebytere): make this less nasty?
-    const baseURL =
-      req.headers.host === 'localhost:3000'
-        ? 'http://localhost:3000'
-        : `https://${req.headers.host}`
+    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(
+      req.headers.host
+    )
+    const baseURL = isLocalHost
+      ? 'http://localhost:3000'
+      : `https://${req.headers.host}`
     const rawReports = await fetch(`${baseURL}/reports/${id}`)
     const reports = await rawReports.json()
 

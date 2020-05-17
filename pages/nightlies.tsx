@@ -23,7 +23,9 @@ class Nightlies extends Component<{ requests: IRequest[] }, {}> {
   static async getInitialProps({ req }) {
     const result: IRequest[] = []
 
-    const isLocalHost = req.headers.host === 'localhost:3000'
+    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(
+      req.headers.host
+    )
     const baseURL = isLocalHost
       ? 'http://localhost:3000'
       : `https://${req.headers.host}`
