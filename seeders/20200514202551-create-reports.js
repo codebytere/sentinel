@@ -1,6 +1,6 @@
 'use strict'
 
-const { QueryTypes } = require('sequelize');
+const { QueryTypes } = require('sequelize')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -16,8 +16,6 @@ module.exports = {
       const reg = registrants.filter(r => r.appName.toLowerCase() === regName)[0]
       return reg.id
     }
-
-    const getRequestID = () => requestIDs[0].id
 
     return queryInterface.bulkInsert('report', [
       {
