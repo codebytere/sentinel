@@ -72,6 +72,7 @@ export namespace Tables {
   export class Report extends Model {
     id!: number
     registrantId!: number
+    requestId!: number
     reportsExpected: number
     status?: api.Status
     sessionToken: string

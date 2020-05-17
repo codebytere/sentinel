@@ -73,6 +73,17 @@ export const getReportsSchema = {
   }
 }
 
+// Schema for /requests/:requestId
+export const getRequestSchema = {
+  params: {
+    type: 'object',
+    required: ['requestId'],
+    properties: {
+      requestId: { type: 'number' }
+    }
+  }
+}
+
 // Schema for '/reports/:requestId'
 export const getReportSchema = {
   params: {

@@ -3,10 +3,16 @@ import Dropdown, { Option } from 'react-dropdown'
 import { Box, Container, Tile, Section, Level } from 'react-bulma-components'
 import { api } from '../src/server/api'
 import TestBreakdown from '../src/components/test-breakdown'
+import { mReport, mRequest } from 'src/server/database'
 
 interface IReport {
   table: api.Report
   testData: { table: api.TestData }[]
+}
+
+interface IReportProps {
+  reports: IReport[]
+  versionQualifier: string
 }
 
 interface IReportState {
@@ -22,7 +28,7 @@ const asyncForEach = async (array: any[], callback: Function) => {
   }
 }
 
-class Reports extends Component<{ reports: IReport[] }, IReportState> {
+class Reports extends Component<IReportProps, IReportState> {
   static async getInitialProps({ req }) {
     const id = req.url.replace('/request/', '')
 
@@ -34,8 +40,15 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
     const baseURL = isLocalHost
       ? 'http://localhost:3000'
       : `https://${req.headers.host}`
+
     const rawReports = await fetch(`${baseURL}/reports/${id}`)
-    const reports = await rawReports.json()
+    const reports: mReport[] = await rawReports.json()
+
+    // The requestId will be the same for any given set of reports, so we can safely
+    // pull the requestId off the top of the pile.
+    const reqId = reports[0].table.requestId
+    const rawRequest = await fetch(`${baseURL}/requests/${reqId}`)
+    const request: mRequest = await rawRequest.json()
 
     await asyncForEach(reports, async (r: IReport) => {
       const raw = await fetch(`${baseURL}/testdata/${r.table.id}`)
@@ -43,10 +56,10 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
       result.push({ table: r.table, testData })
     })
 
-    return { reports: result }
+    return { reports: result, versionQualifier: request.table.versionQualifier }
   }
 
-  constructor(props: { reports: IReport[] }) {
+  constructor(props: { reports: IReport[]; versionQualifier: string }) {
     super(props)
 
     const currentReport = this.props.reports[0]
@@ -78,7 +91,6 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
 
   public render() {
     const { currentReport } = this.state
-    console.log(currentReport)
 
     return (
       <Fragment>
@@ -174,7 +186,11 @@ class Reports extends Component<{ reports: IReport[] }, IReportState> {
                   </Box>
                 </Tile>
               </Tile>
-              <Tile kind={'parent'}>
+              <Tile vertical kind={'parent'}>
+                <Tile kind={'child'} notification color={'warning'}>
+                  <p className={'title'}>Version</p>
+                  <Box>{this.props.versionQualifier}</Box>
+                </Tile>
                 <Tile kind={'child'} notification color={'info'}>
                   <p className={'title'}>Links</p>
                   <Box>

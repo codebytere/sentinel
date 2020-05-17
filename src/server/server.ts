@@ -16,7 +16,8 @@ import {
   loginSchema,
   getTestDataSchema,
   getReportsSchema,
-  getReportSchema
+  getReportSchema,
+  getRequestSchema
 } from './utils/schemas'
 import {
   HOST,
@@ -125,6 +126,20 @@ fast
 
             const reports = await mRequest.GetReports(requestId)
             reply.send(reports)
+          }
+        })
+
+        fast.route({
+          method: 'GET',
+          url: '/requests/:requestId',
+          schema: getRequestSchema,
+          handler: async (request, reply) => {
+            const { requestId } = request.params
+
+            fast.log.info(`Fetching request for id: ${requestId}`)
+
+            const req = await mRequest.FindById(requestId)
+            reply.send(req)
           }
         })
 
