@@ -30,17 +30,12 @@ const asyncForEach = async (array: any[], callback: Function) => {
 
 class Reports extends Component<IReportProps, IReportState> {
   static async getInitialProps({ req }) {
-    const id = req.url.replace('/request/', '')
+    const host = req ? req.headers.host : window.location.host
+    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host)
+    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`
 
-    const result: IReport[] = []
-
-    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(
-      req.headers.host
-    )
-    const baseURL = isLocalHost
-      ? 'http://localhost:3000'
-      : `https://${req.headers.host}`
-
+    const path = req ? req.url : window.location.pathname
+    const id = path.replace.replace('/request/', '')
     const rawReports = await fetch(`${baseURL}/reports/${id}`)
     const reports: mReport[] = await rawReports.json()
 
@@ -50,6 +45,7 @@ class Reports extends Component<IReportProps, IReportState> {
     const rawRequest = await fetch(`${baseURL}/requests/${reqId}`)
     const request: mRequest = await rawRequest.json()
 
+    const result: IReport[] = []
     await asyncForEach(reports, async (r: IReport) => {
       const raw = await fetch(`${baseURL}/testdata/${r.table.id}`)
       const testData = await raw.json()

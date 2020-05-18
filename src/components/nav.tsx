@@ -27,7 +27,7 @@ class NavBar extends Component<IAlertProps, INavBarState> {
     return (
       <Navbar fixed={'top'} color={'link'}>
         <Navbar.Brand>
-          <a className={'navbar-item'} href={'/'}>
+          <a className={'navbar-item'} href={'/index'}>
             <img src={SENTINEL_LOGO} alt="sentinel robot icon" width={28} />
           </a>
           <Navbar.Burger className={open} onClick={toggleMenu} />

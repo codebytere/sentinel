@@ -138,7 +138,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
       })
       .then(user => {
         auth.signIn(user)
-        Router.push('/home')
+        Router.push('/index')
       })
       .catch(err => {
         console.log(err)

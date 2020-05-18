@@ -14,12 +14,9 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
   static async getInitialProps({ req }) {
     const result: IRequest[] = []
 
-    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(
-      req.headers.host
-    )
-    const baseURL = isLocalHost
-      ? 'http://localhost:3000'
-      : `https://${req.headers.host}`
+    const host = req ? req.headers.host : window.location.host
+    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host)
+    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`
 
     const rawRequests = await fetch(`${baseURL}/requests`)
     const requests = await rawRequests.json()
