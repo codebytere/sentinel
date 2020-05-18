@@ -47,7 +47,7 @@ class NavBar extends Component<IAlertProps, INavBarState> {
               ) : (
                 <Fragment>
                   <Navbar.Container position={'start'}>
-                    <Link href={'/home'}>
+                    <Link href={'/index'}>
                       <a className={'navbar-item'}>Home</a>
                     </Link>
                     <p className={'navbar-item'}>
@@ -55,6 +55,9 @@ class NavBar extends Component<IAlertProps, INavBarState> {
                     </p>
                   </Navbar.Container>
                   <Navbar.Container position={'end'}>
+                    <a href={'/settings'} className={'navbar-item'}>
+                      Settings
+                    </a>
                     <a
                       className={'navbar-item'}
                       onClick={() => {
@@ -89,7 +92,7 @@ class NavBar extends Component<IAlertProps, INavBarState> {
         if (response.status === 200) {
           alert.show('Successfully logged out')
           auth.signOut()
-          Router.push('/')
+          Router.push('/index')
         } else {
           alert.show('Logout failed')
         }

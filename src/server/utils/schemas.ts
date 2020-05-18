@@ -50,6 +50,30 @@ export const registerSchema = {
   }
 }
 
+// Schema for /update
+export const updateWebhooksSchema = {
+  body: {
+    type: 'object',
+    properties: {
+      webhooks: {
+        type: 'object',
+        properties: {
+          'win32-ia32': { type: 'string' },
+          'win32-x64': { type: 'string' },
+          'win32-arm64': { type: 'string' },
+          'win32-arm64-x64': { type: 'string' },
+          'darwin-x64': { type: 'string' },
+          'mas-x64': { type: 'string' },
+          'linux-armv7l': { type: 'string' },
+          'linux-arm64': { type: 'string' },
+          'linux-ia32': { type: 'string' },
+          'linux-x64': { type: 'string' }
+        }
+      }
+    }
+  }
+}
+
 // Schema for /login
 export const loginSchema = {
   body: {

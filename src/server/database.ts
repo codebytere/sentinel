@@ -21,6 +21,33 @@ export class mRegistrant {
   }
 
   /**
+   * Updates webhooks for a Sentinel registrant.
+   *
+   * @param id The id of the Sentinel registrant.
+   * @param webhooks The webhooks to update for the registrant.
+   *
+   * @returns true if the webhooks were successfully updated, else false.
+   */
+  static async UpdateWebhooks(id: number, webhooks: Record<string, string>) {
+    const registrant = await Tables.Registrant.findOne({
+      where: { id }
+    })
+
+    if (!registrant) return false
+
+    // Update all webhooks which were changed.
+    for (const hook in webhooks) {
+      const updatedHook = webhooks[hook]
+      if (updatedHook !== '') {
+        // @ts-ignore - types wrongly assume that only the high-level key is valid.
+        await registrant.set(`webhooks.${hook}`, updatedHook)
+      }
+    }
+
+    await registrant.save()
+  }
+
+  /**
    * Authenticates a Sentinel registrant.
    *
    * @param username The username of the Sentinel registrant.

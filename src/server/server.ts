@@ -17,7 +17,8 @@ import {
   getTestDataSchema,
   getReportsSchema,
   getReportSchema,
-  getRequestSchema
+  getRequestSchema,
+  updateWebhooksSchema
 } from './utils/schemas'
 import {
   HOST,
@@ -82,6 +83,18 @@ fast
           } else {
             return app
               .render(request.req, reply.res, '/signup', request.query)
+              .then(() => {
+                reply.sent = true
+              })
+          }
+        })
+
+        fast.get('/settings', (request, reply) => {
+          if (!request.session.authenticated) {
+            reply.redirect('/index')
+          } else {
+            return app
+              .render(request.req, reply.res, '/settings', request.query)
               .then(() => {
                 reply.sent = true
               })
@@ -251,6 +264,25 @@ fast
         })
 
         fast.route({
+          method: 'GET',
+          url: '/update',
+          schema: updateWebhooksSchema,
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              const { webhooks } = request.body
+
+              fast.log.error(`Updating webhooks for ${request.session.user.name}`)
+
+              const currentUserId = request.session.user.id
+              mRegistrant.UpdateWebhooks(currentUserId, webhooks)
+            } else {
+              fast.log.error('Cannot update webhooks for unauthenticated user')
+              reply.redirect('/index')
+            }
+          }
+        })
+
+        fast.route({
           method: 'POST',
           url: '/trigger',
           schema: triggerSchema,
@@ -275,8 +307,7 @@ fast
                 versionQualifier
               })
 
-              // @ts-ignore - nested json is not saved automatically and
-              // the types wrongly assume that only the high-level key is valid.
+              // @ts-ignore - types wrongly assume that only the high-level key is valid.
               await req.table.set(`platformInstallData.${platform}`, link)
               await req.table.save()
 
