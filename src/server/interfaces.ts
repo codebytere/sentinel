@@ -1,4 +1,5 @@
 import { AlertManager } from 'react-alert'
+import { api } from './api';
 
 export interface IRegistrant {
   appName: string
@@ -51,4 +52,14 @@ export interface HomeState {
   reports?: any
   loading: boolean
   selectedReport?: string
+}
+
+export interface IRequest {
+  table: api.Request
+  reports: IReport[]
+}
+
+export interface IReport {
+  table: api.Report
+  testData?: { table: api.TestData[] }
 }

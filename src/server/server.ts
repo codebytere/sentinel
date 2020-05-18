@@ -56,14 +56,6 @@ fast
             })
         })
 
-        fast.get('/nightlies', (request, reply) => {
-          return app
-            .render(request.req, reply.res, '/nightlies', request.query)
-            .then(() => {
-              reply.sent = true
-            })
-        })
-
         fast.get('/request/*', (request, reply) => {
           return app
             .render(request.req, reply.res, '/reports', request.query)
@@ -74,7 +66,7 @@ fast
 
         fast.get('/signin', (request, reply) => {
           if (request.session.authenticated) {
-            reply.redirect('/home')
+            reply.redirect('/index')
           } else {
             return app
               .render(request.req, reply.res, '/signin', request.query)
@@ -86,7 +78,7 @@ fast
 
         fast.get('/signup', (request, reply) => {
           if (request.session.authenticated) {
-            reply.redirect('/home')
+            reply.redirect('/index')
           } else {
             return app
               .render(request.req, reply.res, '/signup', request.query)
@@ -195,24 +187,12 @@ fast
                 name: user.table.username,
                 id: user.table.id
               }
-              reply.redirect('/home')
+              reply.redirect('/index')
             } catch (err) {
               fast.log.error(`Failed to create account for ${appName}: ${err}`)
               reply.code(500).send({
                 error: `Failed to create account for ${appName}: ${err}`
               })
-            }
-          }
-        })
-
-        fast.route({
-          method: 'GET',
-          url: '/home',
-          handler: async (request, reply) => {
-            if (request.session.authenticated) {
-              return app.render(request.req, reply.res, '/home', request.query)
-            } else {
-              reply.redirect('/signin')
             }
           }
         })
@@ -236,7 +216,7 @@ fast
                   name: user.table.username,
                   id: user.table.id
                 }
-                reply.send(request.session.user).redirect('/home')
+                reply.send(request.session.user).redirect('/index')
               } else {
                 fast.log.error(`Failed to authorize ${username}`)
 
