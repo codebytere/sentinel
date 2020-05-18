@@ -21,6 +21,21 @@ export class mRegistrant {
   }
 
   /**
+   * Returns a Registrant with the specified id, if one exists.
+   *
+   * @param id The id of the Sentinel registrant.
+   *
+   * @returns The registrant with the specified id.
+   */
+  static async Find(id: number) {
+    const registrant = await Tables.Registrant.findOne({
+      where: { id }
+    })
+
+    return registrant ? new mRegistrant(registrant) : false
+  }
+
+  /**
    * Updates webhooks for a Sentinel registrant.
    *
    * @param id The id of the Sentinel registrant.
@@ -39,7 +54,7 @@ export class mRegistrant {
     for (const hook in webhooks) {
       const updatedHook = webhooks[hook]
       if (updatedHook !== '') {
-        // @ts-ignore - types wrongly assume that only the high-level key is valid.
+        // @ts-ignore - ts wrongly assumes that only the high-level key is valid.
         await registrant.set(`webhooks.${hook}`, updatedHook)
       }
     }
