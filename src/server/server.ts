@@ -215,6 +215,11 @@ fast
           url: '/login',
           schema: loginSchema,
           handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              fast.log.info(`${request.session.user.name} is already logged in`)
+              reply.send(request.session.user).redirect('/index')
+            }
+
             const { username, password } = request.body
 
             try {
