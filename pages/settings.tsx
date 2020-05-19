@@ -1,4 +1,4 @@
-import { FormEvent, Component } from 'react'
+import { Component } from 'react'
 import Router from 'next/router'
 import {
   Container,
@@ -8,34 +8,35 @@ import {
   Hero,
   Columns,
   Box,
-  Table,
+  Table
 } from 'react-bulma-components'
-import { withAlert } from 'react-alert'
+// import { withAlert } from 'react-alert'
 import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
-import {
-  IAlertProps as ISignupProps,
-  ISignupState
-} from 'src/server/interfaces'
-import { AuthContext } from '../src/contexts/auth'
+import { ISettingsProps, IRegistrant } from 'src/server/interfaces'
+import { AuthContext, IAuthProviderState } from '../src/contexts/auth'
 
-class Settings extends Component<ISignupProps, ISignupState> {
+class Settings extends Component<ISettingsProps, {}> {
   static contextType = AuthContext
 
-  constructor(props: ISignupProps) {
+  static async getInitialProps({ req }) {
+    const host = req ? req.headers.host : window.location.host
+    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host)
+    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`
+
+    const reply = await fetch(`${baseURL}/currentuser`)
+    const json = await reply.json()
+
+    const registrant: IRegistrant = json.table
+    const webhooks = registrant.webhooks || null
+
+    return { webhooks }
+  }
+
+  constructor(props: ISettingsProps) {
     super(props)
 
-    this.state = {
-      newRegistrant: {
-        username: '',
-        appName: '',
-        password: ''
-      }
-    }
-
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    this.handleClearForm = this.handleClearForm.bind(this)
-    this.handleInput = this.handleInput.bind(this)
   }
 
   public render() {
@@ -51,13 +52,10 @@ class Settings extends Component<ISignupProps, ISignupState> {
                   </Heading>
                   <Form.Field>{this.renderWebHookTable()}</Form.Field>
                   <Form.Field>
-                    <Button onClick={this.handleClearForm} color={'danger'}>
-                      Clear
-                    </Button>{' '}
                     <AuthContext.Consumer>
-                      {() => (
+                      {(auth: IAuthProviderState) => (
                         <Button
-                          onClick={() => this.handleFormSubmit()}
+                          onClick={() => this.handleFormSubmit(auth.user!.name)}
                           color={'success'}
                         >
                           Update Webhooks
@@ -76,40 +74,27 @@ class Settings extends Component<ISignupProps, ISignupState> {
 
   /* PRIVATE METHODS */
 
-  private handleInput(e: FormEvent<HTMLInputElement>) {
-    const prop = e.currentTarget.name
-    const value = e.currentTarget.value
-
-    this.setState(prevState => ({
-      newRegistrant: {
-        ...prevState.newRegistrant,
-        [prop]: value
-      }
-    }))
-  }
-
-  private handleFormSubmit() {
-    const alert = this.props.alert
-    const reg = this.state.newRegistrant
+  private handleFormSubmit(regName: string) {
+    // const alert = this.props.alert
 
     const rawTableHTML = document.getElementById('webhook-table')!
     const rawTableString = rawTableHTML.outerHTML.toString()
-    reg.webhooks = this.convertTableToJSON(rawTableString)
+    const webhooks = this.convertTableToJSON(rawTableString)
 
     fetch('/update', {
       method: 'POST',
-      body: JSON.stringify(reg),
+      body: JSON.stringify({ webhooks }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
       }
     })
       .then(response => {
-        if (response.status === 200) {
-          alert.show(`Successfully updated webhooks for ${reg.username}`)
-        } else {
-          alert.show(`Failed to update webhooks for ${reg.username}`)
-        }
+        // if (response.status === 200) {
+        //   alert.show(`Successfully updated webhooks for ${regName}`)
+        // } else {
+        //   alert.show(`Failed to update webhooks for ${regName}`)
+        // }
         return response.json()
       })
       .then(() => {
@@ -118,17 +103,6 @@ class Settings extends Component<ISignupProps, ISignupState> {
       .catch(err => {
         console.log(err)
       })
-  }
-
-  private handleClearForm(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault()
-    this.setState({
-      newRegistrant: {
-        username: '',
-        appName: '',
-        password: ''
-      }
-    })
   }
 
   private convertTableToJSON(data: string) {
@@ -144,8 +118,11 @@ class Settings extends Component<ISignupProps, ISignupState> {
   }
 
   private renderWebHookTable() {
+    const { webhooks } = this.props
+
     const hooks = PLATFORMS.map(p => {
-      return { platform: p, link: '' }
+      const link = webhooks ? webhooks[p] : ''
+      return { platform: p, link }
     })
 
     const hookData = hooks.map(w => {
@@ -174,4 +151,4 @@ class Settings extends Component<ISignupProps, ISignupState> {
   }
 }
 
-export default withAlert()(Settings)
+export default (Settings)

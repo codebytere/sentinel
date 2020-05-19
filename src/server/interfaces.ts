@@ -1,5 +1,5 @@
 import { AlertManager } from 'react-alert'
-import { api } from './api';
+import { api } from './api'
 
 export interface IRegistrant {
   appName: string
@@ -10,6 +10,11 @@ export interface IRegistrant {
 
 export interface IAlertProps {
   alert: AlertManager
+}
+
+export interface ISettingsProps {
+  alert: AlertManager
+  webhooks: Record<string, string> | null
 }
 
 export interface INavBarState {

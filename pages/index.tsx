@@ -12,8 +12,6 @@ const asyncForEach = async (array: any[], callback: Function) => {
 
 class Home extends Component<{ requests: IRequest[] }, {}> {
   static async getInitialProps({ req }) {
-    const result: IRequest[] = []
-
     const host = req ? req.headers.host : window.location.host
     const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host)
     const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`
@@ -21,6 +19,7 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
     const rawRequests = await fetch(`${baseURL}/requests`)
     const requests = await rawRequests.json()
 
+    const result: IRequest[] = []
     await asyncForEach(requests, async (req: IRequest) => {
       const raw = await fetch(`${baseURL}/reports/${req.table.id}`)
       const reports = await raw.json()

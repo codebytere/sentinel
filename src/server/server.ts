@@ -40,9 +40,17 @@ const fast: fastify.FastifyInstance<
 
 fast
   .register(fastifyCookie)
+  .addHook('preHandler', (request, reply, next) => {
+    fast.log.info(request.headers)
+    console.info(`AUTHED IS: ${request.session.authenticated}`)
+    next()
+  })
   .register(fastifySession, {
     secret: SESSION_SECRET,
-    cookie: { secure: !isDev }
+    cookie: {
+      secure: !isDev,
+      path: '/*'
+    }
   })
   .register((fast, opts, next) => {
     const app = Next({ dev: isDev })
@@ -269,20 +277,55 @@ fast
         })
 
         fast.route({
-          method: 'GET',
+          method: 'POST',
           url: '/update',
           schema: updateWebhooksSchema,
           handler: async (request, reply) => {
             if (request.session.authenticated) {
               const { webhooks } = request.body
+              const authedUser = request.session.user.name
 
-              fast.log.error(`Updating webhooks for ${request.session.user.name}`)
+              fast.log.info(
+                `Updating webhooks for ${authedUser}`
+              )
 
-              const currentUserId = request.session.user.id
-              mRegistrant.UpdateWebhooks(currentUserId, webhooks)
+              const id = request.session.user.id
+              const success = await mRegistrant.UpdateWebhooks(id, webhooks)
+              if (!success) {
+                reply
+                .code(500)
+                .send({ error: `Failed to update webhooks for ${authedUser}` })
+              }
             } else {
               fast.log.error('Cannot update webhooks for unauthenticated user')
               reply.redirect('/index')
+            }
+          }
+        })
+
+        fast.route({
+          method: 'GET',
+          url: '/currentuser',
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              fast.log.info(
+                `Fetching data for current user ${request.session.user.name}`
+              )
+
+              const currentUserId = request.session.user.id
+              const registrant = await mRegistrant.Find(currentUserId)
+
+              if (!registrant) {
+                fast.log.error('Could not find current user data')
+                reply
+                  .code(500)
+                  .send({ error: `No user with id: ${currentUserId}` })
+              } else {
+                fast.log.info(registrant)
+                reply.send(registrant)
+              }
+            } else {
+              fast.log.error('Cannot get information for unauthenticated user')
             }
           }
         })

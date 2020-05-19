@@ -35,7 +35,7 @@ class Reports extends Component<IReportProps, IReportState> {
     const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`
 
     const path = req ? req.url : window.location.pathname
-    const id = path.replace.replace('/request/', '')
+    const id = path.replace('/request/', '')
     const rawReports = await fetch(`${baseURL}/reports/${id}`)
     const reports: mReport[] = await rawReports.json()
 

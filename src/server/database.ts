@@ -52,14 +52,14 @@ export class mRegistrant {
 
     // Update all webhooks which were changed.
     for (const hook in webhooks) {
-      const updatedHook = webhooks[hook]
-      if (updatedHook !== '') {
+      if (webhooks[hook] !== '') {
         // @ts-ignore - ts wrongly assumes that only the high-level key is valid.
-        await registrant.set(`webhooks.${hook}`, updatedHook)
+        await registrant.set(`webhooks.${hook}`, webhooks[hook])
       }
     }
 
     await registrant.save()
+    return true
   }
 
   /**
