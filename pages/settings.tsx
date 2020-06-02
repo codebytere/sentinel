@@ -151,4 +151,4 @@ class Settings extends Component<ISettingsProps, {}> {
   }
 }
 
-export default (Settings)
+export default Settings

@@ -42,7 +42,6 @@ fast
   .register(fastifyCookie)
   .addHook('preHandler', (request, reply, next) => {
     fast.log.info(request.headers)
-    console.info(`AUTHED IS: ${request.session.authenticated}`)
     next()
   })
   .register(fastifySession, {
@@ -170,7 +169,7 @@ fast
           }
         })
 
-        fast.get('/requests', async (request, reply) => {
+        fast.get('/requests', async (_request, reply) => {
           const response = await mRequest.FindAll()
           reply.send(response)
         })
@@ -285,16 +284,14 @@ fast
               const { webhooks } = request.body
               const authedUser = request.session.user.name
 
-              fast.log.info(
-                `Updating webhooks for ${authedUser}`
-              )
+              fast.log.info(`Updating webhooks for ${authedUser}`)
 
               const id = request.session.user.id
               const success = await mRegistrant.UpdateWebhooks(id, webhooks)
               if (!success) {
-                reply
-                .code(500)
-                .send({ error: `Failed to update webhooks for ${authedUser}` })
+                reply.code(500).send({
+                  error: `Failed to update webhooks for ${authedUser}`
+                })
               }
             } else {
               fast.log.error('Cannot update webhooks for unauthenticated user')

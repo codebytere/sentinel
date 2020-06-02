@@ -4,7 +4,7 @@ import { IRegistrant } from './interfaces'
 import { Op } from 'sequelize'
 import { api } from './api'
 
-const ONE_WEEK_AGO = +new Date() - 7 * 24 * 60 * 60 * 1000
+const MINIMUM_TIME_AGO = new Date(new Date().setDate(new Date().getDate() - 31))
 
 /**
  * A class that represents a single Sentinel service registrant.
@@ -158,7 +158,7 @@ export class mTestData {
       where: {
         reportId,
         createdAt: {
-          [Op.gt]: new Date(ONE_WEEK_AGO)
+          [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
     })
@@ -215,7 +215,7 @@ export class mReport {
       where: {
         reportId,
         createdAt: {
-          [Op.gt]: new Date(ONE_WEEK_AGO)
+          [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
     })
@@ -233,7 +233,7 @@ export class mReport {
       where: {
         registrantId,
         createdAt: {
-          [Op.gt]: new Date(ONE_WEEK_AGO)
+          [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
     })
@@ -273,7 +273,7 @@ export class mRequest {
     const requests = await Tables.Request.findAll({
       where: {
         createdAt: {
-          [Op.gt]: new Date(ONE_WEEK_AGO)
+          [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
     })
@@ -289,7 +289,7 @@ export class mRequest {
       where: {
         requestId,
         createdAt: {
-          [Op.gt]: new Date(ONE_WEEK_AGO)
+          [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       },
       include: [Tables.Request]
