@@ -163,9 +163,8 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
         <tr>
           <th>{this.getStatusIcon(passed, total)}</th>
           <th>{`${passed}/${total}`}</th>
-          <td>v{versionQualifier}</td>
           <td>
-            <a href={releaseLink}>GitHub Release</a>
+            <a href={releaseLink}>v{versionQualifier}</a>
           </td>
           <td>
             {total > 0 ? (
@@ -186,7 +185,6 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
               <th>Status</th>
               <th>Report Count</th>
               <th>Version</th>
-              <th>Release</th>
               <th>Reports</th>
             </tr>
             {requestData}
