@@ -14,10 +14,57 @@ import { Box, Columns, Container, Hero, Table } from 'react-bulma-components'
 import { api } from '../src/server/api'
 import { IRequest } from 'src/server/interfaces'
 
+// Helper Methods
+
 const asyncForEach = async (array: any[], callback: Function) => {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array)
   }
+}
+
+const getStatusIcon = (passed: number, total: number) => {
+  let statusIcon: string
+  if (total === 0) {
+    statusIcon = '🟡'
+  } else if (passed === total) {
+    statusIcon = '🟢'
+  } else {
+    statusIcon = '🔴'
+  }
+
+  return statusIcon
+}
+
+const getReportStats = (request: IRequest) => {
+  return {
+    total: request.reports.length,
+    passed: request.reports.filter(
+      rep => rep.table.status === api.Status.PASSED
+    ).length
+  }
+}
+
+const getDate = (dateString: string) => {
+  const yyyy = parseInt(dateString.substr(0, 4))
+  const mm = parseInt(dateString.substr(4, 2))
+  const dd = parseInt(dateString.substr(6, 2))
+
+  return new Date(yyyy, mm, dd)
+}
+
+const sortByDate = (one, two) => {
+  const pattern = /\d+.\d+.\d+-nightly.(\d{8})/
+
+  const [vq1, vq2] = [one.table.versionQualifier, two.table.versionQualifier]
+  const [match1, match2] = [vq1.match(pattern), vq2.match(pattern)]
+
+  if (!match1 || !match2) {
+    throw new Error(`Invalid nightly dates`)
+  }
+
+  const [d1, d2] = [getDate(match1[1]), getDate(match2[1])]
+
+  return d1 > d2 ? -1 : d1 < d2 ? 1 : 0
 }
 
 class Home extends Component<{ requests: IRequest[] }, {}> {
@@ -64,37 +111,14 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
 
   /* PRIVATE METHODS */
 
-  private getStatusIcon(passed, total) {
-    let statusIcon
-    if (total === 0) {
-      statusIcon = '🟡'
-    } else if (passed === total) {
-      statusIcon = '🟢'
-    } else {
-      statusIcon = '🔴'
-    }
-
-    return statusIcon
-  }
-
-  private getReportStats (request: IRequest) {
-    return { 
-      total: request.reports.length,
-      passed: request.reports.filter(
-        rep => rep.table.status === api.Status.PASSED
-      ).length
-    }
-  }
-
   private renderTrendChart() {
     const { requests } = this.props
 
     const data = requests.map(r => {
-      const { passed, total } = this.getReportStats(r)
-
+      const { passed, total } = getReportStats(r)
       const percentage = total === 0 ? total : (passed / total) * 100
-
       const date = new Date(r.table.createdAt)
+
       return {
         date: date.toLocaleDateString(),
         passed,
@@ -103,13 +127,13 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
       }
     })
 
-    const CustomTooltip = (tooltipData) => {
+    const CustomTooltip = tooltipData => {
       const { active, payload, label } = tooltipData
 
       const style = {
-        'background': 'white',
-        'border': '2px solid black',
-        'padding': '10px',
+        background: 'white',
+        border: '2px solid black',
+        padding: '10px',
         'border-radius': '10px'
       }
 
@@ -121,11 +145,11 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
             <p>Reports Passed: {data.passed}</p>
             <p>Total Reports: {data.total}</p>
           </div>
-        );
+        )
       }
-    
-      return null;
-    };
+
+      return null
+    }
 
     return (
       <Box>
@@ -136,8 +160,8 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
-            <YAxis domain={[0, 100]} tickFormatter={(number) => `${number}%`}/>
-            <Tooltip content={<CustomTooltip/>}/>
+            <YAxis domain={[0, 100]} tickFormatter={number => `${number}%`} />
+            <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Line
               type="monotone"
@@ -153,15 +177,15 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
 
   private renderRequests() {
     const { requests } = this.props
-    const requestData = requests.map(r => {
+
+    const requestData = requests.sort(sortByDate).map(r => {
       const { versionQualifier, id } = r.table
       const releaseLink = `https://github.com/electron/nightlies/releases/tag/v${versionQualifier}`
-
-      const { passed, total } = this.getReportStats(r)
+      const { passed, total } = getReportStats(r)
 
       return (
         <tr>
-          <th>{this.getStatusIcon(passed, total)}</th>
+          <th>{getStatusIcon(passed, total)}</th>
           <th>{`${passed}/${total}`}</th>
           <td>
             <a href={releaseLink}>v{versionQualifier}</a>
