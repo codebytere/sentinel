@@ -44,25 +44,24 @@ const getReportStats = (request: IRequest) => {
   }
 }
 
-const getDate = (dateString: string) => {
-  const yyyy = parseInt(dateString.substr(0, 4))
-  const mm = parseInt(dateString.substr(4, 2))
-  const dd = parseInt(dateString.substr(6, 2))
+const getDate = (versionQualifier: string) => {
+  const pattern = /\d+.\d+.\d+-nightly.(\d{8})/
+
+  const match = versionQualifier.match(pattern)
+  if (!match) {
+    throw new Error(`Invalid date for versionQualifier: ${versionQualifier}`)
+  }
+
+  const yyyy = parseInt(match[1].substr(0, 4))
+  const mm = parseInt(match[1].substr(4, 2))
+  const dd = parseInt(match[1].substr(6, 2))
 
   return new Date(yyyy, mm, dd)
 }
 
 const sortByDate = (one, two) => {
-  const pattern = /\d+.\d+.\d+-nightly.(\d{8})/
-
-  const [vq1, vq2] = [one.table.versionQualifier, two.table.versionQualifier]
-  const [match1, match2] = [vq1.match(pattern), vq2.match(pattern)]
-
-  if (!match1 || !match2) {
-    throw new Error(`Invalid nightly dates`)
-  }
-
-  const [d1, d2] = [getDate(match1[1]), getDate(match2[1])]
+  const d1 = getDate(one.table.versionQualifier)
+  const d2 = getDate(two.table.versionQualifier)
 
   return d1 > d2 ? -1 : d1 < d2 ? 1 : 0
 }
@@ -114,17 +113,12 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
   private renderTrendChart() {
     const { requests } = this.props
 
-    const data = requests.map(r => {
+    const data = requests.sort(sortByDate).reverse().map(r => {
       const { passed, total } = getReportStats(r)
       const percentage = total === 0 ? total : (passed / total) * 100
-      const date = new Date(r.table.createdAt)
+      const date = getDate(r.table.versionQualifier).toLocaleDateString()
 
-      return {
-        date: date.toLocaleDateString(),
-        passed,
-        total,
-        percentage
-      }
+      return { date, passed, total, percentage }
     })
 
     const CustomTooltip = tooltipData => {
