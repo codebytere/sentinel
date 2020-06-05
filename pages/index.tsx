@@ -11,62 +11,16 @@ import {
   ResponsiveContainer
 } from 'recharts'
 import { Box, Columns, Container, Hero, Table } from 'react-bulma-components'
-import { api } from '../src/server/api'
-import { IRequest } from 'src/server/interfaces'
+import { IRequest, IHomeProps } from 'src/server/interfaces'
+import {
+  getDate,
+  getReportStats,
+  asyncForEach,
+  getStatusIcon,
+  dateSort
+} from 'src/utils/report-helpers'
 
-// Helper Methods
-
-const asyncForEach = async (array: any[], callback: Function) => {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array)
-  }
-}
-
-const getStatusIcon = (passed: number, total: number) => {
-  let statusIcon: string
-  if (total === 0) {
-    statusIcon = '🟡'
-  } else if (passed === total) {
-    statusIcon = '🟢'
-  } else {
-    statusIcon = '🔴'
-  }
-
-  return statusIcon
-}
-
-const getReportStats = (request: IRequest) => {
-  return {
-    total: request.reports.length,
-    passed: request.reports.filter(
-      rep => rep.table.status === api.Status.PASSED
-    ).length
-  }
-}
-
-const getDate = (versionQualifier: string) => {
-  const pattern = /\d+.\d+.\d+-nightly.(\d{8})/
-
-  const match = versionQualifier.match(pattern)
-  if (!match) {
-    throw new Error(`Invalid date for versionQualifier: ${versionQualifier}`)
-  }
-
-  const yyyy = parseInt(match[1].substr(0, 4))
-  const mm = parseInt(match[1].substr(4, 2))
-  const dd = parseInt(match[1].substr(6, 2))
-
-  return new Date(yyyy, mm, dd)
-}
-
-const dateSort = (one: IRequest, two: IRequest) => {
-  const d1 = getDate(one.table.versionQualifier)
-  const d2 = getDate(two.table.versionQualifier)
-
-  return d1 > d2 ? -1 : d1 < d2 ? 1 : 0
-}
-
-class Home extends Component<{ requests: IRequest[] }, {}> {
+class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }) {
     const host = req ? req.headers.host : window.location.host
     const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host)
@@ -100,10 +54,14 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
         <Hero.Body>
           <Container>
             <Columns centered>
-              <Columns.Column>{this.renderTrendChart(sortedRequests)}</Columns.Column>
+              <Columns.Column>
+                {this.renderTrendChart(sortedRequests)}
+              </Columns.Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>{this.renderRequests(sortedRequests)}</Columns.Column>
+              <Columns.Column>
+                {this.renderRequests(sortedRequests)}
+              </Columns.Column>
             </Columns>
           </Container>
         </Hero.Body>

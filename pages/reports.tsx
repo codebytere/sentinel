@@ -1,32 +1,10 @@
 import { Component, Fragment } from 'react'
 import Dropdown, { Option } from 'react-dropdown'
 import { Box, Container, Tile, Section, Level } from 'react-bulma-components'
-import { api } from '../src/server/api'
 import TestBreakdown from '../src/components/test-breakdown'
 import { mReport, mRequest } from 'src/server/database'
-
-interface IReport {
-  table: api.Report
-  testData: { table: api.TestData }[]
-}
-
-interface IReportProps {
-  reports: IReport[]
-  versionQualifier: string
-}
-
-interface IReportState {
-  platformOptions: string[]
-  registrants: string[]
-  currentPlatformData?: { table: api.TestData }
-  currentReport: IReport
-}
-
-const asyncForEach = async (array: any[], callback: Function) => {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array)
-  }
-}
+import { IReportProps, IReportState, IReport } from 'src/server/interfaces'
+import { asyncForEach } from 'src/utils/report-helpers'
 
 class Reports extends Component<IReportProps, IReportState> {
   static async getInitialProps({ req }) {
@@ -55,7 +33,7 @@ class Reports extends Component<IReportProps, IReportState> {
     return { reports: result, versionQualifier: request.table.versionQualifier }
   }
 
-  constructor(props: { reports: IReport[]; versionQualifier: string }) {
+  constructor(props: IReportProps) {
     super(props)
 
     const currentReport = this.props.reports[0]

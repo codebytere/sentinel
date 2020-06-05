@@ -1,11 +1,10 @@
 import { AlertManager } from 'react-alert'
 import { api } from './api'
 
-export interface IRegistrant {
-  appName: string
-  username: string
-  password: string
-  webhooks?: Record<string, string>
+// Props
+
+export interface IHomeProps {
+  requests: IRequest[]
 }
 
 export interface IAlertProps {
@@ -17,6 +16,18 @@ export interface ISettingsProps {
   webhooks: Record<string, string> | null
 }
 
+export interface IReportListProps {
+  reports: IReportInfo[]
+  changeReport: (id: string) => void
+}
+
+export interface IReportProps {
+  reports: IReport[]
+  versionQualifier: string
+}
+
+// State
+
 export interface INavBarState {
   open: boolean
   user?: {
@@ -25,15 +36,31 @@ export interface INavBarState {
   }
 }
 
-export interface ISignupState {
-  newRegistrant: IRegistrant
-}
-
 export interface IRegistrantState {
   registrant: {
     username: string
     password: string
   }
+}
+
+export interface ISignupState {
+  newRegistrant: IRegistrant
+}
+
+export interface IReportState {
+  platformOptions: string[]
+  registrants: string[]
+  currentPlatformData?: { table: api.TestData }
+  currentReport: IReport
+}
+
+// Other Interfaces
+
+export interface IRegistrant {
+  appName: string
+  username: string
+  password: string
+  webhooks?: Record<string, string>
 }
 
 export interface IReportInfo {
@@ -47,18 +74,6 @@ export interface IReportInfo {
   updatedAt: Date
 }
 
-export interface IReportListProps {
-  reports: IReportInfo[]
-  changeReport: (id: string) => void
-}
-
-export interface HomeState {
-  registrantId?: number
-  reports?: any
-  loading: boolean
-  selectedReport?: string
-}
-
 export interface IRequest {
   table: api.Request
   reports: IReport[]
@@ -66,5 +81,5 @@ export interface IRequest {
 
 export interface IReport {
   table: api.Report
-  testData?: { table: api.TestData[] }
+  testData: { table: api.TestData }[]
 }

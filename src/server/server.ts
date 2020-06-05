@@ -19,7 +19,7 @@ import {
   getReportSchema,
   getRequestSchema,
   updateWebhooksSchema
-} from './utils/schemas'
+} from './schemas'
 import {
   HOST,
   PORT,
