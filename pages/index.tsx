@@ -59,7 +59,7 @@ const getDate = (versionQualifier: string) => {
   return new Date(yyyy, mm, dd)
 }
 
-const sortByDate = (one, two) => {
+const dateSort = (one: IRequest, two: IRequest) => {
   const d1 = getDate(one.table.versionQualifier)
   const d2 = getDate(two.table.versionQualifier)
 
@@ -92,15 +92,18 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
   }
 
   public render() {
+    const { requests } = this.props
+    const sortedRequests = requests.sort(dateSort)
+
     return (
       <Hero color={'info'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns centered>
-              <Columns.Column>{this.renderTrendChart()}</Columns.Column>
+              <Columns.Column>{this.renderTrendChart(sortedRequests)}</Columns.Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>{this.renderRequests()}</Columns.Column>
+              <Columns.Column>{this.renderRequests(sortedRequests)}</Columns.Column>
             </Columns>
           </Container>
         </Hero.Body>
@@ -110,10 +113,8 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
 
   /* PRIVATE METHODS */
 
-  private renderTrendChart() {
-    const { requests } = this.props
-
-    const data = requests.sort(sortByDate).reverse().map(r => {
+  private renderTrendChart(requests: IRequest[]) {
+    const data = requests.reverse().map(r => {
       const { passed, total } = getReportStats(r)
       const percentage = total === 0 ? total : (passed / total) * 100
       const date = getDate(r.table.versionQualifier).toLocaleDateString()
@@ -169,10 +170,8 @@ class Home extends Component<{ requests: IRequest[] }, {}> {
     )
   }
 
-  private renderRequests() {
-    const { requests } = this.props
-
-    const requestData = requests.sort(sortByDate).map(r => {
+  private renderRequests(requests: IRequest[]) {
+    const requestData = requests.map(r => {
       const { versionQualifier, id } = r.table
       const releaseLink = `https://github.com/electron/nightlies/releases/tag/v${versionQualifier}`
       const { passed, total } = getReportStats(r)
