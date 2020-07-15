@@ -90,7 +90,7 @@ class Home extends Component<IHomeProps, {}> {
         'border-radius': '10px'
       }
 
-      if (active) {
+      if (active && payload?.length > 0) {
         const data = payload[0].payload
         return (
           <div style={style}>
