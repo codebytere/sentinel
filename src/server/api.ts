@@ -79,6 +79,19 @@ export namespace api {
     AMD64 = 'amd64'
   }
 
+  export enum ReleaseChannel {
+    None = 0,
+    Stable = 1,
+    Beta = 2,
+    Nightly = 4
+  }
+
+  export enum Channel {
+    STABLE = 'stable',
+    BETA = 'beta',
+    NIGHTLY = 'nightly'
+  }
+
   export enum OS {
     MACOS = 'macos',
     WINDOWS = 'windows',

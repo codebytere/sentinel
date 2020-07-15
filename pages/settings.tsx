@@ -15,6 +15,7 @@ import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
 import { ISettingsProps, IRegistrant } from 'src/server/interfaces'
 import { AuthContext, IAuthProviderState } from '../src/contexts/auth'
+import { api } from 'src/server/api'
 
 class Settings extends Component<ISettingsProps, {}> {
   static contextType = AuthContext
@@ -30,7 +31,7 @@ class Settings extends Component<ISettingsProps, {}> {
     const registrant: IRegistrant = json.table
     const webhooks = registrant.webhooks || null
 
-    return { webhooks }
+    return { webhooks, channel: registrant.channel }
   }
 
   constructor(props: ISettingsProps) {
@@ -40,34 +41,40 @@ class Settings extends Component<ISettingsProps, {}> {
   }
 
   public render() {
+    const { Field } = Form
+    const { Body } = Hero
+    const { Column } = Columns
+    const { Consumer } = AuthContext
+
     return (
       <Hero color={'light'} size={'fullheight'}>
-        <Hero.Body>
+        <Body>
           <Container>
             <Columns className={'is-centered'}>
-              <Columns.Column size={6}>
+              <Column size={6}>
                 <Box>
                   <Heading size={3} className={'has-text-centered'}>
-                    Webhook Settings
+                    User Settings
                   </Heading>
-                  <Form.Field>{this.renderWebHookTable()}</Form.Field>
-                  <Form.Field>
-                    <AuthContext.Consumer>
+                  <Field>{this.renderWebHookTable()}</Field>
+                  <Field>{this.renderChannels()}</Field>
+                  <Field>
+                    <Consumer>
                       {(auth: IAuthProviderState) => (
                         <Button
                           onClick={() => this.handleFormSubmit(auth.user!.name)}
                           color={'success'}
                         >
-                          Update Webhooks
+                          Update Settings
                         </Button>
                       )}
-                    </AuthContext.Consumer>
-                  </Form.Field>
+                    </Consumer>
+                  </Field>
                 </Box>
-              </Columns.Column>
+              </Column>
             </Columns>
           </Container>
-        </Hero.Body>
+        </Body>
       </Hero>
     )
   }
@@ -80,10 +87,11 @@ class Settings extends Component<ISettingsProps, {}> {
     const rawTableHTML = document.getElementById('webhook-table')!
     const rawTableString = rawTableHTML.outerHTML.toString()
     const webhooks = this.convertTableToJSON(rawTableString)
+    const channel = this.handleChannelCheckboxes()
 
     fetch('/update', {
       method: 'POST',
-      body: JSON.stringify({ webhooks }),
+      body: JSON.stringify({ webhooks, channel }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
@@ -105,6 +113,28 @@ class Settings extends Component<ISettingsProps, {}> {
       })
   }
 
+  private handleChannelCheckboxes = () => {
+    const stable = document.getElementById('stable')! as HTMLInputElement
+    const beta = document.getElementById('stable')! as HTMLInputElement
+    const nightly = document.getElementById('stable')! as HTMLInputElement
+
+    let channel = api.ReleaseChannel.None
+
+    channel = stable.checked
+      ? channel | api.ReleaseChannel.Stable
+      : channel & ~api.ReleaseChannel.Stable
+
+    channel = beta.checked
+      ? channel | api.ReleaseChannel.Beta
+      : channel & ~api.ReleaseChannel.Beta
+
+    channel = nightly.checked
+      ? channel | api.ReleaseChannel.Nightly
+      : channel & ~api.ReleaseChannel.Nightly
+
+    return channel
+  }
+
   private convertTableToJSON(data: string) {
     const webhookData: Record<string, string> = {}
     const { results: json } = converter.parse(data)
@@ -115,6 +145,32 @@ class Settings extends Component<ISettingsProps, {}> {
       }
     })
     return webhookData
+  }
+
+  private renderChannels() {
+    const { channel } = this.props
+    const { Control, Checkbox } = Form
+
+    const usingStable = channel & api.ReleaseChannel.Stable
+    const usingBeta = channel & api.ReleaseChannel.Beta
+    const usingNightly = channel & api.ReleaseChannel.Nightly
+
+    return (
+      <Control>
+        <Checkbox id={'stable'} checked={usingStable}>
+          {' '}
+          Stable
+        </Checkbox>{' '}
+        <Checkbox id={'beta'} checked={usingBeta}>
+          {' '}
+          Beta
+        </Checkbox>{' '}
+        <Checkbox id={'nightly'} checked={usingNightly}>
+          {' '}
+          Nightly
+        </Checkbox>
+      </Control>
+    )
   }
 
   private renderWebHookTable() {

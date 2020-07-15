@@ -29,6 +29,7 @@ export namespace Tables {
   // Represented as mRegistrant
   export class Registrant extends Model {
     webhooks!: Record<string, string>
+    channel!: number
     username!: string
     appName!: string
     password: string
@@ -40,7 +41,8 @@ export namespace Tables {
       username: TEXT,
       appName: TEXT,
       password: TEXT,
-      webhooks: JSONB
+      webhooks: JSONB,
+      channel: INTEGER
     },
     {
       sequelize,
@@ -136,11 +138,10 @@ export namespace Tables {
     }
   )
 
-  // Report.hasMany(TestData, )
   TestData.belongsTo(Report, { foreignKey: 'reportId' })
 
   export const random = () => sequelize.random()
   export async function sync() {
-    await sequelize.sync({ alter: true })
+    await sequelize.sync({ alter: true, logging: console.log })
   }
 }

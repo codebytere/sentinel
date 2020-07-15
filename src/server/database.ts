@@ -43,12 +43,19 @@ export class mRegistrant {
    *
    * @returns true if the webhooks were successfully updated, else false.
    */
-  static async UpdateWebhooks(id: number, webhooks: Record<string, string>) {
+  static async UpdateSettings(
+    id: number,
+    webhooks: Record<string, string>,
+    channel: number
+  ) {
     const registrant = await Tables.Registrant.findOne({
       where: { id }
     })
 
     if (!registrant) return false
+
+    // Update release channel to test against.
+    await registrant.update('channel', channel)
 
     // Update all webhooks which were changed.
     for (const hook in webhooks) {
@@ -137,7 +144,7 @@ export class mTestData {
     let td
     if (filtered.length === 1) {
       const existing = filtered[0]
-      td = await await Tables.TestData.update(
+      td = await Tables.TestData.update(
         { ...test },
         { where: { id: existing.id } }
       )

@@ -18,7 +18,7 @@ import {
   getReportsSchema,
   getReportSchema,
   getRequestSchema,
-  updateWebhooksSchema
+  updateSettingsSchema
 } from './schemas'
 import {
   HOST,
@@ -185,7 +185,7 @@ fast
           url: '/register',
           schema: registerSchema,
           handler: async (request, reply) => {
-            const { appName, username, webhooks } = request.body
+            const { appName, channel, username, webhooks } = request.body
             fast.log.info(
               `Creating new account for username: ${username} and app: ${appName}`
             )
@@ -197,7 +197,8 @@ fast
                 appName,
                 username,
                 password: hash,
-                webhooks
+                webhooks,
+                channel
               })
 
               fast.log.info(`Successfully created new account for ${username}`)
@@ -207,6 +208,7 @@ fast
                 name: user.table.username,
                 id: user.table.id
               }
+
               reply.redirect('/index')
             } catch (err) {
               fast.log.error(`Failed to create account for ${appName}: ${err}`)
@@ -278,23 +280,27 @@ fast
         fast.route({
           method: 'POST',
           url: '/update',
-          schema: updateWebhooksSchema,
+          schema: updateSettingsSchema,
           handler: async (request, reply) => {
             if (request.session.authenticated) {
-              const { webhooks } = request.body
+              const { webhooks, channel } = request.body
               const authedUser = request.session.user.name
 
               fast.log.info(`Updating webhooks for ${authedUser}`)
 
               const id = request.session.user.id
-              const success = await mRegistrant.UpdateWebhooks(id, webhooks)
+              const success = await mRegistrant.UpdateSettings(
+                id,
+                webhooks,
+                channel
+              )
               if (!success) {
                 reply.code(500).send({
-                  error: `Failed to update webhooks for ${authedUser}`
+                  error: `Failed to update settings for ${authedUser}`
                 })
               }
             } else {
-              fast.log.error('Cannot update webhooks for unauthenticated user')
+              fast.log.error('Cannot update settings for unauthenticated user')
               reply.redirect('/index')
             }
           }

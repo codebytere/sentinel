@@ -12,6 +12,7 @@ import {
 import { withAlert } from 'react-alert'
 import converter from 'html-table-to-json'
 import { PLATFORMS } from '../src/server/constants'
+import { api } from '../src/server/api'
 import {
   IAlertProps as ISignupProps,
   ISignupState
@@ -28,16 +29,20 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
       newRegistrant: {
         username: '',
         appName: '',
-        password: ''
+        password: '',
+        channel: api.ReleaseChannel.None
       }
     }
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleClearForm = this.handleClearForm.bind(this)
     this.handleInput = this.handleInput.bind(this)
+    this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this)
   }
 
   public render() {
+    const { Input, Field, Control, Checkbox, Label } = Form
+
     return (
       <Hero color={'light'} size={'fullheight'}>
         <Hero.Body>
@@ -45,26 +50,27 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
             <Columns className={'is-centered'}>
               <Columns.Column size={6}>
                 <Box>
-                  <Form.Field>
-                    <Form.Input
+                  <Label>General Information</Label>
+                  <Field>
+                    <Input
                       title={'User Name'}
                       name={'username'}
                       value={this.state.newRegistrant.username}
                       placeholder={'Enter your name'}
                       onChange={this.handleInput}
                     />{' '}
-                  </Form.Field>
-                  <Form.Field>
-                    <Form.Input
+                  </Field>
+                  <Field>
+                    <Input
                       title={'App Name'}
                       name={'appName'}
                       value={this.state.newRegistrant.appName}
                       placeholder={`Enter your app's name`}
                       onChange={this.handleInput}
                     />{' '}
-                  </Form.Field>
-                  <Form.Field>
-                    <Form.Input
+                  </Field>
+                  <Field>
+                    <Input
                       title={'Password'}
                       name={'password'}
                       type={'password'}
@@ -72,9 +78,38 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                       placeholder={'Enter a new password'}
                       onChange={this.handleInput}
                     />{' '}
-                  </Form.Field>
-                  <Form.Field>{this.renderWebHookTable()}</Form.Field>
-                  <Form.Field>
+                  </Field>
+                  <Field>
+                    <Label>Webhooks</Label>
+                    {this.renderWebHookTable()}
+                  </Field>
+                  <Field>
+                    <Label>Release Channels</Label>
+                    <Control>
+                      <Checkbox
+                        id={'stable'}
+                        onChange={this.onInputCheckboxChange}
+                      >
+                        {' '}
+                        Stable
+                      </Checkbox>{' '}
+                      <Checkbox
+                        id={'beta'}
+                        onChange={this.onInputCheckboxChange}
+                      >
+                        {' '}
+                        Beta{' '}
+                      </Checkbox>{' '}
+                      <Checkbox
+                        id={'nightly'}
+                        onChange={this.onInputCheckboxChange}
+                      >
+                        {' '}
+                        Nightly
+                      </Checkbox>
+                    </Control>
+                  </Field>
+                  <Field>
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear
                     </Button>{' '}
@@ -88,7 +123,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                         </Button>
                       )}
                     </AuthContext.Consumer>
-                  </Form.Field>
+                  </Field>
                 </Box>
               </Columns.Column>
             </Columns>
@@ -151,9 +186,37 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
       newRegistrant: {
         username: '',
         appName: '',
-        password: ''
+        password: '',
+        channel: api.ReleaseChannel.None
       }
     })
+  }
+
+  private onInputCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let { channel } = this.state.newRegistrant
+
+    const id = event.target.id
+    const checked = event.target.checked
+
+    if (id === api.Channel.STABLE) {
+      channel = checked
+        ? channel | api.ReleaseChannel.Stable
+        : channel & ~api.ReleaseChannel.Stable
+    } else if (id === api.Channel.BETA) {
+      channel = checked
+        ? channel | api.ReleaseChannel.Beta
+        : channel & ~api.ReleaseChannel.Beta
+    } else {
+      channel = checked
+        ? channel | api.ReleaseChannel.Nightly
+        : channel & ~api.ReleaseChannel.Nightly
+    }
+
+    this.setState(prevState => ({
+      newRegistrant: { ...prevState.newRegistrant, channel }
+    }))
   }
 
   private convertTableToJSON(data: string) {

@@ -14,6 +14,7 @@ export interface IAlertProps {
 export interface ISettingsProps {
   alert: AlertManager
   webhooks: Record<string, string> | null
+  channel: api.ReleaseChannel
 }
 
 export interface IReportListProps {
@@ -60,6 +61,7 @@ export interface IRegistrant {
   appName: string
   username: string
   password: string
+  channel: api.ReleaseChannel
   webhooks?: Record<string, string>
 }
 

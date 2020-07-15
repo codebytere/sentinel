@@ -26,11 +26,12 @@ export const triggerSchema = {
 export const registerSchema = {
   body: {
     type: 'object',
-    required: ['appName', 'username', 'password'],
+    required: ['appName', 'username', 'password', 'channel'],
     properties: {
       appName: { type: 'string' },
       username: { type: 'string' },
       password: { type: 'string' },
+      channel: { type: 'number' },
       webhooks: {
         type: 'object',
         properties: {
@@ -51,10 +52,11 @@ export const registerSchema = {
 }
 
 // Schema for /update
-export const updateWebhooksSchema = {
+export const updateSettingsSchema = {
   body: {
     type: 'object',
     properties: {
+      channel: { type: 'number' },
       webhooks: {
         type: 'object',
         properties: {
