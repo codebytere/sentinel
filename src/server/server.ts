@@ -266,6 +266,8 @@ fast
             if (request.session.authenticated) {
               fast.log.info('Logging out current user');
 
+              request.session.authenticated = false;
+              request.session.user = {};
               request.destroySession(err => {
                 if (err) {
                   reply.code(500).send('Internal Server Error');
