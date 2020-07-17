@@ -1,5 +1,5 @@
-import { Component, FormEvent } from 'react'
-import Router from 'next/router'
+import { Component, FormEvent } from 'react';
+import Router from 'next/router';
 import {
   Container,
   Form,
@@ -7,27 +7,27 @@ import {
   Hero,
   Columns,
   Box
-} from 'react-bulma-components'
-import { withAlert } from 'react-alert'
-import { IAlertProps, IRegistrantState } from 'src/server/interfaces'
-import { IAuthProviderState, AuthContext } from '../src/contexts/auth'
+} from 'react-bulma-components';
+import { withAlert } from 'react-alert';
+import { IAlertProps, IRegistrantState } from 'src/server/interfaces';
+import { IAuthProviderState, AuthContext } from '../src/contexts/auth';
 
 class SignInContainer extends Component<IAlertProps, IRegistrantState> {
-  static contextType = AuthContext
+  static contextType = AuthContext;
 
   constructor(props: IAlertProps) {
-    super(props)
+    super(props);
 
     this.state = {
       registrant: {
         username: '',
         password: ''
       }
-    }
+    };
 
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    this.handleClearForm = this.handleClearForm.bind(this)
-    this.handleInput = this.handleInput.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleClearForm = this.handleClearForm.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
 
   public render() {
@@ -65,7 +65,7 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
                       {(auth: IAuthProviderState) => (
                         <Button
                           onClick={() => {
-                            this.handleFormSubmit(auth)
+                            this.handleFormSubmit(auth);
                           }}
                           color={'success'}
                         >
@@ -80,26 +80,26 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
           </Container>
         </Hero.Body>
       </Hero>
-    )
+    );
   }
 
   /* PRIVATE METHODS */
 
   private handleInput(e: FormEvent<HTMLInputElement>) {
-    const prop = e.currentTarget.name
-    const value = e.currentTarget.value
+    const prop = e.currentTarget.name;
+    const value = e.currentTarget.value;
 
     this.setState(prevState => ({
       registrant: {
         ...prevState.registrant,
         [prop]: value
       }
-    }))
+    }));
   }
 
   private handleFormSubmit(auth: IAuthProviderState) {
-    const alert = this.props.alert
-    const reg = this.state.registrant
+    const alert = this.props.alert;
+    const reg = this.state.registrant;
 
     fetch('/login', {
       method: 'POST',
@@ -111,30 +111,30 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully Logged In ${reg.username}`)
+          alert.show(`Successfully Logged In ${reg.username}`);
         } else {
-          alert.show(`Login Failed For ${reg.username}`)
+          alert.show(`Login Failed For ${reg.username}`);
         }
-        return response.json()
+        return response.json();
       })
       .then(user => {
-        auth.signIn(user)
-        Router.push('/index')
+        auth.signIn(user);
+        Router.push('/index');
       })
       .catch(err => {
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
 
   private handleClearForm(e: FormEvent<HTMLInputElement>) {
-    e.preventDefault()
+    e.preventDefault();
     this.setState({
       registrant: {
         username: '',
         password: ''
       }
-    })
+    });
   }
 }
 
-export default withAlert()(SignInContainer)
+export default withAlert()(SignInContainer);

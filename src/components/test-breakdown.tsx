@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { PieChart, Pie, Cell, Tooltip } from 'recharts'
-import { api } from '../server/api'
+import React, { Component } from 'react';
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { api } from '../server/api';
 
 const divStyle = {
   margin: '0 auto'
-}
+};
 
 export default class TestBreakdown extends Component<
   { data: api.TestData },
@@ -16,21 +16,21 @@ export default class TestBreakdown extends Component<
       totalSkipped,
       totalWarnings,
       totalFailed
-    } = this.props.data
+    } = this.props.data;
 
     const COLORS = [
       'hsl(141, 53%, 53%)',
       'hsl(0, 0%, 71%)',
       'hsl(48, 100%, 67%)',
       'hsl(348, 86%, 61%)'
-    ]
+    ];
 
     const data = [
       { name: 'Passed', value: totalPassed ? totalPassed : 0 },
       { name: 'Skipped', value: totalSkipped ? totalSkipped : 0 },
       { name: 'Warnings', value: totalWarnings ? totalWarnings : 0 },
       { name: 'Failed', value: totalFailed ? totalFailed : 0 }
-    ]
+    ];
 
     return (
       <PieChart width={280} height={340} style={divStyle}>
@@ -49,6 +49,6 @@ export default class TestBreakdown extends Component<
         </Pie>
         <Tooltip />
       </PieChart>
-    )
+    );
   }
 }

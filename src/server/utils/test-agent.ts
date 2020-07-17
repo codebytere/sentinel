@@ -1,5 +1,5 @@
-import * as os from 'os'
-import { api } from '../api'
+import * as os from 'os';
+import { api } from '../api';
 
 export function testAgent(): api.TestAgent {
   return {
@@ -15,5 +15,5 @@ export function testAgent(): api.TestAgent {
     totalMem: os.totalmem(),
     type: os.type(),
     endianness: os.endianness()
-  } as api.TestAgent
+  } as api.TestAgent;
 }

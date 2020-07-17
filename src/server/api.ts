@@ -1,74 +1,74 @@
 export namespace api {
   export interface ReportRequest {
     platformInstallData: {
-      platform: string
-      link: string
-    }
-    versionQualifier: string
-    reportCallback: string
-    commitHash: string
+      platform: string;
+      link: string;
+    };
+    versionQualifier: string;
+    reportCallback: string;
+    commitHash: string;
   }
 
   export interface TestAgent {
-    arch: string
-    platform: NodeJS.Platform
+    arch: string;
+    platform: NodeJS.Platform;
     cpus: {
-      cores: number
-      model: string
-      speed: number
-    }
-    freeMem: number
-    release: string
-    totalMem: number
-    type: string
-    endianness: 'BE' | 'DE'
+      cores: number;
+      model: string;
+      speed: number;
+    };
+    freeMem: number;
+    release: string;
+    totalMem: number;
+    type: string;
+    endianness: 'BE' | 'DE';
   }
 
   export interface ReportRequestResponse {
-    sessionToken: string
-    reportsExpected: number
-    name: string
+    sessionToken: string;
+    reportsExpected: number;
+    name: string;
   }
 
   export interface Request {
-    id: number
+    id: number;
     platformInstallData: {
-      platform: string
-      link: string
-    }
-    versionQualifier: string
-    commitHash: string
-    createdAt: Date
-    updatedAt: Date
+      platform: string;
+      link: string;
+    };
+    versionQualifier: string;
+    commitHash: string;
+    createdAt: Date;
+    updatedAt: Date;
   }
 
   export interface Report {
-    id: number
-    registrantId: number
-    name: string
-    status: Status
-    reportsExpected: number
-    sessionToken: string
-    createdAt: Date
-    updatedAt: Date
-    requestId: number
+    id: number;
+    registrantId: number;
+    name: string;
+    status: Status;
+    reportsExpected: number;
+    sessionToken: string;
+    createdAt: Date;
+    updatedAt: Date;
+    requestId: number;
   }
 
   export interface TestData {
-    id: number
-    status: Status
-    arch: Arch
-    os: OS
-    sourceLink?: string
-    timeStart: Date
-    timeStop: Date
-    totalPassed?: number
-    totalSkipped?: number
-    totalWarnings?: number
-    totalFailed?: number
-    logfileLink?: string
-    ciLink?: string
-    testAgent: TestAgent
+    id: number;
+    status: Status;
+    arch: Arch;
+    os: OS;
+    sourceLink?: string;
+    timeStart: Date;
+    timeStop: Date;
+    totalPassed?: number;
+    totalSkipped?: number;
+    totalWarnings?: number;
+    totalFailed?: number;
+    logfileLink?: string;
+    ciLink?: string;
+    testAgent: TestAgent;
   }
 
   export enum Arch {

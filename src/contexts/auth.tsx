@@ -1,38 +1,38 @@
-import { Component, createContext } from 'react'
+import { Component, createContext } from 'react';
 
-type SentinelUser = { name: string; id: number }
+type SentinelUser = { name: string; id: number };
 export interface IAuthProviderState {
-  user?: SentinelUser
-  signIn: (user: SentinelUser) => void
-  signOut: () => void
-  fetchAuthedUser: () => void
+  user?: SentinelUser;
+  signIn: (user: SentinelUser) => void;
+  signOut: () => void;
+  fetchAuthedUser: () => void;
 }
 
 export const AuthContext = createContext({
   signIn: (user: SentinelUser) => {},
   signOut: () => {},
   fetchAuthedUser: () => {}
-})
+});
 
 export default class AuthProvider extends Component<{}, IAuthProviderState> {
   constructor(props: any) {
-    super(props)
+    super(props);
 
     this.state = {
       signIn: this.signIn,
       signOut: this.signOut,
       fetchAuthedUser: this.fetchAuthedUser
-    }
+    };
   }
 
   componentDidMount() {
     this.fetchAuthedUser()
       .then(user => {
-        this.setState({ user })
+        this.setState({ user });
       })
       .catch(err => {
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
 
   public render() {
@@ -40,18 +40,18 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
       <AuthContext.Provider value={this.state}>
         {this.props.children}
       </AuthContext.Provider>
-    )
+    );
   }
 
   private fetchAuthedUser = () => {
-    return fetch('/checkAuth').then(response => response.json())
-  }
+    return fetch('/checkAuth').then(response => response.json());
+  };
 
   private signIn = (user: SentinelUser) => {
-    this.setState({ user })
-  }
+    this.setState({ user });
+  };
 
   private signOut = () => {
-    this.setState({ user: undefined })
-  }
+    this.setState({ user: undefined });
+  };
 }

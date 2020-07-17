@@ -1,28 +1,28 @@
-import { Navbar } from 'react-bulma-components'
-import { Component, Fragment } from 'react'
-import Router from 'next/router'
-import Link from 'next/link'
-import { withAlert } from 'react-alert'
-import { SENTINEL_LOGO } from '../server/constants'
-import { IAlertProps, INavBarState } from 'src/server/interfaces'
+import { Navbar } from 'react-bulma-components';
+import { Component, Fragment } from 'react';
+import Router from 'next/router';
+import Link from 'next/link';
+import { withAlert } from 'react-alert';
+import { SENTINEL_LOGO } from '../server/constants';
+import { IAlertProps, INavBarState } from 'src/server/interfaces';
 
-import { AuthContext, IAuthProviderState } from '../contexts/auth'
+import { AuthContext, IAuthProviderState } from '../contexts/auth';
 
 class NavBar extends Component<IAlertProps, INavBarState> {
-  static contextType = AuthContext
+  static contextType = AuthContext;
 
   constructor(props: IAlertProps) {
-    super(props)
-    this.state = { open: false }
+    super(props);
+    this.state = { open: false };
 
-    this.handleLogout = this.handleLogout.bind(this)
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   public render() {
-    const open = this.state.open ? 'is-active' : ''
+    const open = this.state.open ? 'is-active' : '';
     const toggleMenu = () => {
-      this.setState({ open: !this.state.open })
-    }
+      this.setState({ open: !this.state.open });
+    };
 
     return (
       <Navbar fixed={'top'} color={'link'}>
@@ -61,7 +61,7 @@ class NavBar extends Component<IAlertProps, INavBarState> {
                     <a
                       className={'navbar-item'}
                       onClick={() => {
-                        this.handleLogout(auth)
+                        this.handleLogout(auth);
                       }}
                     >
                       Log Out
@@ -73,13 +73,13 @@ class NavBar extends Component<IAlertProps, INavBarState> {
           </AuthContext.Consumer>
         </Navbar.Menu>
       </Navbar>
-    )
+    );
   }
 
   /* PRIVATE METHODS */
 
   private handleLogout(auth: IAuthProviderState) {
-    const alert = this.props.alert
+    const alert = this.props.alert;
 
     fetch('/logout', {
       method: 'GET',
@@ -90,17 +90,17 @@ class NavBar extends Component<IAlertProps, INavBarState> {
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show('Successfully logged out')
-          auth.signOut()
-          Router.push('/index')
+          alert.show('Successfully logged out');
+          auth.signOut();
+          Router.push('/index');
         } else {
-          alert.show('Logout failed')
+          alert.show('Logout failed');
         }
       })
       .catch(err => {
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
 }
 
-export default withAlert()(NavBar)
+export default withAlert()(NavBar);

@@ -1,5 +1,5 @@
-import { FormEvent, Component } from 'react'
-import Router from 'next/router'
+import { FormEvent, Component } from 'react';
+import Router from 'next/router';
 import {
   Container,
   Form,
@@ -8,22 +8,22 @@ import {
   Columns,
   Box,
   Table
-} from 'react-bulma-components'
-import { withAlert } from 'react-alert'
-import converter from 'html-table-to-json'
-import { PLATFORMS } from '../src/server/constants'
-import { api } from '../src/server/api'
+} from 'react-bulma-components';
+import { withAlert } from 'react-alert';
+import converter from 'html-table-to-json';
+import { PLATFORMS } from '../src/server/constants';
+import { api } from '../src/server/api';
 import {
   IAlertProps as ISignupProps,
   ISignupState
-} from 'src/server/interfaces'
-import { IAuthProviderState, AuthContext } from '../src/contexts/auth'
+} from 'src/server/interfaces';
+import { IAuthProviderState, AuthContext } from '../src/contexts/auth';
 
 class SignUpContainer extends Component<ISignupProps, ISignupState> {
-  static contextType = AuthContext
+  static contextType = AuthContext;
 
   constructor(props: ISignupProps) {
-    super(props)
+    super(props);
 
     this.state = {
       newRegistrant: {
@@ -32,16 +32,16 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
         password: '',
         channel: api.ReleaseChannel.None
       }
-    }
+    };
 
-    this.handleFormSubmit = this.handleFormSubmit.bind(this)
-    this.handleClearForm = this.handleClearForm.bind(this)
-    this.handleInput = this.handleInput.bind(this)
-    this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleClearForm = this.handleClearForm.bind(this);
+    this.handleInput = this.handleInput.bind(this);
+    this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this);
   }
 
   public render() {
-    const { Input, Field, Control, Checkbox, Label } = Form
+    const { Input, Field, Control, Checkbox, Label } = Form;
 
     return (
       <Hero color={'light'} size={'fullheight'}>
@@ -139,28 +139,28 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
           </Container>
         </Hero.Body>
       </Hero>
-    )
+    );
   }
 
   /* PRIVATE METHODS */
 
   private handleInput(e: FormEvent<HTMLInputElement>) {
-    const prop = e.currentTarget.name
-    const value = e.currentTarget.value
+    const prop = e.currentTarget.name;
+    const value = e.currentTarget.value;
 
     this.setState(prevState => ({
       newRegistrant: {
         ...prevState.newRegistrant,
         [prop]: value
       }
-    }))
+    }));
   }
 
   private handleFormSubmit(auth: IAuthProviderState) {
-    const alert = this.props.alert
-    const reg = this.state.newRegistrant
+    const alert = this.props.alert;
+    const reg = this.state.newRegistrant;
 
-    reg.webhooks = this.getWebhookData()
+    reg.webhooks = this.getWebhookData();
 
     fetch('/register', {
       method: 'POST',
@@ -172,23 +172,23 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully Registered ${reg.username}`)
+          alert.show(`Successfully Registered ${reg.username}`);
         } else {
-          alert.show(`Registration Failed For ${reg.username}`)
+          alert.show(`Registration Failed For ${reg.username}`);
         }
-        return response.json()
+        return response.json();
       })
       .then(user => {
-        auth.signIn(user)
-        Router.push('/index')
+        auth.signIn(user);
+        Router.push('/index');
       })
       .catch(err => {
-        console.log(err)
-      })
+        console.log(err);
+      });
   }
 
   private handleClearForm(event: FormEvent<HTMLInputElement>) {
-    event.preventDefault()
+    event.preventDefault();
     this.setState({
       newRegistrant: {
         username: '',
@@ -196,79 +196,79 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
         password: '',
         channel: api.ReleaseChannel.None
       }
-    })
+    });
   }
 
   private onInputCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    let { channel } = this.state.newRegistrant
+    let { channel } = this.state.newRegistrant;
 
-    const id = event.target.id
-    const checked = event.target.checked
+    const id = event.target.id;
+    const checked = event.target.checked;
 
     if (id === 'use-provided-client') {
-      const table = document.getElementById('webhook-table')!
-      table.style.display = checked ? 'none' : 'block'
-      return
+      const table = document.getElementById('webhook-table')!;
+      table.style.display = checked ? 'none' : 'block';
+      return;
     }
 
     if (id === api.Channel.STABLE) {
       channel = checked
         ? channel | api.ReleaseChannel.Stable
-        : channel & ~api.ReleaseChannel.Stable
+        : channel & ~api.ReleaseChannel.Stable;
     } else if (id === api.Channel.BETA) {
       channel = checked
         ? channel | api.ReleaseChannel.Beta
-        : channel & ~api.ReleaseChannel.Beta
+        : channel & ~api.ReleaseChannel.Beta;
     } else {
       channel = checked
         ? channel | api.ReleaseChannel.Nightly
-        : channel & ~api.ReleaseChannel.Nightly
+        : channel & ~api.ReleaseChannel.Nightly;
     }
 
     this.setState(prevState => ({
       newRegistrant: { ...prevState.newRegistrant, channel }
-    }))
-  }
+    }));
+  };
 
   private getWebhookData() {
-    const webhookData: Record<string, string> = {}
+    const webhookData: Record<string, string> = {};
 
     const provided = document.getElementById(
       'use-provided-client'
-    )! as HTMLInputElement
+    )! as HTMLInputElement;
 
     if (provided.checked) {
-      const { appName } = this.state.newRegistrant
-      const link = `http://sentinel-client.herokuapp.com/${appName}`
-      const platforms = ['linux-x64', 'win32-x64', 'darwin-x64']
+      const { appName } = this.state.newRegistrant;
+      const link = `http://sentinel-client.herokuapp.com/${appName}`;
+      const platforms = ['linux-x64', 'win32-x64', 'darwin-x64'];
       for (const platform of platforms) {
-        webhookData[platform] = link
+        webhookData[platform] = link;
       }
     } else {
-      const rawTableHTML = document.getElementById('webhook-table')!
-      const rawTableString = rawTableHTML.outerHTML.toString()
+      const rawTableHTML = document.getElementById('webhook-table')!;
+      const rawTableString = rawTableHTML.outerHTML.toString();
 
-      const { results: json } = converter.parse(rawTableString)
+      const { results: json } = converter.parse(rawTableString);
       json[0].forEach((hook: { Platform: string; Webhook: string }) => {
-        const [platform, link] = [hook.Platform, hook.Webhook]
+        const [platform, link] = [hook.Platform, hook.Webhook];
         if (link !== '') {
-          webhookData[platform] = link
+          webhookData[platform] = link;
         }
-      })
+      });
     }
 
-    return webhookData
+    return webhookData;
   }
 
   private renderWebHookTable() {
     const hooks = PLATFORMS.map(p => {
-      return { platform: p, link: '' }
-    })
+      return { platform: p, link: '' };
+    });
 
     const hookData = hooks.map(w => {
-      const { platform, link } = w
+      const { platform, link } = w;
       return (
         <tr>
           <td>{platform}</td>
@@ -276,8 +276,8 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
             {link}
           </td>
         </tr>
-      )
-    })
+      );
+    });
 
     return (
       <Table bordered className={'is-narrow'} id={'webhook-table'}>
@@ -289,8 +289,8 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
           {hookData}
         </tbody>
       </Table>
-    )
+    );
   }
 }
 
-export default withAlert()(SignUpContainer)
+export default withAlert()(SignUpContainer);

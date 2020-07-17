@@ -20,7 +20,7 @@ export const triggerSchema = {
       }
     }
   }
-}
+};
 
 // Schema for /register
 export const registerSchema = {
@@ -49,7 +49,7 @@ export const registerSchema = {
       }
     }
   }
-}
+};
 
 // Schema for /update
 export const updateSettingsSchema = {
@@ -74,7 +74,7 @@ export const updateSettingsSchema = {
       }
     }
   }
-}
+};
 
 // Schema for /login
 export const loginSchema = {
@@ -86,7 +86,7 @@ export const loginSchema = {
       password: { type: 'string' }
     }
   }
-}
+};
 
 // Schema for /report/registrant/:registrantId
 export const getReportsSchema = {
@@ -97,7 +97,7 @@ export const getReportsSchema = {
       registrantId: { type: 'number' }
     }
   }
-}
+};
 
 // Schema for /requests/:requestId
 export const getRequestSchema = {
@@ -108,7 +108,7 @@ export const getRequestSchema = {
       requestId: { type: 'number' }
     }
   }
-}
+};
 
 // Schema for '/reports/:requestId'
 export const getReportSchema = {
@@ -119,7 +119,7 @@ export const getReportSchema = {
       requestId: { type: 'number' }
     }
   }
-}
+};
 
 // Schema for /testdata/:reportId
 export const getTestDataSchema = {
@@ -130,7 +130,7 @@ export const getTestDataSchema = {
       reportId: { type: 'number' }
     }
   }
-}
+};
 
 // Schema for /report/:reportId
 export const newReportSchema = {
@@ -181,4 +181,4 @@ export const newReportSchema = {
       testAgent: { type: 'object' }
     }
   }
-}
+};

@@ -1,10 +1,12 @@
-import { Tables } from './models'
-import bcrypt from 'bcrypt'
-import { IRegistrant } from './interfaces'
-import { Op } from 'sequelize'
-import { api } from './api'
+import { Tables } from './models';
+import bcrypt from 'bcrypt';
+import { IRegistrant } from './interfaces';
+import { Op } from 'sequelize';
+import { api } from './api';
 
-const MINIMUM_TIME_AGO = new Date(new Date().setDate(new Date().getDate() - 31))
+const MINIMUM_TIME_AGO = new Date(
+  new Date().setDate(new Date().getDate() - 31)
+);
 
 /**
  * A class that represents a single Sentinel service registrant.
@@ -16,8 +18,8 @@ export class mRegistrant {
    * @returns An array of all Registrants who have opted into Sentinel.
    */
   static async FindAll() {
-    const registrants = await Tables.Registrant.findAll()
-    return registrants.map(reg => new mRegistrant(reg))
+    const registrants = await Tables.Registrant.findAll();
+    return registrants.map(reg => new mRegistrant(reg));
   }
 
   /**
@@ -30,9 +32,9 @@ export class mRegistrant {
   static async Find(id: number) {
     const registrant = await Tables.Registrant.findOne({
       where: { id }
-    })
+    });
 
-    return registrant ? new mRegistrant(registrant) : false
+    return registrant ? new mRegistrant(registrant) : false;
   }
 
   /**
@@ -50,23 +52,23 @@ export class mRegistrant {
   ) {
     const registrant = await Tables.Registrant.findOne({
       where: { id }
-    })
+    });
 
-    if (!registrant) return false
+    if (!registrant) return false;
 
     // Update release channel to test against.
-    await registrant.update('channel', channel)
+    await registrant.update('channel', channel);
 
     // Update all webhooks which were changed.
     for (const hook in webhooks) {
       if (webhooks[hook] !== '') {
         // @ts-ignore - ts wrongly assumes that only the high-level key is valid.
-        await registrant.set(`webhooks.${hook}`, webhooks[hook])
+        await registrant.set(`webhooks.${hook}`, webhooks[hook]);
       }
     }
 
-    await registrant.save()
-    return true
+    await registrant.save();
+    return true;
   }
 
   /**
@@ -81,13 +83,13 @@ export class mRegistrant {
   static async Authenticate(username: string, password: string) {
     const registrant = await Tables.Registrant.findOne({
       where: { username }
-    })
+    });
 
     if (!registrant || !bcrypt.compareSync(password, registrant.password)) {
-      return false
+      return false;
     }
 
-    return new mRegistrant(registrant)
+    return new mRegistrant(registrant);
   }
 
   /**
@@ -103,8 +105,8 @@ export class mRegistrant {
    * @returns A new mRegistrant instance.
    */
   static async Create(opts: IRegistrant) {
-    const registrant = await Tables.Registrant.create(opts)
-    return new mRegistrant(registrant)
+    const registrant = await Tables.Registrant.create(opts);
+    return new mRegistrant(registrant);
   }
 }
 
@@ -127,32 +129,32 @@ export class mTestData {
    * @returns A new TestData instance.
    */
   static async CreateOrUpdateFromReport(report: mReport, test: api.TestData) {
-    const reportId = report.table.id
+    const reportId = report.table.id;
 
     const testData = await Tables.TestData.findAll({
       where: {
         reportId
       }
-    })
+    });
 
     const filtered = testData.filter(td => {
-      const sameOS = td.os === test.os
-      const sameArch = td.arch === test.arch
-      return sameOS && sameArch
-    })
+      const sameOS = td.os === test.os;
+      const sameArch = td.arch === test.arch;
+      return sameOS && sameArch;
+    });
 
-    let td
+    let td;
     if (filtered.length === 1) {
-      const existing = filtered[0]
+      const existing = filtered[0];
       td = await Tables.TestData.update(
         { ...test },
         { where: { id: existing.id } }
-      )
+      );
     } else {
-      td = await Tables.TestData.create({ reportId, ...test })
+      td = await Tables.TestData.create({ reportId, ...test });
     }
 
-    return new mTestData(td)
+    return new mTestData(td);
   }
 
   /**
@@ -168,9 +170,9 @@ export class mTestData {
           [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
-    })
+    });
 
-    return testDataSets.map(data => new mTestData(data))
+    return testDataSets.map(data => new mTestData(data));
   }
 }
 
@@ -201,16 +203,16 @@ export class mReport {
         requestId: request.table.id,
         registrantId: registrant.table.id
       }
-    })
+    });
     if (report) {
-      return new mReport(report)
+      return new mReport(report);
     } else {
       return new mReport(
         await Tables.Report.create({
           requestId: request.table.id,
           registrantId: registrant.table.id
         })
-      )
+      );
     }
   }
 
@@ -225,9 +227,9 @@ export class mReport {
           [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
-    })
+    });
 
-    return testdata.map(t => new mTestData(t))
+    return testdata.map(t => new mTestData(t));
   }
 
   /**
@@ -243,9 +245,9 @@ export class mReport {
           [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
-    })
+    });
 
-    return reports.map(report => new mReport(report))
+    return reports.map(report => new mReport(report));
   }
 
   /**
@@ -257,11 +259,11 @@ export class mReport {
    * @returns An mReport corresponding to the passed ID.
    */
   static async FindById(id: number) {
-    const report = await Tables.Report.findOne({ where: { id } })
+    const report = await Tables.Report.findOne({ where: { id } });
     if (!report) {
-      throw new Error(`Report id:${id} not found`)
+      throw new Error(`Report id:${id} not found`);
     }
-    return new mReport(report)
+    return new mReport(report);
   }
 }
 
@@ -283,9 +285,9 @@ export class mRequest {
           [Op.gt]: new Date(MINIMUM_TIME_AGO)
         }
       }
-    })
+    });
 
-    return requests.map(r => new mRequest(r))
+    return requests.map(r => new mRequest(r));
   }
 
   /**
@@ -300,9 +302,9 @@ export class mRequest {
         }
       },
       include: [Tables.Request]
-    })
+    });
 
-    return reports.map(r => new mReport(r))
+    return reports.map(r => new mReport(r));
   }
 
   /**
@@ -320,18 +322,18 @@ export class mRequest {
    * @returns A newly created or existing mRequest associated with a commit hash.
    */
   static async FindOrCreate(opts: {
-    versionQualifier: string
-    commitHash: string
-    installLink: Record<string, string>
+    versionQualifier: string;
+    commitHash: string;
+    installLink: Record<string, string>;
   }) {
     const request = await Tables.Request.findOne({
       where: {
         commitHash: opts.commitHash,
         versionQualifier: opts.versionQualifier
       }
-    })
+    });
     if (request) {
-      return new mRequest(request)
+      return new mRequest(request);
     } else {
       return new mRequest(
         await Tables.Request.create({
@@ -339,7 +341,7 @@ export class mRequest {
           commitHash: opts.commitHash,
           platformInstallData: opts.installLink
         })
-      )
+      );
     }
   }
 
@@ -352,10 +354,10 @@ export class mRequest {
    * @returns An mRequest corresponding to the passed ID.
    */
   static async FindById(id: number): Promise<mRequest> {
-    const record = await Tables.Request.findOne({ where: { id } })
+    const record = await Tables.Request.findOne({ where: { id } });
     if (!record) {
-      throw new Error(`Request id:${id} not found`)
+      throw new Error(`Request id:${id} not found`);
     }
-    return new mRequest(record)
+    return new mRequest(record);
   }
 }

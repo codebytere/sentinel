@@ -1,6 +1,14 @@
-import { DATABASE_URL } from './constants'
-import { INTEGER, JSONB, Model, Sequelize, TEXT, STRING, DATE } from 'sequelize'
-import { api } from './api'
+import { DATABASE_URL } from './constants';
+import {
+  INTEGER,
+  JSONB,
+  Model,
+  Sequelize,
+  TEXT,
+  STRING,
+  DATE
+} from 'sequelize';
+import { api } from './api';
 
 /**
  * HIERARCHY
@@ -24,16 +32,16 @@ export namespace Tables {
       ssl: !!process.env.DATABASE_SSL
     },
     logging: false
-  })
+  });
 
   // Represented as mRegistrant
   export class Registrant extends Model {
-    webhooks!: Record<string, string>
-    channel!: number
-    username!: string
-    appName!: string
-    password: string
-    id!: number
+    webhooks!: Record<string, string>;
+    channel!: number;
+    username!: string;
+    appName!: string;
+    password: string;
+    id!: number;
   }
 
   Registrant.init(
@@ -48,14 +56,14 @@ export namespace Tables {
       sequelize,
       tableName: 'registrant'
     }
-  )
+  );
 
   // Represented as mRequest
   export class Request extends Model {
-    id!: number
-    platformInstallData!: Record<string, string>
-    versionQualifier!: string
-    commitHash!: string
+    id!: number;
+    platformInstallData!: Record<string, string>;
+    versionQualifier!: string;
+    commitHash!: string;
   }
 
   Request.init(
@@ -68,17 +76,17 @@ export namespace Tables {
       sequelize,
       tableName: 'request'
     }
-  )
+  );
 
   // Represented as mReport
   export class Report extends Model {
-    id!: number
-    registrantId!: number
-    requestId!: number
-    reportsExpected: number
-    status?: api.Status
-    sessionToken: string
-    name: string
+    id!: number;
+    registrantId!: number;
+    requestId!: number;
+    reportsExpected: number;
+    status?: api.Status;
+    sessionToken: string;
+    name: string;
   }
 
   Report.init(
@@ -93,27 +101,27 @@ export namespace Tables {
       sequelize,
       tableName: 'report'
     }
-  )
+  );
 
   // Request.hasMany(Report, )
-  Report.belongsTo(Request, { foreignKey: 'requestId' })
+  Report.belongsTo(Request, { foreignKey: 'requestId' });
 
   // Represented as mTestData
   export class TestData extends Model {
-    id!: number
-    status: api.Status
-    arch: api.Arch
-    os: api.OS
-    sourceLink!: string
-    timeStart!: Date
-    timeStop!: Date
-    totalPassed!: number
-    totalSkipped!: number
-    totalWarnings!: number
-    totalFailed!: number
-    logfileLink!: string
-    ciLink?: string
-    testAgent: api.TestAgent
+    id!: number;
+    status: api.Status;
+    arch: api.Arch;
+    os: api.OS;
+    sourceLink!: string;
+    timeStart!: Date;
+    timeStop!: Date;
+    totalPassed!: number;
+    totalSkipped!: number;
+    totalWarnings!: number;
+    totalFailed!: number;
+    logfileLink!: string;
+    ciLink?: string;
+    testAgent: api.TestAgent;
   }
 
   TestData.init(
@@ -136,12 +144,12 @@ export namespace Tables {
       sequelize,
       tableName: 'testdata'
     }
-  )
+  );
 
-  TestData.belongsTo(Report, { foreignKey: 'reportId' })
+  TestData.belongsTo(Report, { foreignKey: 'reportId' });
 
-  export const random = () => sequelize.random()
+  export const random = () => sequelize.random();
   export async function sync() {
-    await sequelize.sync({ alter: true, logging: console.log })
+    await sequelize.sync({ alter: true, logging: console.log });
   }
 }

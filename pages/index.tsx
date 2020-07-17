@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component } from 'react';
 
 import {
   LineChart,
@@ -9,45 +9,45 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer
-} from 'recharts'
-import { Box, Columns, Container, Hero, Table } from 'react-bulma-components'
-import { IRequest, IHomeProps } from 'src/server/interfaces'
+} from 'recharts';
+import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
+import { IRequest, IHomeProps } from 'src/server/interfaces';
 import {
   getDate,
   getReportStats,
   asyncForEach,
   getStatusIcon,
   dateSort
-} from 'src/utils/report-helpers'
+} from 'src/utils/report-helpers';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }) {
-    const host = req ? req.headers.host : window.location.host
-    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host)
-    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`
+    const host = req ? req.headers.host : window.location.host;
+    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
+    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
 
-    const rawRequests = await fetch(`${baseURL}/requests`)
-    const requests = await rawRequests.json()
+    const rawRequests = await fetch(`${baseURL}/requests`);
+    const requests = await rawRequests.json();
 
-    const result: IRequest[] = []
+    const result: IRequest[] = [];
     await asyncForEach(requests, async (req: IRequest) => {
-      const raw = await fetch(`${baseURL}/reports/${req.table.id}`)
-      const reports = await raw.json()
-      result.push({ table: req.table, reports })
-    })
+      const raw = await fetch(`${baseURL}/reports/${req.table.id}`);
+      const reports = await raw.json();
+      result.push({ table: req.table, reports });
+    });
 
-    return { requests: result }
+    return { requests: result };
   }
 
   constructor(props: { requests: IRequest[] }) {
-    super(props)
+    super(props);
 
-    this.renderRequests = this.renderRequests.bind(this)
+    this.renderRequests = this.renderRequests.bind(this);
   }
 
   public render() {
-    const { requests } = this.props
-    const sortedRequests = requests.sort(dateSort)
+    const { requests } = this.props;
+    const sortedRequests = requests.sort(dateSort);
 
     return (
       <Hero color={'info'} size={'fullheight'}>
@@ -66,43 +66,43 @@ class Home extends Component<IHomeProps, {}> {
           </Container>
         </Hero.Body>
       </Hero>
-    )
+    );
   }
 
   /* PRIVATE METHODS */
 
   private renderTrendChart(requests: IRequest[]) {
     const data = requests.reverse().map(r => {
-      const { passed, total } = getReportStats(r)
-      const percentage = total === 0 ? total : (passed / total) * 100
-      const date = getDate(r.table.versionQualifier).toLocaleDateString()
+      const { passed, total } = getReportStats(r);
+      const percentage = total === 0 ? total : (passed / total) * 100;
+      const date = getDate(r.table.versionQualifier).toLocaleDateString();
 
-      return { date, passed, total, percentage }
-    })
+      return { date, passed, total, percentage };
+    });
 
     const CustomTooltip = tooltipData => {
-      const { active, payload, label } = tooltipData
+      const { active, payload, label } = tooltipData;
 
       const style = {
         background: 'white',
         border: '2px solid black',
         padding: '10px',
         'border-radius': '10px'
-      }
+      };
 
       if (active && payload?.length > 0) {
-        const data = payload[0].payload
+        const data = payload[0].payload;
         return (
           <div style={style}>
             <p className="label">{label}</p>
             <p>Reports Passed: {data.passed}</p>
             <p>Total Reports: {data.total}</p>
           </div>
-        )
+        );
       }
 
-      return null
-    }
+      return null;
+    };
 
     return (
       <Box>
@@ -125,14 +125,14 @@ class Home extends Component<IHomeProps, {}> {
           </LineChart>
         </ResponsiveContainer>
       </Box>
-    )
+    );
   }
 
   private renderRequests(requests: IRequest[]) {
     const requestData = requests.map(r => {
-      const { versionQualifier, id } = r.table
-      const releaseLink = `https://github.com/electron/nightlies/releases/tag/v${versionQualifier}`
-      const { passed, total } = getReportStats(r)
+      const { versionQualifier, id } = r.table;
+      const releaseLink = `https://github.com/electron/nightlies/releases/tag/v${versionQualifier}`;
+      const { passed, total } = getReportStats(r);
 
       return (
         <tr>
@@ -149,8 +149,8 @@ class Home extends Component<IHomeProps, {}> {
             )}
           </td>
         </tr>
-      )
-    })
+      );
+    });
 
     return (
       <Box>
@@ -166,8 +166,8 @@ class Home extends Component<IHomeProps, {}> {
           </tbody>
         </Table>
       </Box>
-    )
+    );
   }
 }
 
-export default Home
+export default Home;
