@@ -82,6 +82,15 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                   <Field>
                     <Label>Webhooks</Label>
                     {this.renderWebHookTable()}
+                    <Control>
+                      <Checkbox
+                        id={'use-provided-client'}
+                        onChange={this.onInputCheckboxChange}
+                      >
+                        {' '}
+                        Use Default Client
+                      </Checkbox>
+                    </Control>
                   </Field>
                   <Field>
                     <Label>Release Channels</Label>
@@ -151,9 +160,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     const alert = this.props.alert
     const reg = this.state.newRegistrant
 
-    const rawTableHTML = document.getElementById('webhook-table')!
-    const rawTableString = rawTableHTML.outerHTML.toString()
-    reg.webhooks = this.convertTableToJSON(rawTableString)
+    reg.webhooks = this.getWebhookData()
 
     fetch('/register', {
       method: 'POST',
@@ -200,6 +207,12 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     const id = event.target.id
     const checked = event.target.checked
 
+    if (id === 'use-provided-client') {
+      const table = document.getElementById('webhook-table')!
+      table.style.display = checked ? 'none' : 'block'
+      return
+    }
+
     if (id === api.Channel.STABLE) {
       channel = checked
         ? channel | api.ReleaseChannel.Stable
@@ -219,15 +232,33 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     }))
   }
 
-  private convertTableToJSON(data: string) {
+  private getWebhookData() {
     const webhookData: Record<string, string> = {}
-    const { results: json } = converter.parse(data)
-    json[0].forEach((hook: { Platform: string; Webhook: string }) => {
-      const [platform, link] = [hook.Platform, hook.Webhook]
-      if (link !== '') {
+
+    const provided = document.getElementById(
+      'use-provided-client'
+    )! as HTMLInputElement
+
+    if (provided.checked) {
+      const { appName } = this.state.newRegistrant
+      const link = `http://sentinel-client.herokuapp.com/${appName}`
+      const platforms = ['linux-x64', 'win32-x64', 'darwin-x64']
+      for (const platform of platforms) {
         webhookData[platform] = link
       }
-    })
+    } else {
+      const rawTableHTML = document.getElementById('webhook-table')!
+      const rawTableString = rawTableHTML.outerHTML.toString()
+
+      const { results: json } = converter.parse(rawTableString)
+      json[0].forEach((hook: { Platform: string; Webhook: string }) => {
+        const [platform, link] = [hook.Platform, hook.Webhook]
+        if (link !== '') {
+          webhookData[platform] = link
+        }
+      })
+    }
+
     return webhookData
   }
 
