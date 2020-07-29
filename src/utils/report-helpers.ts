@@ -12,7 +12,7 @@ export const dateSort = (one: IRequest, two: IRequest) => {
   const d1 = new Date(one.table.createdAt);
   const d2 = new Date(two.table.createdAt);
 
-  return d1 > d2 ? -1 : d1 < d2 ? 1 : 0;
+  return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
 };
 
 // Returns a status icon depending on how many tests passed.
