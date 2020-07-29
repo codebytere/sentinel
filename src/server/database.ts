@@ -5,7 +5,7 @@ import { Op } from 'sequelize';
 import { api } from './api';
 
 const MINIMUM_TIME_AGO = new Date(
-  new Date().setDate(new Date().getDate() - 31)
+  new Date().setDate(new Date().getDate() - 100)
 );
 
 /**

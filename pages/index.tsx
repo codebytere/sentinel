@@ -18,6 +18,7 @@ import {
   getStatusIcon,
   dateSort
 } from 'src/utils/report-helpers';
+import { api } from 'src/server/api';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }) {
@@ -71,12 +72,28 @@ class Home extends Component<IHomeProps, {}> {
   /* PRIVATE METHODS */
 
   private renderTrendChart(requests: IRequest[]) {
-    const data = requests.reverse().map(r => {
-      const { passed, total } = getReportStats(r);
+    const data = requests.map(r => {
+      const {
+        stats: { passed, total },
+        type
+      } = getReportStats(r);
+
       const percentage = total === 0 ? total : (passed / total) * 100;
       const date = new Date(r.table.createdAt).toLocaleDateString();
 
-      return { date, passed, total, percentage };
+      const stable = type === api.Channel.STABLE ? percentage : null;
+      const beta = type === api.Channel.BETA ? percentage : null;
+      const nightly = type === api.Channel.NIGHTLY ? percentage : null;
+
+      return {
+        date,
+        passed,
+        total,
+        stable,
+        beta,
+        nightly,
+        type
+      };
     });
 
     const CustomTooltip = tooltipData => {
@@ -91,11 +108,22 @@ class Home extends Component<IHomeProps, {}> {
 
       if (active && payload?.length > 0) {
         const data = payload[0].payload;
+
+        const formattedType = `${data.type
+          .charAt(0)
+          .toUpperCase()}${data.type.slice(1)}`;
         return (
           <div style={style}>
             <p className="label">{label}</p>
-            <p>Reports Passed: {data.passed}</p>
-            <p>Total Reports: {data.total}</p>
+            <p>
+              <b>Type:</b> {formattedType}
+            </p>
+            <p>
+              <b>Reports Passed:</b> {data.passed}
+            </p>
+            <p>
+              <b>Total Reports:</b> {data.total}
+            </p>
           </div>
         );
       }
@@ -117,8 +145,29 @@ class Home extends Component<IHomeProps, {}> {
             <Legend />
             <Line
               type="monotone"
-              dataKey="percentage"
-              stroke=" #000000"
+              dataKey="stable"
+              stroke="#000000"
+              strokeWidth={2}
+              dot={{ stroke: '#000000', strokeWidth: 4 }}
+              connectNulls={true}
+              activeDot={{ r: 8 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="beta"
+              stroke="#8A2BE2"
+              strokeWidth={2}
+              dot={{ stroke: '#8A2BE2', strokeWidth: 4 }}
+              connectNulls={true}
+              activeDot={{ r: 8 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="nightly"
+              stroke="#008080"
+              strokeWidth={2}
+              dot={{ stroke: '#008080', strokeWidth: 4 }}
+              connectNulls={true}
               activeDot={{ r: 8 }}
             />
           </LineChart>
@@ -134,7 +183,9 @@ class Home extends Component<IHomeProps, {}> {
         ? versionQualifier
         : `v${versionQualifier}`;
       const releaseLink = `https://github.com/electron/nightlies/releases/tag/${version}`;
-      const { failed, passed, total } = getReportStats(r);
+      const {
+        stats: { failed, passed, total }
+      } = getReportStats(r);
 
       return (
         <tr>

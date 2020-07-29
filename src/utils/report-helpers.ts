@@ -7,6 +7,12 @@ export const asyncForEach = async (array: any[], callback: Function) => {
   }
 };
 
+// Determines whether a given version is a nightly release.
+export const isNightly = v => v.includes('nightly');
+
+// Determines whether a given version is a beta release.
+export const isBeta = v => v.includes('beta');
+
 // Comparison function to sort dates in increasing order.
 export const dateSort = (one: IRequest, two: IRequest) => {
   const d1 = new Date(one.table.createdAt);
@@ -31,7 +37,9 @@ export const getStatusIcon = (failed: number, total: number) => {
 
 // Return an object containing total and passed tests for a Request.
 export const getReportStats = (request: IRequest) => {
-  return {
+  const version = request.table.versionQualifier;
+
+  const stats = {
     total: request.reports.filter(
       rep => rep.table.status !== api.Status.NOT_RUN
     ).length,
@@ -42,4 +50,13 @@ export const getReportStats = (request: IRequest) => {
       rep => rep.table.status === api.Status.FAILED
     ).length
   };
+
+  let type = api.Channel.STABLE;
+  if (isNightly(version)) {
+    type = api.Channel.NIGHTLY;
+  } else if (isBeta(version)) {
+    type = api.Channel.BETA;
+  }
+
+  return { stats, type };
 };
