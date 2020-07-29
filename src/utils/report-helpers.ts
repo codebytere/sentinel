@@ -13,6 +13,9 @@ export const isNightly = v => v.includes('nightly');
 // Determines whether a given version is a beta release.
 export const isBeta = v => v.includes('beta');
 
+// Determines whether a given version is a stable release.
+export const isStable = v => !(isBeta(v) || isNightly(v));
+
 // Comparison function to sort dates in increasing order.
 export const dateSort = (one: IRequest, two: IRequest) => {
   const d1 = new Date(one.table.createdAt);

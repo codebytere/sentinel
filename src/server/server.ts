@@ -72,6 +72,14 @@ fast
             });
         });
 
+        fast.get('/release_channel', (request, reply) => {
+          return app
+            .render(request.req, reply.res, '/release_channel', request.query)
+            .then(() => {
+              reply.sent = true;
+            });
+        });
+
         fast.get('/signin', (request, reply) => {
           if (request.session.authenticated) {
             reply.redirect('/index');

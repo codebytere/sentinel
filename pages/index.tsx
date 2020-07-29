@@ -1,5 +1,8 @@
 import { Component } from 'react';
 
+import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
+import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';
+import { api } from 'src/server/api';
 import {
   LineChart,
   Line,
@@ -10,14 +13,12 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
-import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';
 import {
   getReportStats,
   asyncForEach,
   dateSort
 } from 'src/utils/report-helpers';
-import { api } from 'src/server/api';
+import Link from 'next/link';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }) {
@@ -184,15 +185,15 @@ class Home extends Component<IHomeProps, {}> {
     let betaCount = 0;
     let nightlyCount = 0;
 
-    for (const r of registrants) {
-      if (r.table.channel & api.ReleaseChannel.Stable) stableCount++;
-      if (r.table.channel & api.ReleaseChannel.Beta) betaCount++;
-      if (r.table.channel & api.ReleaseChannel.Nightly) nightlyCount++;
+    for (const reg of registrants) {
+      if (reg.table.channel & api.ReleaseChannel.Stable) stableCount++;
+      if (reg.table.channel & api.ReleaseChannel.Beta) betaCount++;
+      if (reg.table.channel & api.ReleaseChannel.Nightly) nightlyCount++;
     }
 
     return (
       <Box>
-        <Table bordered id={'nightlies-table'}>
+        <Table bordered id={'reports-table'}>
           <tbody>
             <tr>
               <th>Channel</th>
@@ -202,17 +203,47 @@ class Home extends Component<IHomeProps, {}> {
             <tr>
               <th>Stable</th>
               <td>{stableCount}</td>
-              <td>TODO</td>
+              <td>
+                <Link
+                  as={`channels/${api.Channel.STABLE}`}
+                  href={{
+                    pathname: '/release_channel',
+                    query: { channel: api.Channel.STABLE }
+                  }}
+                >
+                  Stable Reports
+                </Link>
+              </td>
             </tr>
             <tr>
               <th>Beta</th>
               <td>{betaCount}</td>
-              <td>TODO</td>
+              <td>
+                <Link
+                  as={`channels/${api.Channel.BETA}`}
+                  href={{
+                    pathname: '/release_channel',
+                    query: { channel: api.Channel.BETA }
+                  }}
+                >
+                  Beta Reports
+                </Link>
+              </td>
             </tr>
             <tr>
               <th>Nightly</th>
               <td>{nightlyCount}</td>
-              <td>TODO</td>
+              <td>
+                <Link
+                  as={`channels/${api.Channel.NIGHTLY}`}
+                  href={{
+                    pathname: '/release_channel',
+                    query: { channel: api.Channel.NIGHTLY }
+                  }}
+                >
+                  Nightly Reports
+                </Link>
+              </td>
             </tr>
           </tbody>
         </Table>

@@ -8,6 +8,11 @@ export interface IHomeProps {
   registrants: IRegistrant[];
 }
 
+export interface IReleaseChannelProps {
+  channel: api.Channel;
+  requests: IRequest[];
+}
+
 export interface IAlertProps {
   alert: AlertManager;
 }
