@@ -26,12 +26,11 @@ class Settings extends Component<ISettingsProps, {}> {
     const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
 
     const reply = await fetch(`${baseURL}/currentuser`);
-    const json = await reply.json();
 
-    const registrant: IRegistrant = json.table;
-    const webhooks = registrant.webhooks || null;
+    const registrant: IRegistrant = await reply.json();
+    const webhooks = registrant.table.webhooks || null;
 
-    return { webhooks, channel: registrant.channel };
+    return { webhooks, channel: registrant.table.channel };
   }
 
   constructor(props: ISettingsProps) {

@@ -5,6 +5,7 @@ import { api } from './api';
 
 export interface IHomeProps {
   requests: IRequest[];
+  registrants: IRegistrant[];
 }
 
 export interface IAlertProps {
@@ -45,7 +46,7 @@ export interface IRegistrantState {
 }
 
 export interface ISignupState {
-  newRegistrant: IRegistrant;
+  newRegistrant: api.Registrant;
 }
 
 export interface IReportState {
@@ -58,11 +59,7 @@ export interface IReportState {
 // Other Interfaces
 
 export interface IRegistrant {
-  appName: string;
-  username: string;
-  password: string;
-  channel: api.ReleaseChannel;
-  webhooks?: Record<string, string>;
+  table: api.Registrant;
 }
 
 export interface IReportInfo {

@@ -11,11 +11,10 @@ import {
   ResponsiveContainer
 } from 'recharts';
 import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
-import { IRequest, IHomeProps } from 'src/server/interfaces';
+import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';
 import {
   getReportStats,
   asyncForEach,
-  getStatusIcon,
   dateSort
 } from 'src/utils/report-helpers';
 import { api } from 'src/server/api';
@@ -36,17 +35,21 @@ class Home extends Component<IHomeProps, {}> {
       result.push({ table: req.table, reports });
     });
 
-    return { requests: result };
+    const rawRegistrants = await fetch(`${baseURL}/registrants`);
+    const registrants = await rawRegistrants.json();
+
+    return { requests: result, registrants };
   }
 
-  constructor(props: { requests: IRequest[] }) {
+  constructor(props: IHomeProps) {
     super(props);
 
-    this.renderRequests = this.renderRequests.bind(this);
+    this.renderTrendChart = this.renderTrendChart.bind(this);
+    this.renderChannelTable = this.renderChannelTable.bind(this);
   }
 
   public render() {
-    const { requests } = this.props;
+    const { requests, registrants } = this.props;
     const sortedRequests = requests.sort(dateSort);
 
     return (
@@ -60,7 +63,7 @@ class Home extends Component<IHomeProps, {}> {
             </Columns>
             <Columns centered>
               <Columns.Column>
-                {this.renderRequests(sortedRequests)}
+                {this.renderChannelTable(registrants)}
               </Columns.Column>
             </Columns>
           </Container>
@@ -176,46 +179,41 @@ class Home extends Component<IHomeProps, {}> {
     );
   }
 
-  private renderRequests(requests: IRequest[]) {
-    const requestData = requests.map(r => {
-      const { versionQualifier, id } = r.table;
-      const version = versionQualifier.startsWith('v')
-        ? versionQualifier
-        : `v${versionQualifier}`;
-      const releaseLink = `https://github.com/electron/nightlies/releases/tag/${version}`;
-      const {
-        stats: { failed, passed, total }
-      } = getReportStats(r);
-
-      return (
-        <tr>
-          <th>{getStatusIcon(failed, total)}</th>
-          <th>{`${passed}/${total}`}</th>
-          <td>
-            <a href={releaseLink}>{version}</a>
-          </td>
-          <td>
-            {total > 0 ? (
-              <a href={`/request/${id}`}>See Reports</a>
-            ) : (
-              'No Reports'
-            )}
-          </td>
-        </tr>
-      );
-    });
+  private renderChannelTable(registrants: IRegistrant[]) {
+    const betaCount = registrants.filter(r => {
+      return r.table.channel & api.ReleaseChannel.Beta;
+    }).length;
+    const stableCount = registrants.filter(r => {
+      return r.table.channel & api.ReleaseChannel.Stable;
+    }).length;
+    const nightlyCount = registrants.filter(r => {
+      return r.table.channel & api.ReleaseChannel.Nightly;
+    }).length;
 
     return (
       <Box>
         <Table bordered id={'nightlies-table'}>
           <tbody>
             <tr>
-              <th>Status</th>
-              <th>Report Count</th>
-              <th>Version</th>
+              <th>Channel</th>
+              <th>Registrants</th>
               <th>Reports</th>
             </tr>
-            {requestData}
+            <tr>
+              <th>Stable</th>
+              <td>{stableCount}</td>
+              <td>TODO</td>
+            </tr>
+            <tr>
+              <th>Beta</th>
+              <td>{betaCount}</td>
+              <td>TODO</td>
+            </tr>
+            <tr>
+              <th>Nightly</th>
+              <td>{nightlyCount}</td>
+              <td>TODO</td>
+            </tr>
           </tbody>
         </Table>
       </Box>

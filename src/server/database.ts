@@ -1,6 +1,5 @@
 import { Tables } from './models';
 import bcrypt from 'bcrypt';
-import { IRegistrant } from './interfaces';
 import { Op } from 'sequelize';
 import { api } from './api';
 
@@ -104,7 +103,7 @@ export class mRegistrant {
    *
    * @returns A new mRegistrant instance.
    */
-  static async Create(opts: IRegistrant) {
+  static async Create(opts: api.Registrant) {
     const registrant = await Tables.Registrant.create(opts);
     return new mRegistrant(registrant);
   }

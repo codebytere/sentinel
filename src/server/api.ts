@@ -30,6 +30,14 @@ export namespace api {
     name: string;
   }
 
+  export interface Registrant {
+    appName: string;
+    username: string;
+    password: string;
+    channel: api.ReleaseChannel;
+    webhooks?: Record<string, string>;
+  }
+
   export interface Request {
     id: number;
     platformInstallData: {

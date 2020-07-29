@@ -462,6 +462,15 @@ fast
         });
 
         fast.route({
+          method: 'GET',
+          url: '/registrants',
+          handler: async (request, reply) => {
+            const registrants = await mRegistrant.FindAll();
+            reply.send(registrants);
+          }
+        });
+
+        fast.route({
           method: 'POST',
           url: '/report/:reportId',
           schema: newReportSchema,
