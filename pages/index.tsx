@@ -134,14 +134,14 @@ class Home extends Component<IHomeProps, {}> {
         ? versionQualifier
         : `v${versionQualifier}`;
       const releaseLink = `https://github.com/electron/nightlies/releases/tag/${version}`;
-      const { passed, total } = getReportStats(r);
+      const { failed, passed, total } = getReportStats(r);
 
       return (
         <tr>
-          <th>{getStatusIcon(passed, total)}</th>
+          <th>{getStatusIcon(failed, total)}</th>
           <th>{`${passed}/${total}`}</th>
           <td>
-            <a href={releaseLink}>v{versionQualifier}</a>
+            <a href={releaseLink}>{version}</a>
           </td>
           <td>
             {total > 0 ? (

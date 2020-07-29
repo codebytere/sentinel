@@ -16,14 +16,14 @@ export const dateSort = (one: IRequest, two: IRequest) => {
 };
 
 // Returns a status icon depending on how many tests passed.
-export const getStatusIcon = (passed: number, total: number) => {
+export const getStatusIcon = (failed: number, total: number) => {
   let statusIcon: string;
   if (total === 0) {
     statusIcon = '🟡';
-  } else if (passed === total) {
-    statusIcon = '🟢';
-  } else {
+  } else if (failed > 0) {
     statusIcon = '🔴';
+  } else {
+    statusIcon = '🟢';
   }
 
   return statusIcon;
@@ -32,9 +32,14 @@ export const getStatusIcon = (passed: number, total: number) => {
 // Return an object containing total and passed tests for a Request.
 export const getReportStats = (request: IRequest) => {
   return {
-    total: request.reports.length,
+    total: request.reports.filter(
+      rep => rep.table.status !== api.Status.NOT_RUN
+    ).length,
     passed: request.reports.filter(
       rep => rep.table.status === api.Status.PASSED
+    ).length,
+    failed: request.reports.filter(
+      rep => rep.table.status === api.Status.FAILED
     ).length
   };
 };
