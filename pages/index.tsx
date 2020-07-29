@@ -103,7 +103,7 @@ class Home extends Component<IHomeProps, {}> {
         background: 'white',
         border: '2px solid black',
         padding: '10px',
-        'border-radius': '10px'
+        borderRadius: '10px'
       };
 
       if (active && payload?.length > 0) {
