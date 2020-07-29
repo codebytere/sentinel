@@ -176,7 +176,9 @@ fast
 
         fast.get('/checkAuth', async (request, reply) => {
           if (request.session.authenticated) {
-            reply.send(request.session.user);
+            reply.send({ authed: true, user: request.session.user });
+          } else {
+            reply.send({ authed: false });
           }
         });
 

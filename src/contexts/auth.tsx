@@ -27,8 +27,10 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
 
   componentDidMount() {
     this.fetchAuthedUser()
-      .then(user => {
-        this.setState({ user });
+      .then(result => {
+        if (result.authed) {
+          this.setState({ user: result.user });
+        }
       })
       .catch(err => {
         console.log(err);
