@@ -180,15 +180,15 @@ class Home extends Component<IHomeProps, {}> {
   }
 
   private renderChannelTable(registrants: IRegistrant[]) {
-    const betaCount = registrants.filter(r => {
-      return r.table.channel & api.ReleaseChannel.Beta;
-    }).length;
-    const stableCount = registrants.filter(r => {
-      return r.table.channel & api.ReleaseChannel.Stable;
-    }).length;
-    const nightlyCount = registrants.filter(r => {
-      return r.table.channel & api.ReleaseChannel.Nightly;
-    }).length;
+    let stableCount = 0;
+    let betaCount = 0;
+    let nightlyCount = 0;
+
+    for (const r of registrants) {
+      if (r.table.channel & api.ReleaseChannel.Stable) stableCount++;
+      if (r.table.channel & api.ReleaseChannel.Beta) betaCount++;
+      if (r.table.channel & api.ReleaseChannel.Nightly) nightlyCount++;
+    }
 
     return (
       <Box>
