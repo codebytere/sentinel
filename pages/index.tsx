@@ -13,7 +13,6 @@ import {
 import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
 import { IRequest, IHomeProps } from 'src/server/interfaces';
 import {
-  getDate,
   getReportStats,
   asyncForEach,
   getStatusIcon,
@@ -75,7 +74,7 @@ class Home extends Component<IHomeProps, {}> {
     const data = requests.reverse().map(r => {
       const { passed, total } = getReportStats(r);
       const percentage = total === 0 ? total : (passed / total) * 100;
-      const date = getDate(r.table.versionQualifier).toLocaleDateString();
+      const date = new Date(r.table.createdAt).toLocaleDateString();
 
       return { date, passed, total, percentage };
     });
@@ -131,7 +130,10 @@ class Home extends Component<IHomeProps, {}> {
   private renderRequests(requests: IRequest[]) {
     const requestData = requests.map(r => {
       const { versionQualifier, id } = r.table;
-      const releaseLink = `https://github.com/electron/nightlies/releases/tag/v${versionQualifier}`;
+      const version = versionQualifier.startsWith('v')
+        ? versionQualifier
+        : `v${versionQualifier}`;
+      const releaseLink = `https://github.com/electron/nightlies/releases/tag/${version}`;
       const { passed, total } = getReportStats(r);
 
       return (

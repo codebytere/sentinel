@@ -7,27 +7,10 @@ export const asyncForEach = async (array: any[], callback: Function) => {
   }
 };
 
-// Converts a version qualifier (v10.0.0-nightly.20200505)
-// to a Date object using the 20200505 nightly extension.
-export const getDate = (versionQualifier: string) => {
-  const pattern = /\d+.\d+.\d+-nightly.(\d{8})/;
-
-  const match = versionQualifier.match(pattern);
-  if (!match) {
-    throw new Error(`Invalid date for versionQualifier: ${versionQualifier}`);
-  }
-
-  const yyyy = parseInt(match[1].substr(0, 4));
-  const mm = parseInt(match[1].substr(4, 2));
-  const dd = parseInt(match[1].substr(6, 2));
-
-  return new Date(yyyy, mm, dd);
-};
-
 // Comparison function to sort dates in increasing order.
 export const dateSort = (one: IRequest, two: IRequest) => {
-  const d1 = getDate(one.table.versionQualifier);
-  const d2 = getDate(two.table.versionQualifier);
+  const d1 = new Date(one.table.createdAt);
+  const d2 = new Date(two.table.createdAt);
 
   return d1 > d2 ? -1 : d1 < d2 ? 1 : 0;
 };
