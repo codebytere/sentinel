@@ -112,6 +112,9 @@ export const getRequestSchema = {
 
 // Schema for '/reports/:requestId'
 export const getReportSchema = {
+  query: {
+    includeTestData: { type: 'boolean' }
+  },
   params: {
     type: 'object',
     required: ['requestId'],

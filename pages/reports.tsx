@@ -3,7 +3,7 @@ import Dropdown, { Option } from 'react-dropdown';
 import { Box, Container, Tile, Section, Level } from 'react-bulma-components';
 import TestBreakdown from '../src/components/test-breakdown';
 import { mRequest } from 'src/server/database';
-import { IReportProps, IReportState, IReport } from 'src/server/interfaces';
+import { IReportProps, IReportState } from 'src/server/interfaces';
 import { formatDateString } from 'src/utils/report-helpers';
 
 class Reports extends Component<IReportProps, IReportState> {
@@ -14,7 +14,8 @@ class Reports extends Component<IReportProps, IReportState> {
 
     const path = req ? req.url : window.location.pathname;
     const id = path.replace('/request/', '');
-    const rawReports = await fetch(`${baseURL}/reports/${id}`);
+    const params = new URLSearchParams({ includeTestData: 'true' })
+    const rawReports = await fetch(`${baseURL}/reports/${id}?${params}`);
     const reports = await rawReports.json();
 
     // The requestId will be the same for any given set of reports, so we can safely
@@ -23,15 +24,8 @@ class Reports extends Component<IReportProps, IReportState> {
     const rawRequest = await fetch(`${baseURL}/requests/${reqId}`);
     const request: mRequest = await rawRequest.json();
 
-    const result: IReport[] = [];
-    for (const report of reports) {
-      const raw = await fetch(`${baseURL}/testdata/${report.table.id}`);
-      const testData = await raw.json();
-      result.push({ table: report.table, testData });
-    }
-
     return {
-      reports: result,
+      reports,
       versionQualifier: request.table.versionQualifier
     };
   }

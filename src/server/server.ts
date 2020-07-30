@@ -186,11 +186,24 @@ fast
           schema: getReportSchema,
           handler: async (request, reply) => {
             const { requestId } = request.params;
+            const { includeTestData } = request.query;
 
             fast.log.info(`Fetching Reports for request: ${requestId}`);
 
             const reports = await mRequest.GetReports(requestId);
-            reply.send(reports);
+
+            if (includeTestData) {
+              fast.log.info(`Appending TestData to Reports for request: ${requestId}`);
+
+              const result: { table: Tables.Report, testData: mTestData[] }[] = [];
+              for (const report of reports) {
+                const testData = await mReport.GetTestData(report.table.id);
+                result.push({ table: report.table, testData });
+              }
+              reply.send(result);
+            } else {
+              reply.send(reports);
+            }
           }
         });
 
