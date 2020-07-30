@@ -2,9 +2,8 @@ import { Component, Fragment } from 'react';
 import Dropdown, { Option } from 'react-dropdown';
 import { Box, Container, Tile, Section, Level } from 'react-bulma-components';
 import TestBreakdown from '../src/components/test-breakdown';
-import { mReport, mRequest } from 'src/server/database';
+import { mRequest } from 'src/server/database';
 import { IReportProps, IReportState, IReport } from 'src/server/interfaces';
-import { asyncForEach } from 'src/utils/report-helpers';
 
 class Reports extends Component<IReportProps, IReportState> {
   static async getInitialProps({ req }) {
@@ -15,7 +14,7 @@ class Reports extends Component<IReportProps, IReportState> {
     const path = req ? req.url : window.location.pathname;
     const id = path.replace('/request/', '');
     const rawReports = await fetch(`${baseURL}/reports/${id}`);
-    const reports: mReport[] = await rawReports.json();
+    const reports = await rawReports.json();
 
     // The requestId will be the same for any given set of reports, so we can safely
     // pull the requestId off the top of the pile.
@@ -24,11 +23,11 @@ class Reports extends Component<IReportProps, IReportState> {
     const request: mRequest = await rawRequest.json();
 
     const result: IReport[] = [];
-    await asyncForEach(reports, async (r: IReport) => {
-      const raw = await fetch(`${baseURL}/testdata/${r.table.id}`);
+    for (const report of reports) {
+      const raw = await fetch(`${baseURL}/testdata/${report.table.id}`);
       const testData = await raw.json();
-      result.push({ table: r.table, testData });
-    });
+      result.push({ table: report.table, testData });
+    }
 
     return {
       reports: result,

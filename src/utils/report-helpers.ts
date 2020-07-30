@@ -1,12 +1,6 @@
 import { IRequest } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 
-export const asyncForEach = async (array: any[], callback: Function) => {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-};
-
 // Determines whether a given version is a nightly release.
 export const isNightly = v => v.includes('nightly');
 

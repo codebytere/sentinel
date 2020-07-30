@@ -18,8 +18,7 @@ import {
   isStable,
   isNightly,
   isBeta,
-  getStatusIcon,
-  asyncForEach
+  getStatusIcon
 } from 'src/utils/report-helpers';
 import { api } from 'src/server/api';
 
@@ -44,11 +43,11 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     }
 
     const result: IRequest[] = [];
-    await asyncForEach(requests, async (req: IRequest) => {
-      const raw = await fetch(`${baseURL}/reports/${req.table.id}`);
+    for (const request of requests) {
+      const raw = await fetch(`${baseURL}/reports/${request.table.id}`);
       const reports = await raw.json();
-      result.push({ table: req.table, reports });
-    });
+      result.push({ table: request.table, reports });
+    }
 
     return { requests: result, channel };
   }

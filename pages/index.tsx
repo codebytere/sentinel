@@ -15,7 +15,6 @@ import {
 } from 'recharts';
 import {
   getReportStats,
-  asyncForEach,
   dateSort
 } from 'src/utils/report-helpers';
 
@@ -29,11 +28,11 @@ class Home extends Component<IHomeProps, {}> {
     const requests = await rawRequests.json();
 
     const result: IRequest[] = [];
-    await asyncForEach(requests, async (req: IRequest) => {
-      const raw = await fetch(`${baseURL}/reports/${req.table.id}`);
+    for (const request of requests) {
+      const raw = await fetch(`${baseURL}/reports/${request.table.id}`);
       const reports = await raw.json();
-      result.push({ table: req.table, reports });
-    });
+      result.push({ table: request.table, reports });
+    }
 
     const rawRegistrants = await fetch(`${baseURL}/registrants`);
     const registrants = await rawRegistrants.json();
