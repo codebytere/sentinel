@@ -9,7 +9,7 @@ export const {
 } = process.env;
 
 export const SENTINEL_LOGO =
-  'https://user-images.githubusercontent.com/2036040/74618739-dcc84000-50e7-11ea-9b90-bd9d16ff623e.png';
+  'https://user-images.githubusercontent.com/2036040/88888382-1357ca00-d1f3-11ea-8e06-ff27d744e5ac.png';
 
 // Valid platforms where CI may be run.
 export const PLATFORMS = [

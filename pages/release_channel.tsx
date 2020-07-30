@@ -10,7 +10,14 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
+import {
+  Box,
+  Columns,
+  Container,
+  Heading,
+  Hero,
+  Table
+} from 'react-bulma-components';
 import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import {
   getReportStats,
@@ -63,12 +70,12 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     const sortedRequests = requests.sort(dateSort);
 
     return (
-      <Hero color={'info'} size={'fullheight'}>
+      <Hero color={'white'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns centered>
               <Columns.Column>
-                {this.renderTrendChart(sortedRequests)}
+                {this.renderTrendChart(channel, sortedRequests)}
               </Columns.Column>
             </Columns>
             <Columns centered>
@@ -84,7 +91,21 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
 
   /* PRIVATE METHODS */
 
-  private renderTrendChart(requests: IRequest[]) {
+  private getBackgroundColor(channel: string) {
+    if (channel === api.Channel.STABLE) {
+      return '#66cccc';
+    } else if (channel === api.Channel.BETA) {
+      return '#ff99cc';
+    } else if (channel === api.Channel.NIGHTLY) {
+      return '#90eebf';
+    } else {
+      throw new Error('Invalid channel type');
+    }
+  }
+
+  private renderTrendChart(channel: string, requests: IRequest[]) {
+    const graphTitle = channel[0].toUpperCase() + channel.slice(1);
+    const bgColor = this.getBackgroundColor(channel);
     const data = requests.map(r => {
       const {
         stats: { passed, total }
@@ -96,37 +117,15 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
       return { date, passed, total, percentage };
     });
 
-    const CustomTooltip = tooltipData => {
-      const { active, payload, label } = tooltipData;
-
-      const style = {
-        background: 'white',
-        border: '2px solid black',
-        padding: '10px',
-        borderRadius: '10px'
-      };
-
-      if (active && payload?.length > 0) {
-        const data = payload[0].payload;
-        return (
-          <div style={style}>
-            <p className="label">{label}</p>
-            <p>
-              <b>Reports Passed:</b> {data.passed}
-            </p>
-            <p>
-              <b>Total Reports:</b> {data.total}
-            </p>
-          </div>
-        );
-      }
-
-      return null;
-    };
-
     return (
-      <Box>
-        <ResponsiveContainer minHeight={'50vh'} width={'95%'}>
+      <Box style={{ backgroundColor: bgColor }}>
+        <Heading size={4} className={'has-text-centered'}>
+          {graphTitle} Report Statistics
+        </Heading>
+        <ResponsiveContainer
+          className={'has-background-white'}
+          minHeight={'50vh'}
+        >
           <LineChart
             data={data}
             margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
@@ -134,7 +133,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis domain={[0, 100]} tickFormatter={number => `${number}%`} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<this.CustomTooltip />} />
             <Legend />
             <Line
               type="monotone"
@@ -151,7 +150,39 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     );
   }
 
+  // TODO(codebytere): Type this when https://github.com/recharts/recharts/pull/2182
+  // is released in a new version of recharts.
+  private CustomTooltip(tooltipData) {
+    const { active, payload, label } = tooltipData;
+
+    const style = {
+      background: 'white',
+      border: '2px solid black',
+      padding: '10px',
+      borderRadius: '10px'
+    };
+
+    if (active && payload?.length > 0) {
+      const data = payload[0].payload;
+      return (
+        <div style={style}>
+          <p className="label">{label}</p>
+          <p>
+            <b>Reports Passed:</b> {data.passed}
+          </p>
+          <p>
+            <b>Total Reports:</b> {data.total}
+          </p>
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   private renderRequests(channel: api.Channel, requests: IRequest[]) {
+    const bgColor = this.getBackgroundColor(channel);
+
     const requestData = requests.map(r => {
       const { versionQualifier, id } = r.table;
       const version = versionQualifier.startsWith('v')
@@ -184,7 +215,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     });
 
     return (
-      <Box>
+      <Box style={{ backgroundColor: bgColor }}>
         <Table bordered id={'reports-table'}>
           <tbody>
             <tr>

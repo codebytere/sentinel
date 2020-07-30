@@ -1,6 +1,13 @@
 import { Component } from 'react';
 
-import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
+import {
+  Box,
+  Columns,
+  Container,
+  Heading,
+  Hero,
+  Table
+} from 'react-bulma-components';
 import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import {
@@ -13,10 +20,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import {
-  getReportStats,
-  dateSort
-} from 'src/utils/report-helpers';
+import { getReportStats, dateSort } from 'src/utils/report-helpers';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }) {
@@ -52,7 +56,7 @@ class Home extends Component<IHomeProps, {}> {
     const sortedRequests = requests.sort(dateSort);
 
     return (
-      <Hero color={'info'} size={'fullheight'}>
+      <Hero color={'white'} size={'fullheight'}>
         <Hero.Body>
           <Container>
             <Columns centered>
@@ -134,8 +138,14 @@ class Home extends Component<IHomeProps, {}> {
     };
 
     return (
-      <Box>
-        <ResponsiveContainer minHeight={'50vh'} width={'95%'}>
+      <Box style={{ backgroundColor: '#8996be' }}>
+        <Heading size={4} className={'has-text-centered'}>
+          Report Statistics
+        </Heading>
+        <ResponsiveContainer
+          className={'has-background-white'}
+          minHeight={'50vh'}
+        >
           <LineChart
             data={data}
             margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
@@ -190,7 +200,7 @@ class Home extends Component<IHomeProps, {}> {
     }
 
     return (
-      <Box>
+      <Box style={{ backgroundColor: '#8996be' }}>
         <Table bordered id={'reports-table'}>
           <tbody>
             <tr>
@@ -202,27 +212,21 @@ class Home extends Component<IHomeProps, {}> {
               <th>Stable</th>
               <td>{stableCount}</td>
               <td>
-                <a href={`/channels/${api.Channel.STABLE}`}>
-                  Stable Reports
-                </a>
+                <a href={`/channels/${api.Channel.STABLE}`}>Stable Reports</a>
               </td>
             </tr>
             <tr>
               <th>Beta</th>
               <td>{betaCount}</td>
               <td>
-                <a href={`/channels/${api.Channel.BETA}`}>
-                  Beta Reports
-                </a>
+                <a href={`/channels/${api.Channel.BETA}`}>Beta Reports</a>
               </td>
             </tr>
             <tr>
               <th>Nightly</th>
               <td>{nightlyCount}</td>
               <td>
-                <a href={`/channels/${api.Channel.NIGHTLY}`}>
-                  Nightly Reports
-                </a>
+                <a href={`/channels/${api.Channel.NIGHTLY}`}>Nightly Reports</a>
               </td>
             </tr>
           </tbody>

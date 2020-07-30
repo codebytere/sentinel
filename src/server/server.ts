@@ -1,7 +1,7 @@
 import fastify from 'fastify';
 import fastifySession from 'fastify-session';
 import fastifyCookie from 'fastify-cookie';
-import fetch from 'isomorphic-unfetch';
+import fetch from 'node-fetch';
 import bcrypt from 'bcrypt';
 import { Server, IncomingMessage, ServerResponse } from 'http';
 const Next = require('next');
@@ -120,7 +120,7 @@ fast
               reply.redirect('/index');
             }
 
-            const req = {...request.req, registrant };
+            const req = { ...request.req, registrant };
             return app
               .render(req, reply.res, '/settings', request.query)
               .then(() => {
