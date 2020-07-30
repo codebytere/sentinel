@@ -10,7 +10,7 @@ export const isBeta = v => v.includes('beta');
 // Determines whether a given version is a stable release.
 export const isStable = v => !(isBeta(v) || isNightly(v));
 
-// Comparison function to sort dates in increasing order.
+// Comparison function to sort dates in descending order.
 export const dateSort = (one: IRequest, two: IRequest) => {
   const d1 = new Date(one.table.createdAt);
   const d2 = new Date(two.table.createdAt);
@@ -18,12 +18,10 @@ export const dateSort = (one: IRequest, two: IRequest) => {
   return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
 };
 
+// Return a date string in YYYY-MM-DD format. 
 export const formatDateString = (d: Date) => {
-  return d
-    .toISOString()
-    .slice(0, 19)
-    .replace(/-/g, '/')
-    .replace('T', ' ');
+  const date = (d instanceof Date) ? d : new Date(d);
+  return date.toISOString().slice(0, 10);
 };
 
 // Returns a status icon depending on how many tests passed.

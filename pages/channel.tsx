@@ -80,7 +80,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
             </Columns>
             <Columns centered>
               <Columns.Column>
-                {this.renderRequests(channel, sortedRequests)}
+                {this.renderRequests(channel, sortedRequests.reverse())}
               </Columns.Column>
             </Columns>
           </Container>
@@ -198,7 +198,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
 
       return (
         <tr>
-          <th>{formatDateString(new Date(r.table.createdAt))}</th>
+          <th>{formatDateString(r.table.createdAt)}</th>
           <th>{`${passed}/${total}`}</th>
           <th>TODO</th>
           <td>

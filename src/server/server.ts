@@ -97,7 +97,7 @@ fast
           url: '/channels/:channel/:date',
           handler: (request, reply) => {
             return app
-              .render(request.req, reply.res, '/channel', request.query)
+              .render(request.req, reply.res, '/reports', request.query)
               .then(() => {
                 reply.sent = true;
               });
