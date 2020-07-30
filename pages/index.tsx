@@ -18,7 +18,6 @@ import {
   asyncForEach,
   dateSort
 } from 'src/utils/report-helpers';
-import Link from 'next/link';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }) {
@@ -204,45 +203,27 @@ class Home extends Component<IHomeProps, {}> {
               <th>Stable</th>
               <td>{stableCount}</td>
               <td>
-                <Link
-                  as={`channels/${api.Channel.STABLE}`}
-                  href={{
-                    pathname: '/release_channel',
-                    query: { channel: api.Channel.STABLE }
-                  }}
-                >
+                <a href={`/channels/${api.Channel.STABLE}`}>
                   Stable Reports
-                </Link>
+                </a>
               </td>
             </tr>
             <tr>
               <th>Beta</th>
               <td>{betaCount}</td>
               <td>
-                <Link
-                  as={`channels/${api.Channel.BETA}`}
-                  href={{
-                    pathname: '/release_channel',
-                    query: { channel: api.Channel.BETA }
-                  }}
-                >
+                <a href={`/channels/${api.Channel.BETA}`}>
                   Beta Reports
-                </Link>
+                </a>
               </td>
             </tr>
             <tr>
               <th>Nightly</th>
               <td>{nightlyCount}</td>
               <td>
-                <Link
-                  as={`channels/${api.Channel.NIGHTLY}`}
-                  href={{
-                    pathname: '/release_channel',
-                    query: { channel: api.Channel.NIGHTLY }
-                  }}
-                >
+                <a href={`/channels/${api.Channel.NIGHTLY}`}>
                   Nightly Reports
-                </Link>
+                </a>
               </td>
             </tr>
           </tbody>

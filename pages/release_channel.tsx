@@ -24,13 +24,16 @@ import {
 import { api } from 'src/server/api';
 
 class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
-  static async getInitialProps({ req, query: { channel } }) {
+  static async getInitialProps({ req }) {
     const host = req ? req.headers.host : window.location.host;
     const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
     const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
 
     const rawRequests = await fetch(`${baseURL}/requests`);
     let requests: IRequest[] = await rawRequests.json();
+
+    const path = req ? req.url : window.location.pathname;
+    const channel = path.replace('/channels/', '');
 
     if (channel === api.Channel.STABLE) {
       requests = requests.filter(r => isStable(r.table.versionQualifier));

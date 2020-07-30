@@ -72,7 +72,7 @@ fast
             });
         });
 
-        fast.get('/release_channel', (request, reply) => {
+        fast.get('/channels/:channel', (request, reply) => {
           return app
             .render(request.req, reply.res, '/release_channel', request.query)
             .then(() => {
