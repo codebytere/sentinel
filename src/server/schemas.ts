@@ -167,6 +167,7 @@ export const newReportSchema = {
       },
       timeStart: { type: 'string' },
       timeStop: { type: 'string' },
+      totalTests: { type: 'number' },
       totalPassed: { type: 'number' },
       totalSkipped: { type: 'number' },
       totalWarnings: { type: 'number' },

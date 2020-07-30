@@ -70,6 +70,7 @@ export namespace api {
     sourceLink?: string;
     timeStart: Date;
     timeStop: Date;
+    totalTests?: number;
     totalPassed?: number;
     totalSkipped?: number;
     totalWarnings?: number;
