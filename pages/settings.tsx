@@ -21,13 +21,7 @@ class Settings extends Component<ISettingsProps, {}> {
   static contextType = AuthContext;
 
   static async getInitialProps({ req }) {
-    const host = req ? req.headers.host : window.location.host;
-    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
-    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
-
-    const reply = await fetch(`${baseURL}/currentuser`);
-
-    const registrant: IRegistrant = await reply.json();
+    const registrant: IRegistrant = req.registrant;
     const webhooks = registrant.table.webhooks || null;
 
     return { webhooks, channel: registrant.table.channel };
