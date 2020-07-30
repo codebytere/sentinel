@@ -56,39 +56,67 @@ fast
     app
       .prepare()
       .then(() => {
-        fast.get('/*', (request, reply) => {
-          return app
-            .render(request.req, reply.res, '/index', request.query)
-            .then(() => {
-              reply.sent = true;
-            });
-        });
-
-        fast.get('/request/*', (request, reply) => {
-          return app
-            .render(request.req, reply.res, '/reports', request.query)
-            .then(() => {
-              reply.sent = true;
-            });
-        });
-
-        fast.get('/channels/:channel', (request, reply) => {
-          return app
-            .render(request.req, reply.res, '/release_channel', request.query)
-            .then(() => {
-              reply.sent = true;
-            });
-        });
-
-        fast.get('/signin', (request, reply) => {
-          if (request.session.authenticated) {
-            reply.redirect('/index');
-          } else {
+        fast.route({
+          method: 'GET',
+          url: '/*',
+          handler: (request, reply) => {
             return app
-              .render(request.req, reply.res, '/signin', request.query)
+              .render(request.req, reply.res, '/index', request.query)
               .then(() => {
                 reply.sent = true;
               });
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/request/*',
+          handler: (request, reply) => {
+            return app
+              .render(request.req, reply.res, '/reports', request.query)
+              .then(() => {
+                reply.sent = true;
+              });
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/channels/:channel',
+          handler: (request, reply) => {
+            return app
+              .render(request.req, reply.res, '/channel', request.query)
+              .then(() => {
+                reply.sent = true;
+              });
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/channels/:channel/:date',
+          handler: (request, reply) => {
+            return app
+              .render(request.req, reply.res, '/channel', request.query)
+              .then(() => {
+                reply.sent = true;
+              });
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/signin',
+          handler: (request, reply) => {
+            if (request.session.authenticated) {
+              reply.redirect('/index');
+            } else {
+              return app
+                .render(request.req, reply.res, '/signin', request.query)
+                .then(() => {
+                  reply.sent = true;
+                });
+            }
           }
         });
 
@@ -104,28 +132,32 @@ fast
           }
         });
 
-        fast.get('/settings', async (request, reply) => {
-          if (!request.session.authenticated) {
-            reply.redirect('/index');
-          } else {
-            fast.log.info(
-              `Fetching data for current user ${request.session.user.name}`
-            );
-
-            const currentUserId = request.session.user.id;
-            const registrant = await mRegistrant.Find(currentUserId);
-
-            if (!registrant) {
-              fast.log.error(`No user with id: ${currentUserId}`);
+        fast.route({
+          method: 'GET',
+          url: '/settings',
+          handler: async (request, reply) => {
+            if (!request.session.authenticated) {
               reply.redirect('/index');
-            }
+            } else {
+              fast.log.info(
+                `Fetching data for current user ${request.session.user.name}`
+              );
 
-            const req = { ...request.req, registrant };
-            return app
-              .render(req, reply.res, '/settings', request.query)
-              .then(() => {
-                reply.sent = true;
-              });
+              const currentUserId = request.session.user.id;
+              const registrant = await mRegistrant.Find(currentUserId);
+
+              if (!registrant) {
+                fast.log.error(`No user with id: ${currentUserId}`);
+                reply.redirect('/index');
+              }
+
+              const req = { ...request.req, registrant };
+              return app
+                .render(req, reply.res, '/settings', request.query)
+                .then(() => {
+                  reply.sent = true;
+                });
+            }
           }
         });
 

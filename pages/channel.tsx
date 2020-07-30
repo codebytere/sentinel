@@ -25,7 +25,7 @@ import {
   isStable,
   isNightly,
   isBeta,
-  getStatusIcon
+  formatDateString
 } from 'src/utils/report-helpers';
 import { api } from 'src/server/api';
 
@@ -193,13 +193,14 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
           ? `https://github.com/electron/nightlies/releases/tag/${version}`
           : `https://github.com/electron/electron/releases/tag/${version}`;
       const {
-        stats: { failed, passed, total }
+        stats: { passed, total }
       } = getReportStats(r);
 
       return (
         <tr>
-          <th>{getStatusIcon(failed, total)}</th>
+          <th>{formatDateString(new Date(r.table.createdAt))}</th>
           <th>{`${passed}/${total}`}</th>
+          <th>TODO</th>
           <td>
             <a href={releaseLink}>{version}</a>
           </td>
@@ -219,8 +220,9 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
         <Table bordered id={'reports-table'}>
           <tbody>
             <tr>
-              <th>Status</th>
-              <th>Report Count</th>
+              <th>Date</th>
+              <th>App Count</th>
+              <th>Test Count</th>
               <th>Version</th>
               <th>Reports</th>
             </tr>

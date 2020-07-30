@@ -4,6 +4,7 @@ import { Box, Container, Tile, Section, Level } from 'react-bulma-components';
 import TestBreakdown from '../src/components/test-breakdown';
 import { mRequest } from 'src/server/database';
 import { IReportProps, IReportState, IReport } from 'src/server/interfaces';
+import { formatDateString } from 'src/utils/report-helpers';
 
 class Reports extends Component<IReportProps, IReportState> {
   static async getInitialProps({ req }) {
@@ -219,17 +220,9 @@ class Reports extends Component<IReportProps, IReportState> {
 
     const minutes = Math.floor(diff / 1000 / 60);
 
-    const formatString = (d: Date) => {
-      return d
-        .toISOString()
-        .slice(0, 19)
-        .replace(/-/g, '/')
-        .replace('T', ' ');
-    };
-
     return {
-      start: formatString(timeStart),
-      end: formatString(timeEnd),
+      start: formatDateString(timeStart),
+      end: formatDateString(timeEnd),
       total: minutes
     };
   }

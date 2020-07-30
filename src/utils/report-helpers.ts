@@ -18,6 +18,14 @@ export const dateSort = (one: IRequest, two: IRequest) => {
   return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
 };
 
+export const formatDateString = (d: Date) => {
+  return d
+    .toISOString()
+    .slice(0, 19)
+    .replace(/-/g, '/')
+    .replace('T', ' ');
+};
+
 // Returns a status icon depending on how many tests passed.
 export const getStatusIcon = (failed: number, total: number) => {
   let statusIcon: string;
