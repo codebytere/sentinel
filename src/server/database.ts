@@ -299,7 +299,7 @@ export class mReport {
           },
           {
             model: Tables.TestData,
-            where: createdQuery,
+            where: createdQuery
           }
         ]
       });

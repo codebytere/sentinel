@@ -136,8 +136,8 @@ fast
           method: 'GET',
           url: '/reports/:channel/:date',
           handler: async (request, reply) => {
-            const { channel, date  } = request.params;
-            console.log('CHANNEL IS: ', channel)
+            const { channel, date } = request.params;
+            console.log('CHANNEL IS: ', channel);
 
             const reports = await mReport.FindByChannelAndDate(channel, date);
 

@@ -72,21 +72,11 @@ class Reports extends Component<IReportProps, {}> {
             <th>{`${td.os}-${td.arch}`}</th>
             <th>{`${td.totalFailed!}/${td.totalTests!}`}</th>
             <th>
-              {td.logfileLink ? (
-                <a href={td.logfileLink}>Log</a>
-              ) : (
-                'No Logfile'
-              )}
+              {td.logfileLink ? <a href={td.logfileLink}>Log</a> : 'No Logfile'}
             </th>
-            <th>
-              {td.ciLink ? (
-                <a href={td.ciLink}>CI</a>
-              ) : (
-                'No CI Link'
-              )}
-            </th>
+            <th>{td.ciLink ? <a href={td.ciLink}>CI</a> : 'No CI Link'}</th>
           </tr>
-        )
+        );
       }
     }
 
