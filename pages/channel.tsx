@@ -184,7 +184,9 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     const bgColor = this.getBackgroundColor(channel);
 
     const requestData = requests.map(r => {
-      const { versionQualifier, id } = r.table;
+      const { versionQualifier, createdAt } = r.table;
+
+      const date = formatDateString(createdAt);
       const version = versionQualifier.startsWith('v')
         ? versionQualifier
         : `v${versionQualifier}`;
@@ -206,7 +208,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
           </td>
           <td>
             {total > 0 ? (
-              <a href={`/request/${id}`}>See Reports</a>
+              <a href={`/channels/${channel}/${date}`}>See Reports</a>
             ) : (
               'No Reports'
             )}

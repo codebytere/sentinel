@@ -1,6 +1,6 @@
 import { Tables } from './models';
 import bcrypt from 'bcrypt';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { api } from './api';
 
 const MINIMUM_TIME_AGO = new Date(
@@ -229,6 +229,53 @@ export class mReport {
     });
 
     return testdata.map(t => new mTestData(t));
+  }
+
+  static async FindByChannelAndDate(opts: {
+    channel: api.Channel;
+    date: string;
+  }) {
+    const { channel, date } = opts;
+    let releaseChannel = api.ReleaseChannel.None;
+    if (channel === api.Channel.STABLE) {
+      releaseChannel = api.ReleaseChannel.Stable;
+    } else if (channel === api.Channel.BETA) {
+      releaseChannel = api.ReleaseChannel.Stable;
+    } else if (channel === api.Channel.NIGHTLY) {
+      releaseChannel = api.ReleaseChannel.Nightly;
+    }
+
+    const DAY_MILLISECONDS = 86400000;
+    const startDate = new Date(date);
+    const endDate = new Date(startDate.getTime() + DAY_MILLISECONDS);
+
+    let reports: Tables.Report[] = [];
+    const createdQuery = {
+      createdAt: {
+        [Op.gt]: startDate,
+        [Op.lt]: endDate
+      }
+    };
+
+    try {
+      reports = await Tables.Report.findAll({
+        where: createdQuery,
+        include: [
+          {
+            model: Tables.Registrant,
+            where: Sequelize.literal(`channel & ${releaseChannel} != 0`)
+          },
+          {
+            model: Tables.TestData,
+            where: createdQuery
+          }
+        ]
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+    return reports.map(report => new mReport(report));
   }
 
   /**

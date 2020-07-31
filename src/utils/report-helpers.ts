@@ -18,9 +18,9 @@ export const dateSort = (one: IRequest, two: IRequest) => {
   return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
 };
 
-// Return a date string in YYYY-MM-DD format. 
+// Return a date string in YYYY-MM-DD format.
 export const formatDateString = (d: Date) => {
-  const date = (d instanceof Date) ? d : new Date(d);
+  const date = d instanceof Date ? d : new Date(d);
   return date.toISOString().slice(0, 10);
 };
 

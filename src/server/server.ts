@@ -134,6 +134,21 @@ fast
 
         fast.route({
           method: 'GET',
+          url: '/reports/:channel/:date',
+          handler: async (request, reply) => {
+            const { date, channel } = request.params;
+
+            const reports = await mReport.FindByChannelAndDate({
+              date,
+              channel
+            });
+
+            reply.send(reports);
+          }
+        });
+
+        fast.route({
+          method: 'GET',
           url: '/settings',
           handler: async (request, reply) => {
             if (!request.session.authenticated) {
@@ -193,9 +208,14 @@ fast
             const reports = await mRequest.GetReports(requestId);
 
             if (includeTestData) {
-              fast.log.info(`Appending TestData to Reports for request: ${requestId}`);
+              fast.log.info(
+                `Appending TestData to Reports for request: ${requestId}`
+              );
 
-              const result: { table: Tables.Report, testData: mTestData[] }[] = [];
+              const result: {
+                table: Tables.Report;
+                testData: mTestData[];
+              }[] = [];
               for (const report of reports) {
                 const testData = await mReport.GetTestData(report.table.id);
                 result.push({ table: report.table, testData });

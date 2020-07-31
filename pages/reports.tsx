@@ -1,256 +1,125 @@
-import { Component, Fragment } from 'react';
-import Dropdown, { Option } from 'react-dropdown';
-import { Box, Container, Tile, Section, Level } from 'react-bulma-components';
-import TestBreakdown from '../src/components/test-breakdown';
+import { Component } from 'react';
+import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
 import { mRequest } from 'src/server/database';
-import { IReportProps, IReportState } from 'src/server/interfaces';
-import { formatDateString } from 'src/utils/report-helpers';
+import { IReportProps, IReport } from 'src/server/interfaces';
+import { getStatusIcon } from 'src/utils/report-helpers';
+import { api } from 'src/server/api';
 
-class Reports extends Component<IReportProps, IReportState> {
+class Reports extends Component<IReportProps, {}> {
   static async getInitialProps({ req }) {
     const host = req ? req.headers.host : window.location.host;
     const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
     const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
 
     const path = req ? req.url : window.location.pathname;
-    const id = path.replace('/request/', '');
-    const params = new URLSearchParams({ includeTestData: 'true' })
-    const rawReports = await fetch(`${baseURL}/reports/${id}?${params}`);
+    const [channel, date] = path.replace('/channels/', '').split('/');
+    const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`);
     const reports = await rawReports.json();
 
     // The requestId will be the same for any given set of reports, so we can safely
     // pull the requestId off the top of the pile.
-    const reqId = reports[0].table.requestId;
-    const rawRequest = await fetch(`${baseURL}/requests/${reqId}`);
-    const request: mRequest = await rawRequest.json();
+    let request: mRequest | null = null;
+    if (reports.length > 0) {
+      const reqId = reports[0].table.requestId;
+      const rawRequest = await fetch(`${baseURL}/requests/${reqId}`);
+      request = await rawRequest.json();
+    }
 
     return {
       reports,
-      versionQualifier: request.table.versionQualifier
+      versionQualifier: request ? request.table.versionQualifier : ''
     };
   }
 
   constructor(props: IReportProps) {
     super(props);
 
-    const currentReport = this.props.reports[0];
-    const currentPlatformData = currentReport.testData[0];
-
-    const registrants: string[] = [];
-    this.props.reports.forEach(r => {
-      registrants.push(r.table.name);
-    });
-
-    const platformOptions: string[] = [];
-    currentReport.testData.forEach(d => {
-      const platform = `${d.table.os}-${d.table.arch}`;
-      platformOptions.push(platform);
-    });
-
-    this.state = {
-      currentReport,
-      currentPlatformData,
-      registrants,
-      platformOptions
-    };
-
-    this.changePlatform = this.changePlatform.bind(this);
-    this.changeReport = this.changeReport.bind(this);
-
-    this.renderDropdowns = this.renderDropdowns.bind(this);
+    this.renderReports = this.renderReports.bind(this);
   }
 
   public render() {
-    const { currentReport } = this.state;
+    const { reports } = this.props;
+    console.log(reports);
 
     return (
-      <Fragment>
-        <Section>{this.renderDropdowns()}</Section>
-        <Section>
-          {currentReport.testData.length > 0 ? (
-            this.renderTestData()
-          ) : (
-            <Box>NO DATA</Box>
-          )}
-        </Section>
-      </Fragment>
+      <Hero color={'white'} size={'fullheight'}>
+        <Hero.Body>
+          <Container>
+            <Columns centered>
+              <Columns.Column>{this.renderReports(reports)}</Columns.Column>
+            </Columns>
+          </Container>
+        </Hero.Body>
+      </Hero>
     );
   }
 
   /* PRIVATE METHODS */
 
-  private renderDropdowns() {
-    const {
-      currentReport,
-      registrants,
-      currentPlatformData,
-      platformOptions
-    } = this.state;
-
-    let defaultPlatform = 'No Platforms';
-    if (currentPlatformData) {
-      const { os, arch } = currentPlatformData.table;
-      defaultPlatform = `${os}-${arch}`;
-    }
-
-    return (
-      <Container>
-        <Level>
-          <Level.Side align={'left'}>
-            <Level.Item>
-              <Dropdown
-                options={registrants}
-                onChange={this.changeReport}
-                value={currentReport.table.name}
-                placeholder="Select a Platform"
-              />
-            </Level.Item>
-          </Level.Side>
-          <Level.Side align={'right'}>
-            <Level.Item>
-              <Dropdown
-                options={platformOptions}
-                onChange={this.changePlatform}
-                value={defaultPlatform}
-                placeholder="Select a Platform"
-              />
-            </Level.Item>
-          </Level.Side>
-        </Level>
-      </Container>
-    );
-  }
-
-  private renderTestData() {
-    const { currentPlatformData } = this.state;
-
-    const time = this.getTimeData();
-
-    return (
-      <Container>
-        <Tile kind={'ancestor'}>
-          <Tile vertical className={'is-7'}>
-            <Tile>
-              <Tile vertical kind={'parent'}>
-                <Tile kind={'child'} notification color={'primary'}>
-                  <p className="title">Status</p>
-                  <Box>
-                    <p className={'subtitle'}>
-                      {currentPlatformData!.table.status}
-                    </p>
-                  </Box>
-                </Tile>
-                <Tile kind={'child'} notification color={'danger'}>
-                  <p className={'title'}>Timestamp</p>
-                  <Box>
-                    <ul>
-                      <li>
-                        <strong>Started at:</strong> {time.start}
-                      </li>
-                      <li>
-                        <strong>Ended at:</strong> {time.end}
-                      </li>
-                      <li>
-                        <strong>Total Elapsed:</strong> {time.total}
-                      </li>
-                    </ul>
-                  </Box>
-                </Tile>
-              </Tile>
-              <Tile vertical kind={'parent'}>
-                <Tile kind={'child'} notification color={'warning'}>
-                  <p className={'title'}>Version</p>
-                  <Box>{this.props.versionQualifier}</Box>
-                </Tile>
-                <Tile kind={'child'} notification color={'info'}>
-                  <p className={'title'}>Links</p>
-                  <Box>
-                    <a
-                      className={'subtitle'}
-                      href={currentPlatformData!.table.sourceLink}
-                    >
-                      Source Files
-                    </a>
-                  </Box>
-                  <Box>
-                    <a
-                      className={'subtitle'}
-                      href={currentPlatformData!.table.ciLink}
-                    >
-                      CI Output
-                    </a>
-                  </Box>
-                  <Box>
-                    <a
-                      className={'subtitle'}
-                      href={currentPlatformData!.table.logfileLink}
-                    >
-                      Logfile
-                    </a>
-                  </Box>
-                </Tile>
-              </Tile>
-            </Tile>
-          </Tile>
-          <Tile kind={'parent'}>
-            <Tile kind={'child'} notification color={'success'}>
-              <p className={'title'}>Test Breakdown</p>
-              <Box>
-                <TestBreakdown data={currentPlatformData!.table} />
-              </Box>
-            </Tile>
-          </Tile>
-        </Tile>
-      </Container>
-    );
-  }
-
-  private getTimeData() {
-    const { currentPlatformData } = this.state;
-
-    const timeStart = new Date(currentPlatformData!.table.timeStart);
-    const timeEnd = new Date(currentPlatformData!.table.timeStop);
-    const diff = Math.abs(+timeStart - +timeEnd);
-
-    const minutes = Math.floor(diff / 1000 / 60);
-
-    return {
-      start: formatDateString(timeStart),
-      end: formatDateString(timeEnd),
-      total: minutes
+  private aggregateTestData(data: api.TestData[]) {
+    const result = {
+      platformsPassed: 0,
+      platformsRun: 0,
+      total: 0,
+      passed: 0,
+      failed: 0,
+      warnings: 0
     };
-  }
 
-  private changePlatform(option: Option) {
-    const { currentReport } = this.state;
-    const currentPlatformData = currentReport.testData.filter(data => {
-      const { os, arch } = data.table;
-      return option.value === `${os}-${arch}`;
-    })[0];
+    data.map((td: api.TestData) => {
+      result.platformsRun += 1;
+      if (td.status === api.Status.PASSED) {
+        result.platformsPassed += 1;
+      }
 
-    this.setState({ currentPlatformData });
-  }
-
-  private changeReport(option: Option) {
-    const currentReport = this.props.reports.filter(report => {
-      return option.value === report.table.name;
-    })[0];
-
-    // We need to update platform options to reflect the current report.
-    const platformOptions: string[] = [];
-    currentReport.testData.forEach(d => {
-      const platform = `${d.table.os}-${d.table.arch}`;
-      platformOptions.push(platform);
+      result.total += td.totalTests ? td.totalTests : 0;
+      result.passed += td.totalPassed ? td.totalPassed : 0;
+      result.failed += td.totalFailed ? td.totalFailed : 0;
+      result.warnings += td.totalWarnings ? td.totalWarnings : 0;
     });
 
-    const hasData = currentReport.testData.length > 0;
-    const currentPlatformData = hasData ? currentReport.testData[0] : undefined;
+    return result;
+  }
 
-    this.setState({
-      currentReport,
-      platformOptions,
-      currentPlatformData
+  private renderReports(reports: IReport[]) {
+    const reportData = reports.map(r => {
+      console.log(r.table);
+      const { name, status } = r.table;
+
+      console.log('TABLE IS: ', r.table);
+      // @ts-ignore
+      const aggregated = this.aggregateTestData(r.table.TestData);
+
+      return (
+        <tr>
+          <th>{name}</th>
+          <th>{`${getStatusIcon(
+            aggregated.failed,
+            aggregated.total
+          )} - ${status}`}</th>
+          <th>{`${aggregated.platformsPassed}/${aggregated.platformsRun}`}</th>
+          <th>{`${aggregated.passed}/${aggregated.total}`}</th>
+          <th>TODO</th>
+        </tr>
+      );
     });
+
+    return (
+      <Box>
+        <Table bordered id={'reports-table'}>
+          <tbody>
+            <tr>
+              <th>App Name</th>
+              <th>Status</th>
+              <th>Platforms Passed</th>
+              <th>Version</th>
+              <th>Reports</th>
+            </tr>
+            {reportData}
+          </tbody>
+        </Table>
+      </Box>
+    );
   }
 }
 

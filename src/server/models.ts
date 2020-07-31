@@ -103,8 +103,8 @@ export namespace Tables {
     }
   );
 
-  // Request.hasMany(Report, )
   Report.belongsTo(Request, { foreignKey: 'requestId' });
+  Report.belongsTo(Registrant, { foreignKey: 'registrantId' });
 
   // Represented as mTestData
   export class TestData extends Model {
@@ -149,6 +149,7 @@ export namespace Tables {
   );
 
   TestData.belongsTo(Report, { foreignKey: 'reportId' });
+  Report.hasMany(TestData, { foreignKey: 'reportId' });
 
   export const random = () => sequelize.random();
   export async function sync() {
