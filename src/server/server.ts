@@ -138,10 +138,7 @@ fast
           handler: async (request, reply) => {
             const { date, channel } = request.params;
 
-            const reports = await mReport.FindByChannelAndDate(
-              date,
-              channel
-            );
+            const reports = await mReport.FindByChannelAndDate(date, channel);
 
             reply.send(reports);
           }
@@ -538,6 +535,11 @@ fast
             const { authorization } = request.headers;
 
             const report = await mReport.FindById(reportId);
+            if (!report) {
+              fast.log.info(`No report found with id ${reportId}`);
+              return;
+            }
+
             fast.log.info(`Received new TestData from ${report.table.name}`);
 
             // Validate that the session token matches the one for this registrant.
