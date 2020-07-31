@@ -145,6 +145,9 @@ class Home extends Component<IHomeProps, {}> {
         <ResponsiveContainer
           className={'has-background-white'}
           minHeight={'50vh'}
+          // If it's 100% it does not resize properly -
+          // see https://github.com/recharts/recharts/issues/1423.
+          width={'99%'}
         >
           <LineChart
             data={data}
