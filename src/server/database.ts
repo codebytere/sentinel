@@ -273,7 +273,7 @@ export class mReport {
     if (channel === api.Channel.STABLE) {
       releaseChannel = api.ReleaseChannel.Stable;
     } else if (channel === api.Channel.BETA) {
-      releaseChannel = api.ReleaseChannel.Stable;
+      releaseChannel = api.ReleaseChannel.Beta;
     } else if (channel === api.Channel.NIGHTLY) {
       releaseChannel = api.ReleaseChannel.Nightly;
     }
@@ -281,8 +281,6 @@ export class mReport {
     const DAY_MILLISECONDS = 86400000;
     const startDate = new Date(date);
     const endDate = new Date(startDate.getTime() + DAY_MILLISECONDS);
-
-    let reports: Tables.Report[] = [];
     const createdQuery = {
       createdAt: {
         [Op.gt]: startDate,
@@ -290,6 +288,7 @@ export class mReport {
       }
     };
 
+    let reports: Tables.Report[] = [];
     try {
       reports = await Tables.Report.findAll({
         where: createdQuery,
@@ -300,7 +299,7 @@ export class mReport {
           },
           {
             model: Tables.TestData,
-            where: createdQuery
+            where: createdQuery,
           }
         ]
       });

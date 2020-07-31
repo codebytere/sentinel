@@ -55,49 +55,40 @@ class Reports extends Component<IReportProps, {}> {
 
   /* PRIVATE METHODS */
 
-  private aggregateTestData(data: api.TestData[]) {
-    const result = {
-      platformsPassed: 0,
-      platformsRun: 0,
-      total: 0,
-      passed: 0,
-      failed: 0,
-      warnings: 0
-    };
-
-    data.map((td: api.TestData) => {
-      result.platformsRun += 1;
-      if (td.status === api.Status.PASSED) {
-        result.platformsPassed += 1;
-      }
-
-      result.total += td.totalTests ? td.totalTests : 0;
-      result.passed += td.totalPassed ? td.totalPassed : 0;
-      result.failed += td.totalFailed ? td.totalFailed : 0;
-      result.warnings += td.totalWarnings ? td.totalWarnings : 0;
-    });
-
-    return result;
-  }
-
   private renderReports(reports: IReport[]) {
-    const reportData = reports.map(r => {
-      const { name, status } = r.table;
+    const reportData: JSX.Element[] = [];
 
-      // @ts-ignore - TS is not aware of the join.
-      const aggregated = this.aggregateTestData(r.table.TestData);
-      const icon = getStatusIcon(aggregated.failed, aggregated.total);
+    for (const report of reports) {
+      const { name } = report.table;
+      // @ts-expect-error - TS is not aware of the join.
+      const testData: api.TestData[] = report.table.TestData;
 
-      return (
-        <tr>
-          <th>{name}</th>
-          <th>{`${icon} - ${status}`}</th>
-          <th>{`${aggregated.platformsPassed}/${aggregated.platformsRun}`}</th>
-          <th>{`${aggregated.passed}/${aggregated.total}`}</th>
-          <th>TODO</th>
-        </tr>
-      );
-    });
+      for (const td of testData) {
+        const icon = getStatusIcon(td.totalFailed!, td.totalTests!);
+        reportData.push(
+          <tr>
+            <th>{name}</th>
+            <th>{`${icon} - ${td.status}`}</th>
+            <th>{`${td.os}-${td.arch}`}</th>
+            <th>{`${td.totalFailed!}/${td.totalTests!}`}</th>
+            <th>
+              {td.logfileLink ? (
+                <a href={td.logfileLink}>Log</a>
+              ) : (
+                'No Logfile'
+              )}
+            </th>
+            <th>
+              {td.ciLink ? (
+                <a href={td.ciLink}>CI</a>
+              ) : (
+                'No CI Link'
+              )}
+            </th>
+          </tr>
+        )
+      }
+    }
 
     return (
       <Box style={{ backgroundColor: '#FF9999' }}>
@@ -106,9 +97,10 @@ class Reports extends Component<IReportProps, {}> {
             <tr>
               <th>App Name</th>
               <th>Status</th>
-              <th>Platforms Passed</th>
+              <th>Platform</th>
               <th>Tests Passed</th>
-              <th>Reports</th>
+              <th>Logfile</th>
+              <th>CI Run</th>
             </tr>
             {reportData}
           </tbody>
