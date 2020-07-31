@@ -1,5 +1,12 @@
-import { Component } from 'react';
-import { Box, Columns, Container, Hero, Table } from 'react-bulma-components';
+import { Component, Fragment } from 'react';
+import {
+  Box,
+  Columns,
+  Container,
+  Heading,
+  Hero,
+  Table
+} from 'react-bulma-components';
 import { mRequest } from 'src/server/database';
 import { IReportProps, IReport } from 'src/server/interfaces';
 import { getStatusIcon } from 'src/utils/report-helpers';
@@ -81,21 +88,27 @@ class Reports extends Component<IReportProps, {}> {
     }
 
     return (
-      <Box style={{ backgroundColor: '#FF9999' }}>
-        <Table bordered id={'reports-table'}>
-          <tbody>
-            <tr>
-              <th>App Name</th>
-              <th>Status</th>
-              <th>Platform</th>
-              <th>Tests Passed</th>
-              <th>Logfile</th>
-              <th>CI Run</th>
-            </tr>
-            {reportData}
-          </tbody>
-        </Table>
-      </Box>
+      <Fragment>
+        <Box style={{ backgroundColor: '#FF9999' }}>
+          <Heading size={5} className={'has-text-centered'}>
+            {this.props.versionQualifier}
+          </Heading>
+          s
+          <Table bordered id={'reports-table'}>
+            <tbody>
+              <tr>
+                <th>App Name</th>
+                <th>Status</th>
+                <th>Platform</th>
+                <th>Tests Passed</th>
+                <th>Logfile</th>
+                <th>CI Run</th>
+              </tr>
+              {reportData}
+            </tbody>
+          </Table>
+        </Box>
+      </Fragment>
     );
   }
 }
