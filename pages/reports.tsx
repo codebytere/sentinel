@@ -70,7 +70,7 @@ class Reports extends Component<IReportProps, {}> {
             <th>{name}</th>
             <th>{`${icon} - ${td.status}`}</th>
             <th>{`${td.os}-${td.arch}`}</th>
-            <th>{`${td.totalFailed!}/${td.totalTests!}`}</th>
+            <th>{`${td.totalPassed!}/${td.totalTests!}`}</th>
             <th>
               {td.logfileLink ? <a href={td.logfileLink}>Log</a> : 'No Logfile'}
             </th>
