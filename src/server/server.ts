@@ -138,10 +138,10 @@ fast
           handler: async (request, reply) => {
             const { date, channel } = request.params;
 
-            const reports = await mReport.FindByChannelAndDate({
+            const reports = await mReport.FindByChannelAndDate(
               date,
               channel
-            });
+            );
 
             reply.send(reports);
           }

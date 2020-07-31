@@ -17,21 +17,32 @@ export class mRegistrant {
    * @returns An array of all Registrants who have opted into Sentinel.
    */
   static async FindAll() {
-    const registrants = await Tables.Registrant.findAll();
+    let registrants: Tables.Registrant[] = [];
+
+    try {
+      registrants = await Tables.Registrant.findAll();
+    } catch (err) {
+      console.error(err);
+    }
+
     return registrants.map(reg => new mRegistrant(reg));
   }
 
   /**
-   * Returns a Registrant with the specified id, if one exists.
-   *
    * @param id The id of the Sentinel registrant.
    *
-   * @returns The registrant with the specified id.
+   * @returns The Registrant with the specified id or, false if none found.
    */
   static async Find(id: number) {
-    const registrant = await Tables.Registrant.findOne({
-      where: { id }
-    });
+    let registrant: Tables.Registrant | null = null;
+
+    try {
+      registrant = await Tables.Registrant.findOne({
+        where: { id }
+      });
+    } catch (err) {
+      console.error(err);
+    }
 
     return registrant ? new mRegistrant(registrant) : false;
   }
@@ -80,9 +91,15 @@ export class mRegistrant {
    * registered account, else false.
    */
   static async Authenticate(username: string, password: string) {
-    const registrant = await Tables.Registrant.findOne({
-      where: { username }
-    });
+    let registrant: Tables.Registrant | null = null;
+
+    try {
+      registrant = await Tables.Registrant.findOne({
+        where: { username }
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
     if (!registrant || !bcrypt.compareSync(password, registrant.password)) {
       return false;
@@ -157,21 +174,27 @@ export class mTestData {
   }
 
   /**
-   * Returns the granular TestData for a given Report.
-   *
    * @param reportId The id of the Report corresponding to this TestData.
+   *
+   * @returns An array of granular TestData for a given Report.
    */
   static async GetFromReport(reportId: number) {
-    const testDataSets = await Tables.TestData.findAll({
-      where: {
-        reportId,
-        createdAt: {
-          [Op.gt]: new Date(MINIMUM_TIME_AGO)
-        }
-      }
-    });
+    let testData: Tables.TestData[] = [];
 
-    return testDataSets.map(data => new mTestData(data));
+    try {
+      testData = await Tables.TestData.findAll({
+        where: {
+          reportId,
+          createdAt: {
+            [Op.gt]: new Date(MINIMUM_TIME_AGO)
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    return testData.map(data => new mTestData(data));
   }
 }
 
@@ -216,26 +239,36 @@ export class mReport {
   }
 
   /**
+   * @param reportId The id of the Report.
+   *
    * @returns An array of all Reports associated with this Request.
    */
   static async GetTestData(reportId: number) {
-    const testdata = await Tables.TestData.findAll({
-      where: {
-        reportId,
-        createdAt: {
-          [Op.gt]: new Date(MINIMUM_TIME_AGO)
-        }
-      }
-    });
+    let testData: Tables.TestData[] = [];
 
-    return testdata.map(t => new mTestData(t));
+    try {
+      testData = await Tables.TestData.findAll({
+        where: {
+          reportId,
+          createdAt: {
+            [Op.gt]: new Date(MINIMUM_TIME_AGO)
+          }
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    return testData.map(t => new mTestData(t));
   }
 
-  static async FindByChannelAndDate(opts: {
-    channel: api.Channel;
-    date: string;
-  }) {
-    const { channel, date } = opts;
+  /**
+   * @param channel The release channel - stable, beta, or nightly.
+   * @param date A date string in YYYY-MM-DD format.
+   *
+   * @returns An array of all Reports created for the passed channel on the passed date.
+   */
+  static async FindByChannelAndDate(channel: api.Channel, date: string) {
     let releaseChannel = api.ReleaseChannel.None;
     if (channel === api.Channel.STABLE) {
       releaseChannel = api.ReleaseChannel.Stable;
@@ -271,27 +304,33 @@ export class mReport {
           }
         ]
       });
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
+      console.error(err);
     }
 
     return reports.map(report => new mReport(report));
   }
 
   /**
-   * Returns all the Reports associated with a Registrant.
-   *
    * @param registrantId The id of the Registrant.
+   *
+   * @returns An array of all Reports associated with a Registrant.
    */
   static async FindForRegistrant(registrantId: number) {
-    const reports = await Tables.Report.findAll({
-      where: {
-        registrantId,
-        createdAt: {
-          [Op.gt]: new Date(MINIMUM_TIME_AGO)
+    let reports: Tables.Report[] = [];
+
+    try {
+      reports = await Tables.Report.findAll({
+        where: {
+          registrantId,
+          createdAt: {
+            [Op.gt]: new Date(MINIMUM_TIME_AGO)
+          }
         }
-      }
-    });
+      });
+    } catch (err) {
+      console.error(err);
+    }
 
     return reports.map(report => new mReport(report));
   }
@@ -300,16 +339,23 @@ export class mReport {
    * Find the Report associated with a given ID, if one
    * has been previously created.
    *
-   * @param id The ID of the Report instance to find.
+   * @param id The id of the Report instance to find.
    *
-   * @returns An mReport corresponding to the passed ID.
+   * @returns An mReport corresponding to the passed id or null if not found.
    */
   static async FindById(id: number) {
-    const report = await Tables.Report.findOne({ where: { id } });
-    if (!report) {
-      throw new Error(`Report id:${id} not found`);
+    let report: mReport | null = null;
+
+    try {
+      const rep = await Tables.Report.findOne({ where: { id } });
+      if (rep) {
+        report = new mReport(rep);
+      }
+    } catch (err) {
+      console.error(err);
     }
-    return new mReport(report);
+
+    return report;
   }
 }
 
@@ -325,18 +371,26 @@ export class mRequest {
    * @returns An array of all Requests created in the last week.
    */
   static async FindAll() {
-    const requests = await Tables.Request.findAll({
-      where: {
-        createdAt: {
-          [Op.gt]: new Date(MINIMUM_TIME_AGO)
+    let requests: Tables.Request[] = [];
+
+    try {
+      requests = await Tables.Request.findAll({
+        where: {
+          createdAt: {
+            [Op.gt]: new Date(MINIMUM_TIME_AGO)
+          }
         }
-      }
-    });
+      });
+    } catch (err) {
+      console.error(err);
+    }
 
     return requests.map(r => new mRequest(r));
   }
 
   /**
+   * @param requestId The id of the Request.
+   *
    * @returns An array of all Reports associated with this Request.
    */
   static async GetReports(requestId: number): Promise<mReport[]> {
@@ -399,11 +453,18 @@ export class mRequest {
    *
    * @returns An mRequest corresponding to the passed ID.
    */
-  static async FindById(id: number): Promise<mRequest> {
-    const record = await Tables.Request.findOne({ where: { id } });
-    if (!record) {
-      throw new Error(`Request id:${id} not found`);
+  static async FindById(id: number): Promise<mRequest | null> {
+    let request: mRequest | null = null;
+
+    try {
+      const req = await Tables.Request.findOne({ where: { id } });
+      if (req) {
+        request = new mRequest(req);
+      }
+    } catch (err) {
+      console.error(err);
     }
-    return new mRequest(record);
+
+    return request;
   }
 }
