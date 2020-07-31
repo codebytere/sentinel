@@ -27,14 +27,13 @@ export const formatDateString = (d: Date) => {
 // Returns a status icon depending on how many tests passed.
 export const getStatusIcon = (failed: number, total: number) => {
   let statusIcon: string;
-  if (total === 0) {
-    statusIcon = '🟡';
-  } else if (failed > 0) {
+  if (failed > 0) {
     statusIcon = '🔴';
+  } else if (total === 0) {
+    statusIcon = '🟡';
   } else {
     statusIcon = '🟢';
   }
-
   return statusIcon;
 };
 

@@ -39,7 +39,6 @@ class Reports extends Component<IReportProps, {}> {
 
   public render() {
     const { reports } = this.props;
-    console.log(reports);
 
     return (
       <Hero color={'white'} size={'fullheight'}>
@@ -83,20 +82,16 @@ class Reports extends Component<IReportProps, {}> {
 
   private renderReports(reports: IReport[]) {
     const reportData = reports.map(r => {
-      console.log(r.table);
       const { name, status } = r.table;
 
-      console.log('TABLE IS: ', r.table);
-      // @ts-ignore
+      // @ts-ignore - TS is not aware of the join.
       const aggregated = this.aggregateTestData(r.table.TestData);
+      const icon = getStatusIcon(aggregated.failed, aggregated.total);
 
       return (
         <tr>
           <th>{name}</th>
-          <th>{`${getStatusIcon(
-            aggregated.failed,
-            aggregated.total
-          )} - ${status}`}</th>
+          <th>{`${icon} - ${status}`}</th>
           <th>{`${aggregated.platformsPassed}/${aggregated.platformsRun}`}</th>
           <th>{`${aggregated.passed}/${aggregated.total}`}</th>
           <th>TODO</th>
@@ -105,14 +100,14 @@ class Reports extends Component<IReportProps, {}> {
     });
 
     return (
-      <Box>
+      <Box style={{ backgroundColor: '#FF9999' }}>
         <Table bordered id={'reports-table'}>
           <tbody>
             <tr>
               <th>App Name</th>
               <th>Status</th>
               <th>Platforms Passed</th>
-              <th>Version</th>
+              <th>Tests Passed</th>
               <th>Reports</th>
             </tr>
             {reportData}
