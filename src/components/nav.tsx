@@ -36,25 +36,24 @@ class NavBar extends Component<IAlertProps, INavBarState> {
           <AuthContext.Consumer>
             {(auth: IAuthProviderState) =>
               !auth.user ? (
-                <Navbar.Container position={'start'}>
-                  <a href={'/signup'} className={'navbar-item'}>
-                    Sign Up
-                  </a>
-                  <a href={'/signin'} className={'navbar-item'}>
-                    Sign In
-                  </a>
-                </Navbar.Container>
+                <Fragment>
+                  {this.renderChannels()}
+                  <Navbar.Container position={'end'}>
+                    <a href={'/signup'} className={'navbar-item'}>
+                      Sign Up
+                    </a>
+                    <a href={'/signin'} className={'navbar-item'}>
+                      Sign In
+                    </a>
+                  </Navbar.Container>
+                </Fragment>
               ) : (
                 <Fragment>
-                  <Navbar.Container position={'start'}>
-                    <Link href={'/index'}>
-                      <a className={'navbar-item'}>Home</a>
-                    </Link>
+                  {this.renderChannels()}
+                  <Navbar.Container position={'end'}>
                     <p className={'navbar-item'}>
                       Logged in as:&nbsp;<b>{auth.user.name}</b>
                     </p>
-                  </Navbar.Container>
-                  <Navbar.Container position={'end'}>
                     <a href={'/settings'} className={'navbar-item'}>
                       Settings
                     </a>
@@ -77,6 +76,22 @@ class NavBar extends Component<IAlertProps, INavBarState> {
   }
 
   /* PRIVATE METHODS */
+
+  private renderChannels() {
+    return (
+      <Navbar.Container position={'start'}>
+        <Link href={'/channels/stable'}>
+          <a className={'navbar-item'}>Stable</a>
+        </Link>
+        <Link href={'/channels/beta'}>
+          <a className={'navbar-item'}>Beta</a>
+        </Link>
+        <Link href={'/channels/nightly'}>
+          <a className={'navbar-item'}>Nightly</a>
+        </Link>
+      </Navbar.Container>
+    );
+  }
 
   private handleLogout(auth: IAuthProviderState) {
     const alert = this.props.alert;
