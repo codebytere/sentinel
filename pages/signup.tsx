@@ -1,22 +1,11 @@
 import { FormEvent, Component } from 'react';
 import Router from 'next/router';
-import {
-  Container,
-  Form,
-  Button,
-  Hero,
-  Columns,
-  Box,
-  Table
-} from 'react-bulma-components';
+import { Container, Form, Button, Hero, Columns, Box, Table } from 'react-bulma-components';
 import { withAlert } from 'react-alert';
 import converter from 'html-table-to-json';
 import { PLATFORMS } from '../src/server/constants';
 import { api } from '../src/server/api';
-import {
-  IAlertProps as ISignupProps,
-  ISignupState
-} from 'src/server/interfaces';
+import { IAlertProps as ISignupProps, ISignupState } from 'src/server/interfaces';
 import { IAuthProviderState, AuthContext } from '../src/contexts/auth';
 
 class SignUpContainer extends Component<ISignupProps, ISignupState> {
@@ -83,10 +72,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                     <Label>Webhooks</Label>
                     {this.renderWebHookTable()}
                     <Control>
-                      <Checkbox
-                        id={'use-provided-client'}
-                        onChange={this.onInputCheckboxChange}
-                      >
+                      <Checkbox id={'use-provided-client'} onChange={this.onInputCheckboxChange}>
                         {' '}
                         Use Default Client
                       </Checkbox>
@@ -95,24 +81,15 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                   <Field>
                     <Label>Release Channels</Label>
                     <Control>
-                      <Checkbox
-                        id={'stable'}
-                        onChange={this.onInputCheckboxChange}
-                      >
+                      <Checkbox id={'stable'} onChange={this.onInputCheckboxChange}>
                         {' '}
                         Stable
                       </Checkbox>{' '}
-                      <Checkbox
-                        id={'beta'}
-                        onChange={this.onInputCheckboxChange}
-                      >
+                      <Checkbox id={'beta'} onChange={this.onInputCheckboxChange}>
                         {' '}
                         Beta{' '}
                       </Checkbox>{' '}
-                      <Checkbox
-                        id={'nightly'}
-                        onChange={this.onInputCheckboxChange}
-                      >
+                      <Checkbox id={'nightly'} onChange={this.onInputCheckboxChange}>
                         {' '}
                         Nightly
                       </Checkbox>
@@ -124,10 +101,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                     </Button>{' '}
                     <AuthContext.Consumer>
                       {(auth: IAuthProviderState) => (
-                        <Button
-                          onClick={() => this.handleFormSubmit(auth)}
-                          color={'success'}
-                        >
+                        <Button onClick={() => this.handleFormSubmit(auth)} color={'success'}>
                           Sign Up
                         </Button>
                       )}
@@ -199,9 +173,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     });
   }
 
-  private onInputCheckboxChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  private onInputCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let { channel } = this.state.newRegistrant;
 
     const id = event.target.id;
@@ -218,9 +190,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
         ? channel | api.ReleaseChannel.Stable
         : channel & ~api.ReleaseChannel.Stable;
     } else if (id === api.Channel.BETA) {
-      channel = checked
-        ? channel | api.ReleaseChannel.Beta
-        : channel & ~api.ReleaseChannel.Beta;
+      channel = checked ? channel | api.ReleaseChannel.Beta : channel & ~api.ReleaseChannel.Beta;
     } else {
       channel = checked
         ? channel | api.ReleaseChannel.Nightly
@@ -235,9 +205,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
   private getWebhookData() {
     const webhookData: Record<string, string> = {};
 
-    const provided = document.getElementById(
-      'use-provided-client'
-    )! as HTMLInputElement;
+    const provided = document.getElementById('use-provided-client')! as HTMLInputElement;
 
     if (provided.checked) {
       const { appName } = this.state.newRegistrant;

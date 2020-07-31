@@ -42,15 +42,9 @@ export const getReportStats = (request: IRequest) => {
   const version = request.table.versionQualifier;
 
   const stats = {
-    total: request.reports.filter(
-      rep => rep.table.status !== api.Status.NOT_RUN
-    ).length,
-    passed: request.reports.filter(
-      rep => rep.table.status === api.Status.PASSED
-    ).length,
-    failed: request.reports.filter(
-      rep => rep.table.status === api.Status.FAILED
-    ).length
+    total: request.reports.filter(rep => rep.table.status !== api.Status.NOT_RUN).length,
+    passed: request.reports.filter(rep => rep.table.status === api.Status.PASSED).length,
+    failed: request.reports.filter(rep => rep.table.status === api.Status.FAILED).length
   };
 
   let type = api.Channel.STABLE;

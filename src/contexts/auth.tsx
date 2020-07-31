@@ -38,11 +38,7 @@ export default class AuthProvider extends Component<{}, IAuthProviderState> {
   }
 
   public render() {
-    return (
-      <AuthContext.Provider value={this.state}>
-        {this.props.children}
-      </AuthContext.Provider>
-    );
+    return <AuthContext.Provider value={this.state}>{this.props.children}</AuthContext.Provider>;
   }
 
   private fetchAuthedUser = () => {

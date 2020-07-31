@@ -3,9 +3,7 @@ import bcrypt from 'bcrypt';
 import { Op, Sequelize } from 'sequelize';
 import { api } from './api';
 
-const MINIMUM_TIME_AGO = new Date(
-  new Date().setDate(new Date().getDate() - 100)
-);
+const MINIMUM_TIME_AGO = new Date(new Date().setDate(new Date().getDate() - 100));
 
 /**
  * A class that represents a single Sentinel service registrant.
@@ -55,11 +53,7 @@ export class mRegistrant {
    *
    * @returns true if the webhooks were successfully updated, else false.
    */
-  static async UpdateSettings(
-    id: number,
-    webhooks: Record<string, string>,
-    channel: number
-  ) {
+  static async UpdateSettings(id: number, webhooks: Record<string, string>, channel: number) {
     const registrant = await Tables.Registrant.findOne({
       where: { id }
     });
@@ -162,10 +156,7 @@ export class mTestData {
     let td;
     if (filtered.length === 1) {
       const existing = filtered[0];
-      td = await Tables.TestData.update(
-        { ...test },
-        { where: { id: existing.id } }
-      );
+      td = await Tables.TestData.update({ ...test }, { where: { id: existing.id } });
     } else {
       td = await Tables.TestData.create({ reportId, ...test });
     }
@@ -216,10 +207,7 @@ export class mReport {
    *
    * @returns A new mReport instance.
    */
-  static async FindOrCreateFromRequest(
-    request: mRequest,
-    registrant: mRegistrant
-  ) {
+  static async FindOrCreateFromRequest(request: mRequest, registrant: mRegistrant) {
     const report = await Tables.Report.findOne({
       where: {
         requestId: request.table.id,

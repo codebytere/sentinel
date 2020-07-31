@@ -1,13 +1,5 @@
 import { DATABASE_URL } from './constants';
-import {
-  INTEGER,
-  JSONB,
-  Model,
-  Sequelize,
-  TEXT,
-  STRING,
-  DATE
-} from 'sequelize';
+import { INTEGER, JSONB, Model, Sequelize, TEXT, STRING, DATE } from 'sequelize';
 import { api } from './api';
 
 /**

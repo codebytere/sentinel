@@ -117,9 +117,7 @@ class Settings extends Component<ISettingsProps, {}> {
       ? channel | api.ReleaseChannel.Stable
       : channel & ~api.ReleaseChannel.Stable;
 
-    channel = beta.checked
-      ? channel | api.ReleaseChannel.Beta
-      : channel & ~api.ReleaseChannel.Beta;
+    channel = beta.checked ? channel | api.ReleaseChannel.Beta : channel & ~api.ReleaseChannel.Beta;
 
     channel = nightly.checked
       ? channel | api.ReleaseChannel.Nightly

@@ -20,23 +20,14 @@ import {
   getRequestSchema,
   updateSettingsSchema
 } from './schemas';
-import {
-  HOST,
-  PORT,
-  REPORT_WEBHOOK,
-  PLATFORMS,
-  SESSION_SECRET,
-  NODE_ENV
-} from './constants';
+import { HOST, PORT, REPORT_WEBHOOK, PLATFORMS, SESSION_SECRET, NODE_ENV } from './constants';
 
 const isDev = NODE_ENV !== 'production';
 const serverOptions: fastify.ServerOptions = { logger: isDev };
 
-const fast: fastify.FastifyInstance<
-  Server,
-  IncomingMessage,
-  ServerResponse
-> = fastify(serverOptions);
+const fast: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify(
+  serverOptions
+);
 
 fast
   .register(fastifyCookie)
@@ -60,11 +51,9 @@ fast
           method: 'GET',
           url: '/*',
           handler: (request, reply) => {
-            return app
-              .render(request.req, reply.res, '/index', request.query)
-              .then(() => {
-                reply.sent = true;
-              });
+            return app.render(request.req, reply.res, '/index', request.query).then(() => {
+              reply.sent = true;
+            });
           }
         });
 
@@ -72,11 +61,9 @@ fast
           method: 'GET',
           url: '/request/*',
           handler: (request, reply) => {
-            return app
-              .render(request.req, reply.res, '/reports', request.query)
-              .then(() => {
-                reply.sent = true;
-              });
+            return app.render(request.req, reply.res, '/reports', request.query).then(() => {
+              reply.sent = true;
+            });
           }
         });
 
@@ -84,11 +71,9 @@ fast
           method: 'GET',
           url: '/channels/:channel',
           handler: (request, reply) => {
-            return app
-              .render(request.req, reply.res, '/channel', request.query)
-              .then(() => {
-                reply.sent = true;
-              });
+            return app.render(request.req, reply.res, '/channel', request.query).then(() => {
+              reply.sent = true;
+            });
           }
         });
 
@@ -96,11 +81,9 @@ fast
           method: 'GET',
           url: '/channels/:channel/:date',
           handler: (request, reply) => {
-            return app
-              .render(request.req, reply.res, '/reports', request.query)
-              .then(() => {
-                reply.sent = true;
-              });
+            return app.render(request.req, reply.res, '/reports', request.query).then(() => {
+              reply.sent = true;
+            });
           }
         });
 
@@ -111,11 +94,9 @@ fast
             if (request.session.authenticated) {
               reply.redirect('/index');
             } else {
-              return app
-                .render(request.req, reply.res, '/signin', request.query)
-                .then(() => {
-                  reply.sent = true;
-                });
+              return app.render(request.req, reply.res, '/signin', request.query).then(() => {
+                reply.sent = true;
+              });
             }
           }
         });
@@ -124,11 +105,9 @@ fast
           if (request.session.authenticated) {
             reply.redirect('/index');
           } else {
-            return app
-              .render(request.req, reply.res, '/signup', request.query)
-              .then(() => {
-                reply.sent = true;
-              });
+            return app.render(request.req, reply.res, '/signup', request.query).then(() => {
+              reply.sent = true;
+            });
           }
         });
 
@@ -152,9 +131,7 @@ fast
             if (!request.session.authenticated) {
               reply.redirect('/index');
             } else {
-              fast.log.info(
-                `Fetching data for current user ${request.session.user.name}`
-              );
+              fast.log.info(`Fetching data for current user ${request.session.user.name}`);
 
               const currentUserId = request.session.user.id;
               const registrant = await mRegistrant.Find(currentUserId);
@@ -165,11 +142,9 @@ fast
               }
 
               const req = { ...request.req, registrant };
-              return app
-                .render(req, reply.res, '/settings', request.query)
-                .then(() => {
-                  reply.sent = true;
-                });
+              return app.render(req, reply.res, '/settings', request.query).then(() => {
+                reply.sent = true;
+              });
             }
           }
         });
@@ -185,9 +160,7 @@ fast
               const reports = await mReport.FindForRegistrant(registrantId);
               reply.send(reports);
             } else {
-              fast.log.info(
-                `User not authorized to access /reports/registrant/${registrantId}`
-              );
+              fast.log.info(`User not authorized to access /reports/registrant/${registrantId}`);
               reply.code(401).send({ error: 'Not Authorized' });
             }
           }
@@ -206,9 +179,7 @@ fast
             const reports = await mRequest.GetReports(requestId);
 
             if (includeTestData) {
-              fast.log.info(
-                `Appending TestData to Reports for request: ${requestId}`
-              );
+              fast.log.info(`Appending TestData to Reports for request: ${requestId}`);
 
               const result: {
                 table: Tables.Report;
@@ -272,9 +243,7 @@ fast
           schema: registerSchema,
           handler: async (request, reply) => {
             const { appName, channel, username, webhooks } = request.body;
-            fast.log.info(
-              `Creating new account for username: ${username} and app: ${appName}`
-            );
+            fast.log.info(`Creating new account for username: ${username} and app: ${appName}`);
 
             const hash = bcrypt.hashSync(request.body.password, 10);
 
@@ -311,9 +280,7 @@ fast
           schema: loginSchema,
           handler: async (request, reply) => {
             if (request.session.authenticated) {
-              fast.log.info(
-                `${request.session.user.name} is already logged in`
-              );
+              fast.log.info(`${request.session.user.name} is already logged in`);
               reply.send(request.session.user).redirect('/index');
             }
 
@@ -335,9 +302,7 @@ fast
               } else {
                 fast.log.error(`Failed to authorize ${username}`);
 
-                reply
-                  .code(401)
-                  .send({ error: `Failed to authorize ${username}` });
+                reply.code(401).send({ error: `Failed to authorize ${username}` });
               }
             } catch (err) {
               reply.code(500).send(err);
@@ -379,11 +344,7 @@ fast
               fast.log.info(`Updating webhooks for ${authedUser}`);
 
               const id = request.session.user.id;
-              const success = await mRegistrant.UpdateSettings(
-                id,
-                webhooks,
-                channel
-              );
+              const success = await mRegistrant.UpdateSettings(id, webhooks, channel);
               if (!success) {
                 reply.code(500).send({
                   error: `Failed to update settings for ${authedUser}`
@@ -401,11 +362,7 @@ fast
           url: '/trigger',
           schema: triggerSchema,
           handler: async (request, reply) => {
-            const {
-              platformInstallData,
-              versionQualifier,
-              commitHash
-            } = request.body;
+            const { platformInstallData, versionQualifier, commitHash } = request.body;
 
             const { platform, link } = platformInstallData;
 
@@ -428,17 +385,13 @@ fast
               // Fetch all current service registrants
               const registrants = await mRegistrant.FindAll();
 
-              fast.log.info(
-                `Sending webhook data to ${registrants.length} registrants`
-              );
+              fast.log.info(`Sending webhook data to ${registrants.length} registrants`);
 
               // Fan out platform webhooks to each registrant.
               for (let reg of registrants) {
                 const platformWebhook = reg.table.webhooks[platform];
                 if (!platformWebhook) {
-                  fast.log.info(
-                    `${reg.table.appName} is not registered for platform: ${platform}`
-                  );
+                  fast.log.info(`${reg.table.appName} is not registered for platform: ${platform}`);
                   continue;
                 }
 
@@ -477,18 +430,13 @@ fast
 
                 // Ensure that requisite data has been sent back by the registrant.
                 if (res.reportsExpected === undefined) {
-                  fast.log.error(
-                    'Invalid report expectation value: must be a number >= 0'
-                  );
+                  fast.log.error('Invalid report expectation value: must be a number >= 0');
                   reply.code(500).send({
-                    error:
-                      'Invalid report expectation value: must be a number >= 0'
+                    error: 'Invalid report expectation value: must be a number >= 0'
                   });
                 } else if (!res.sessionToken) {
                   fast.log.error('Required session token not found');
-                  reply
-                    .code(500)
-                    .send({ error: 'Required session token not found' });
+                  reply.code(500).send({ error: 'Required session token not found' });
                 }
 
                 // Update expectation data for this per-registrant Report instance.
@@ -506,9 +454,7 @@ fast
                 await rp.table.save();
               }
 
-              fast.log.info(
-                `Sent updated webhooks for ${platform} on ${versionQualifier}`
-              );
+              fast.log.info(`Sent updated webhooks for ${platform} on ${versionQualifier}`);
               reply.send({
                 success: `Webhooks sent to registrants on ${platform}`
               });
@@ -545,9 +491,7 @@ fast
 
             // Validate that the session token matches the one for this registrant.
             if (authorization !== report.table.sessionToken) {
-              fast.log.info(
-                `${authorization} does not match the required token for this report`
-              );
+              fast.log.info(`${authorization} does not match the required token for this report`);
               reply.code(403).send({
                 error: `${authorization} does not match the required token for this report`
               });

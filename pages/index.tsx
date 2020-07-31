@@ -1,13 +1,6 @@
 import { Component } from 'react';
 
-import {
-  Box,
-  Columns,
-  Container,
-  Heading,
-  Hero,
-  Table
-} from 'react-bulma-components';
+import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
 import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import {
@@ -60,14 +53,10 @@ class Home extends Component<IHomeProps, {}> {
         <Hero.Body>
           <Container>
             <Columns centered>
-              <Columns.Column>
-                {this.renderTrendChart(sortedRequests)}
-              </Columns.Column>
+              <Columns.Column>{this.renderTrendChart(sortedRequests)}</Columns.Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>
-                {this.renderChannelTable(registrants)}
-              </Columns.Column>
+              <Columns.Column>{this.renderChannelTable(registrants)}</Columns.Column>
             </Columns>
           </Container>
         </Hero.Body>
@@ -115,12 +104,10 @@ class Home extends Component<IHomeProps, {}> {
       if (active && payload?.length > 0) {
         const data = payload[0].payload;
 
-        const formattedType = `${data.type
-          .charAt(0)
-          .toUpperCase()}${data.type.slice(1)}`;
+        const formattedType = `${data.type.charAt(0).toUpperCase()}${data.type.slice(1)}`;
         return (
           <div style={style}>
-            <p className="label">{label}</p>
+            <p className='label'>{label}</p>
             <p>
               <b>Type:</b> {formattedType}
             </p>
@@ -149,37 +136,34 @@ class Home extends Component<IHomeProps, {}> {
           // see https://github.com/recharts/recharts/issues/1423.
           width={'99%'}
         >
-          <LineChart
-            data={data}
-            margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
+          <LineChart data={data} margin={{ top: 30, right: 20, left: 0, bottom: 15 }}>
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis dataKey='date' />
             <YAxis domain={[0, 100]} tickFormatter={number => `${number}%`} />
             <Tooltip content={<CustomTooltip />} />
             <Legend />
             <Line
-              type="monotone"
-              dataKey="stable"
-              stroke="#000000"
+              type='monotone'
+              dataKey='stable'
+              stroke='#000000'
               strokeWidth={2}
               dot={{ stroke: '#000000', strokeWidth: 4 }}
               connectNulls={true}
               activeDot={{ r: 8 }}
             />
             <Line
-              type="monotone"
-              dataKey="beta"
-              stroke="#8A2BE2"
+              type='monotone'
+              dataKey='beta'
+              stroke='#8A2BE2'
               strokeWidth={2}
               dot={{ stroke: '#8A2BE2', strokeWidth: 4 }}
               connectNulls={true}
               activeDot={{ r: 8 }}
             />
             <Line
-              type="monotone"
-              dataKey="nightly"
-              stroke="#008080"
+              type='monotone'
+              dataKey='nightly'
+              stroke='#008080'
               strokeWidth={2}
               dot={{ stroke: '#008080', strokeWidth: 4 }}
               connectNulls={true}

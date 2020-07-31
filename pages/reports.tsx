@@ -1,12 +1,5 @@
 import { Component, Fragment } from 'react';
-import {
-  Box,
-  Columns,
-  Container,
-  Heading,
-  Hero,
-  Table
-} from 'react-bulma-components';
+import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
 import { mRequest } from 'src/server/database';
 import { IReportProps, IReport } from 'src/server/interfaces';
 import { getStatusIcon } from 'src/utils/report-helpers';
@@ -78,9 +71,7 @@ class Reports extends Component<IReportProps, {}> {
             <th>{`${icon} - ${td.status}`}</th>
             <th>{`${td.os}-${td.arch}`}</th>
             <th>{`${td.totalPassed!}/${td.totalTests!}`}</th>
-            <th>
-              {td.logfileLink ? <a href={td.logfileLink}>Log</a> : 'No Logfile'}
-            </th>
+            <th>{td.logfileLink ? <a href={td.logfileLink}>Log</a> : 'No Logfile'}</th>
             <th>{td.ciLink ? <a href={td.ciLink}>CI</a> : 'No CI Link'}</th>
           </tr>
         );

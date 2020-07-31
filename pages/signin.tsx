@@ -1,13 +1,6 @@
 import { Component, FormEvent } from 'react';
 import Router from 'next/router';
-import {
-  Container,
-  Form,
-  Button,
-  Hero,
-  Columns,
-  Box
-} from 'react-bulma-components';
+import { Container, Form, Button, Hero, Columns, Box } from 'react-bulma-components';
 import { withAlert } from 'react-alert';
 import { IAlertProps, IRegistrantState } from 'src/server/interfaces';
 import { IAuthProviderState, AuthContext } from '../src/contexts/auth';

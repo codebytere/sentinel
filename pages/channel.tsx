@@ -10,14 +10,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import {
-  Box,
-  Columns,
-  Container,
-  Heading,
-  Hero,
-  Table
-} from 'react-bulma-components';
+import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
 import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import {
   getReportStats,
@@ -74,9 +67,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
         <Hero.Body>
           <Container>
             <Columns centered>
-              <Columns.Column>
-                {this.renderTrendChart(channel, sortedRequests)}
-              </Columns.Column>
+              <Columns.Column>{this.renderTrendChart(channel, sortedRequests)}</Columns.Column>
             </Columns>
             <Columns centered>
               <Columns.Column>
@@ -129,19 +120,16 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
           // see https://github.com/recharts/recharts/issues/1423.
           width={'99%'}
         >
-          <LineChart
-            data={data}
-            margin={{ top: 20, right: 10, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
+          <LineChart data={data} margin={{ top: 30, right: 20, left: 0, bottom: 15 }}>
+            <CartesianGrid strokeDasharray='3 3' />
+            <XAxis dataKey='date' />
             <YAxis domain={[0, 100]} tickFormatter={number => `${number}%`} />
             <Tooltip content={<this.CustomTooltip />} />
             <Legend />
             <Line
-              type="monotone"
-              dataKey="percentage"
-              stroke="#000000"
+              type='monotone'
+              dataKey='percentage'
+              stroke='#000000'
               strokeWidth={2}
               dot={{ stroke: '#000000', strokeWidth: 4 }}
               connectNulls={true}
@@ -169,7 +157,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
       const data = payload[0].payload;
       return (
         <div style={style}>
-          <p className="label">{label}</p>
+          <p className='label'>{label}</p>
           <p>
             <b>Reports Passed:</b> {data.passed}
           </p>
@@ -190,9 +178,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
       const { versionQualifier, createdAt } = r.table;
 
       const date = formatDateString(createdAt);
-      const version = versionQualifier.startsWith('v')
-        ? versionQualifier
-        : `v${versionQualifier}`;
+      const version = versionQualifier.startsWith('v') ? versionQualifier : `v${versionQualifier}`;
       const releaseLink =
         channel === api.Channel.NIGHTLY
           ? `https://github.com/electron/nightlies/releases/tag/${version}`
@@ -210,11 +196,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
             <a href={releaseLink}>{version}</a>
           </td>
           <td>
-            {total > 0 ? (
-              <a href={`/channels/${channel}/${date}`}>See Reports</a>
-            ) : (
-              'No Reports'
-            )}
+            {total > 0 ? <a href={`/channels/${channel}/${date}`}>See Reports</a> : 'No Reports'}
           </td>
         </tr>
       );
