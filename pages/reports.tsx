@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react';
-import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
+import { Box, Columns, Container, Heading, Hero, Navbar, Table } from 'react-bulma-components';
 import { mRequest } from 'src/server/database';
 import { IReportProps, IReport } from 'src/server/interfaces';
 import { getStatusIcon } from 'src/utils/report-helpers';
@@ -16,19 +16,13 @@ class Reports extends Component<IReportProps, {}> {
     const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`);
     const reports = await rawReports.json();
 
-    // The requestId will be the same for any given set of reports, so we can safely
-    // pull the requestId off the top of the pile.
-    let request: mRequest | null = null;
-    if (reports.length > 0) {
-      const reqId = reports[0].table.requestId;
-      const rawRequest = await fetch(`${baseURL}/requests/${reqId}`);
-      request = await rawRequest.json();
-    }
+    // requestId will be the same for any given set of Reports.
+    const reqId = reports[0].table.requestId;
+    const rawRequest = await fetch(`${baseURL}/requests/${reqId}`);
+    const request: mRequest = await rawRequest.json();
+    const versionQualifier = request.table.versionQualifier;
 
-    return {
-      reports,
-      versionQualifier: request ? request.table.versionQualifier : ''
-    };
+    return { reports, channel, date, versionQualifier };
   }
 
   constructor(props: IReportProps) {
@@ -38,12 +32,15 @@ class Reports extends Component<IReportProps, {}> {
   }
 
   public render() {
-    const { reports } = this.props;
+    const { reports, channel, date } = this.props;
 
     return (
       <Hero color={'white'} size={'fullheight'}>
         <Hero.Body>
           <Container>
+            <Columns centered>
+              <Columns.Column>{this.renderBreadcrumb(channel, date)}</Columns.Column>
+            </Columns>
             <Columns centered>
               <Columns.Column>{this.renderReports(reports)}</Columns.Column>
             </Columns>
@@ -55,9 +52,32 @@ class Reports extends Component<IReportProps, {}> {
 
   /* PRIVATE METHODS */
 
-  private renderReports(reports: IReport[]) {
-    const reportData: JSX.Element[] = [];
+  private renderBreadcrumb(channel: string, date: string) {
+    const formattedChannel = channel[0].toUpperCase() + channel.slice(1);
 
+    return (
+      <Navbar.Container className={'breadcrumb is-medium has-arrow-separator'}>
+        <ul>
+          <li>
+            <a href={'/index'}>Home</a>
+          </li>
+          <li>
+            <a href={`/channels/${channel}`}>{formattedChannel}</a>
+          </li>
+          <li className='is-active'>
+            <a href={`/channels/${channel}/${date}`} aria-current='page'>
+              {date}
+            </a>
+          </li>
+        </ul>
+      </Navbar.Container>
+    );
+  }
+
+  private renderReports(reports: IReport[]) {
+    const { versionQualifier } = this.props;
+
+    const reportData: JSX.Element[] = [];
     for (const report of reports) {
       const { name } = report.table;
       // @ts-expect-error - TS is not aware of the join.
@@ -82,9 +102,8 @@ class Reports extends Component<IReportProps, {}> {
       <Fragment>
         <Box style={{ backgroundColor: '#FF9999' }}>
           <Heading size={5} className={'has-text-centered'}>
-            {this.props.versionQualifier}
+            {versionQualifier}
           </Heading>
-          s
           <Table bordered id={'reports-table'}>
             <tbody>
               <tr>

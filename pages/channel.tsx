@@ -10,7 +10,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
+import { Box, Columns, Container, Heading, Hero, Navbar, Table } from 'react-bulma-components';
 import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import {
   getReportStats,
@@ -67,6 +67,9 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
         <Hero.Body>
           <Container>
             <Columns centered>
+              <Columns.Column>{this.renderBreadcrumb(channel)}</Columns.Column>
+            </Columns>
+            <Columns centered>
               <Columns.Column>{this.renderTrendChart(channel, sortedRequests)}</Columns.Column>
             </Columns>
             <Columns centered>
@@ -92,6 +95,25 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     } else {
       throw new Error('Invalid channel type');
     }
+  }
+
+  private renderBreadcrumb(channel: string) {
+    const formattedChannel = channel[0].toUpperCase() + channel.slice(1);
+
+    return (
+      <Navbar.Container className={'breadcrumb is-medium has-arrow-separator'}>
+        <ul>
+          <li>
+            <a href={'/index'}>Home</a>
+          </li>
+          <li className='is-active'>
+            <a href={'/channels/beta'} aria-current='page'>
+              {formattedChannel}
+            </a>
+          </li>
+        </ul>
+      </Navbar.Container>
+    );
   }
 
   private renderTrendChart(channel: string, requests: IRequest[]) {
@@ -190,11 +212,11 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
       return (
         <tr>
           <th>{formatDateString(r.table.createdAt)}</th>
-          <th>{`${passed}/${total}`}</th>
-          <th>TODO</th>
           <td>
             <a href={releaseLink}>{version}</a>
           </td>
+          <th>{`${passed}/${total}`}</th>
+          <th>TODO</th>
           <td>
             {total > 0 ? <a href={`/channels/${channel}/${date}`}>See Reports</a> : 'No Reports'}
           </td>
@@ -204,18 +226,20 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
 
     return (
       <Box style={{ backgroundColor: bgColor }}>
-        <Table bordered id={'reports-table'}>
-          <tbody>
-            <tr>
-              <th>Date</th>
-              <th>App Count</th>
-              <th>Test Count</th>
-              <th>Version</th>
-              <th>Reports</th>
-            </tr>
-            {requestData}
-          </tbody>
-        </Table>
+        <div className={'table-container'} style={{ overflowY: 'auto', maxHeight: '50vh' }}>
+          <Table bordered id={'reports-table'}>
+            <tbody>
+              <tr>
+                <th>Date</th>
+                <th>Version</th>
+                <th>Apps Passing</th>
+                <th>Tests Passing</th>
+                <th>Reports</th>
+              </tr>
+              {requestData}
+            </tbody>
+          </Table>
+        </div>
       </Box>
     );
   }
