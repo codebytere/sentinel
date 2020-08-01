@@ -1,8 +1,16 @@
 import { Component, Fragment } from 'react';
-import { Box, Columns, Container, Heading, Hero, Navbar, Table } from 'react-bulma-components';
+import {
+  Box,
+  Columns,
+  Container,
+  Heading,
+  Hero,
+  Navbar,
+  Table,
+  Tag
+} from 'react-bulma-components';
 import { mRequest } from 'src/server/database';
 import { IReportProps, IReport } from 'src/server/interfaces';
-import { getStatusIcon } from 'src/utils/report-helpers';
 import { api } from 'src/server/api';
 
 class Reports extends Component<IReportProps, {}> {
@@ -74,6 +82,22 @@ class Reports extends Component<IReportProps, {}> {
     );
   }
 
+  private getStatusButton(status: api.Status) {
+    const buttonTypes = {
+      [api.Status.PASSED]: 'success',
+      [api.Status.FAILED]: 'danger',
+      [api.Status.NOT_RUN]: 'info',
+      [api.Status.PENDING]: 'warning'
+    };
+
+    const color = buttonTypes[status];
+    return (
+      <Tag size={'medium'} color={color}>
+        {status}
+      </Tag>
+    );
+  }
+
   private renderReports(reports: IReport[]) {
     const { versionQualifier } = this.props;
 
@@ -84,11 +108,11 @@ class Reports extends Component<IReportProps, {}> {
       const testData: api.TestData[] = report.table.TestData;
 
       for (const td of testData) {
-        const icon = getStatusIcon(td.totalFailed!, td.totalTests!);
+        const status = this.getStatusButton(td.status);
         reportData.push(
           <tr>
             <th>{name}</th>
-            <th>{`${icon} - ${td.status}`}</th>
+            <th>{status}</th>
             <th>{`${td.os}-${td.arch}`}</th>
             <th>{`${td.totalPassed!}/${td.totalTests!}`}</th>
             <th>{td.logfileLink ? <a href={td.logfileLink}>Log</a> : 'No Logfile'}</th>
