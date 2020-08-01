@@ -39,7 +39,7 @@ class Settings extends Component<ISettingsProps, {}> {
   }
 
   public render() {
-    const { Field } = Form;
+    const { Field, Control, Input } = Form;
     const { Body } = Hero;
     const { Column } = Columns;
     const { Consumer } = AuthContext;
@@ -48,25 +48,49 @@ class Settings extends Component<ISettingsProps, {}> {
       <Hero color={'light'} size={'fullheight'}>
         <Body>
           <Container>
-            <Columns className={'is-centered'}>
+            <Columns centered>
               <Column size={6}>
-                <Box>
-                  <Heading size={3} className={'has-text-centered'}>
-                    User Settings
+                <Box className={'has-background-link-light'}>
+                  <Heading size={4} className={'has-text-centered tooltip'}>
+                    Password
+                  </Heading>
+                  <Field>
+                    <Input
+                      title={'Password'}
+                      name={'password'}
+                      type={'password'}
+                      placeholder={'Update your password'}
+                    />{' '}
+                  </Field>
+                  <Heading size={4} className={'has-text-centered tooltip'}>
+                    Webhooks
+                    <span className={'tooltiptext'}>
+                      Where should Sentinel send webhooks for each platform?
+                    </span>
                   </Heading>
                   <Field>{this.renderWebHookTable()}</Field>
-                  <Field>{this.renderChannels()}</Field>
-                  <Field>
-                    <Consumer>
-                      {(auth: IAuthProviderState) => (
-                        <Button
-                          onClick={() => this.handleFormSubmit(auth.user!.name)}
-                          color={'success'}
-                        >
-                          Update Settings
-                        </Button>
-                      )}
-                    </Consumer>
+                  <Heading size={4} className={'has-text-centered tooltip'}>
+                    Channels
+                    <span className={'tooltiptext'}>
+                      What release lines do you want to test against?
+                    </span>
+                  </Heading>
+                  <Field kind={'group'} align={'centered'}>
+                    {this.renderChannels()}
+                  </Field>
+                  <Field kind={'group'} align={'centered'}>
+                    <Control>
+                      <Consumer>
+                        {(auth: IAuthProviderState) => (
+                          <Button
+                            onClick={() => this.handleFormSubmit(auth.user!.name)}
+                            color={'success'}
+                          >
+                            Update Settings
+                          </Button>
+                        )}
+                      </Consumer>
+                    </Control>
                   </Field>
                 </Box>
               </Column>
@@ -190,15 +214,17 @@ class Settings extends Component<ISettingsProps, {}> {
     });
 
     return (
-      <Table bordered size={'narrow'} id={'webhook-table'}>
-        <tbody>
-          <tr>
-            <th>Platform</th>
-            <th>Webhook</th>
-          </tr>
-          {hookData}
-        </tbody>
-      </Table>
+      <div className={'table-container'} style={{ borderRadius: '8px' }}>
+        <Table bordered id={'webhook-table'}>
+          <tbody>
+            <tr>
+              <th>Platform</th>
+              <th>Webhook URL</th>
+            </tr>
+            {hookData}
+          </tbody>
+        </Table>
+      </div>
     );
   }
 }

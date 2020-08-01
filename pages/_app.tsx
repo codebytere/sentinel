@@ -7,6 +7,7 @@ import AuthProvider from '../src/contexts/auth';
 
 import 'bulma/css/bulma.min.css';
 import 'react-dropdown/style.css';
+import '../src/styles/styles.css';
 
 const Nav = dynamic(() => import('../src/components/nav'), { ssr: false });
 

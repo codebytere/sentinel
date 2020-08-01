@@ -1,6 +1,15 @@
 import { FormEvent, Component } from 'react';
 import Router from 'next/router';
-import { Container, Form, Button, Hero, Columns, Box, Table } from 'react-bulma-components';
+import {
+  Container,
+  Form,
+  Heading,
+  Button,
+  Hero,
+  Columns,
+  Box,
+  Table
+} from 'react-bulma-components';
 import { withAlert } from 'react-alert';
 import converter from 'html-table-to-json';
 import { PLATFORMS } from '../src/server/constants';
@@ -32,7 +41,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
   public render() {
     const { Consumer } = AuthContext;
     const { Column } = Columns;
-    const { Input, Field, Control, Checkbox, Label } = Form;
+    const { Input, Field, Control, Checkbox } = Form;
     const { Body } = Hero;
 
     return (
@@ -41,8 +50,10 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
           <Container>
             <Columns className={'is-centered'}>
               <Column size={6}>
-                <Box>
-                  <Label>General Information</Label>
+                <Box className={'has-background-link-light'}>
+                  <Heading size={4} className={'has-text-centered'}>
+                    User Information
+                  </Heading>
                   <Field>
                     <Input
                       title={'User Name'}
@@ -71,9 +82,13 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                       onChange={this.handleInput}
                     />{' '}
                   </Field>
-                  <Field>
-                    <Label>Webhooks</Label>
-                    {this.renderWebHookTable()}
+                  <Heading size={4} className={'has-text-centered tooltip'}>
+                    Webhooks
+                    <span className={'tooltiptext'}>
+                      Where should Sentinel send webhooks for each platform?
+                    </span>
+                  </Heading>
+                  <Field kind={'group'} align={'centered'}>
                     <Control>
                       <Checkbox id={'use-provided-client'} onChange={this.onInputCheckboxChange}>
                         {' '}
@@ -81,8 +96,14 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                       </Checkbox>
                     </Control>
                   </Field>
-                  <Field>
-                    <Label>Release Channels</Label>
+                  <Field>{this.renderWebHookTable()}</Field>
+                  <Heading size={4} className={'has-text-centered tooltip'}>
+                    Release Channels
+                    <span className={'tooltiptext'}>
+                      What release lines do you want to test against?
+                    </span>
+                  </Heading>
+                  <Field kind={'group'} align={'centered'}>
                     <Control>
                       <Checkbox id={'stable'} onChange={this.onInputCheckboxChange}>
                         {' '}
@@ -98,17 +119,21 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                       </Checkbox>
                     </Control>
                   </Field>
-                  <Field>
-                    <Button onClick={this.handleClearForm} color={'danger'}>
-                      Clear
-                    </Button>{' '}
-                    <Consumer>
-                      {(auth: IAuthProviderState) => (
-                        <Button onClick={() => this.handleFormSubmit(auth)} color={'success'}>
-                          Sign Up
-                        </Button>
-                      )}
-                    </Consumer>
+                  <Field kind={'group'} align={'centered'}>
+                    <Control>
+                      <Button onClick={this.handleClearForm} color={'danger'}>
+                        Clear
+                      </Button>
+                    </Control>
+                    <Control>
+                      <Consumer>
+                        {(auth: IAuthProviderState) => (
+                          <Button onClick={() => this.handleFormSubmit(auth)} color={'success'}>
+                            Sign Up
+                          </Button>
+                        )}
+                      </Consumer>
+                    </Control>
                   </Field>
                 </Box>
               </Column>
@@ -184,7 +209,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
 
     if (id === 'use-provided-client') {
       const table = document.getElementById('webhook-table')!;
-      table.style.display = checked ? 'none' : 'block';
+      table.style.display = checked ? 'none' : '';
       return;
     }
 
@@ -251,15 +276,17 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     });
 
     return (
-      <Table bordered size={'narrow'} id={'webhook-table'}>
-        <tbody>
-          <tr>
-            <th>Platform</th>
-            <th>Webhook</th>
-          </tr>
-          {hookData}
-        </tbody>
-      </Table>
+      <div className={'table-container'} style={{ borderRadius: '8px' }}>
+        <Table bordered id={'webhook-table'}>
+          <tbody>
+            <tr>
+              <th>Platform</th>
+              <th>Webhook URL</th>
+            </tr>
+            {hookData}
+          </tbody>
+        </Table>
+      </div>
     );
   }
 }

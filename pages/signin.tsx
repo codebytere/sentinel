@@ -35,7 +35,7 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
           <Container>
             <Columns centered>
               <Column size={4}>
-                <Box>
+                <Box className={'has-background-link-light'}>
                   <Field>
                     <Input
                       title={'User Name'}
