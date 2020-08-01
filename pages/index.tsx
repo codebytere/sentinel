@@ -13,13 +13,12 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { getReportStats, dateSort } from 'src/utils/report-helpers';
+import { getReportStats, dateSort, getBaseURL } from 'src/utils';
+import { NextApiRequest } from 'next';
 
 class Home extends Component<IHomeProps, {}> {
-  static async getInitialProps({ req }) {
-    const host = req ? req.headers.host : window.location.host;
-    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
-    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
+  static async getInitialProps({ req }: { req: NextApiRequest | null }) {
+    const baseURL = getBaseURL(req);
 
     const rawRequests = await fetch(`${baseURL}/requests`);
     const requests = await rawRequests.json();

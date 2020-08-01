@@ -16,12 +16,17 @@ import { PLATFORMS } from '../src/server/constants';
 import { ISettingsProps, IRegistrant } from 'src/server/interfaces';
 import { AuthContext, IAuthProviderState } from '../src/contexts/auth';
 import { api } from 'src/server/api';
+import { NextApiRequest } from 'next';
+import { getBaseURL } from 'src/utils';
 
 class Settings extends Component<ISettingsProps, {}> {
   static contextType = AuthContext;
 
-  static async getInitialProps({ req }) {
-    const registrant: IRegistrant = req.registrant;
+  static async getInitialProps({ req }: { req: NextApiRequest | null }) {
+    const baseURL = getBaseURL(req);
+    const reply = await fetch(`${baseURL}/currentuser`);
+
+    const registrant: IRegistrant = await reply.json();
     const webhooks = registrant.table.webhooks || null;
 
     return { webhooks, channel: registrant.table.channel };

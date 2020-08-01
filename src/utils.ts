@@ -1,5 +1,6 @@
 import { IRequest } from 'src/server/interfaces';
 import { api } from 'src/server/api';
+import { NextApiRequest } from 'next';
 
 // Determines whether a given version is a nightly release.
 export const isNightly = v => v.includes('nightly');
@@ -18,23 +19,17 @@ export const dateSort = (one: IRequest, two: IRequest) => {
   return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
 };
 
+// Returns a base URL for API calls.
+export const getBaseURL = (req: NextApiRequest | null) => {
+  const host = req?.headers?.host ? req.headers.host : window.location.host;
+  const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
+  return isLocalHost ? 'http://localhost:3000' : `https://${host}`;
+}
+
 // Return a date string in YYYY-MM-DD format.
 export const formatDateString = (d: Date) => {
   const date = d instanceof Date ? d : new Date(d);
   return date.toISOString().slice(0, 10);
-};
-
-// Returns a status icon depending on how many tests passed.
-export const getStatusIcon = (failed: number, total: number) => {
-  let statusIcon: string;
-  if (failed > 0) {
-    statusIcon = '🔴';
-  } else if (total === 0) {
-    statusIcon = '🟡';
-  } else {
-    statusIcon = '🟢';
-  }
-  return statusIcon;
 };
 
 // Return an object containing total and passed tests for a Request.

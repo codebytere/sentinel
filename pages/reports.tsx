@@ -12,14 +12,14 @@ import {
 import { mRequest } from 'src/server/database';
 import { IReportProps, IReport } from 'src/server/interfaces';
 import { api } from 'src/server/api';
+import { NextApiRequest } from 'next';
+import { getBaseURL } from 'src/utils';
 
 class Reports extends Component<IReportProps, {}> {
-  static async getInitialProps({ req }) {
-    const host = req ? req.headers.host : window.location.host;
-    const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
-    const baseURL = isLocalHost ? 'http://localhost:3000' : `https://${host}`;
+  static async getInitialProps({ req }: { req: NextApiRequest | null }) {
+    const baseURL = getBaseURL(req);
 
-    const path = req ? req.url : window.location.pathname;
+    const path = req?.url ? req.url : window.location.pathname;
     const [channel, date] = path.replace('/channels/', '').split('/');
     const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`);
     const reports = await rawReports.json();

@@ -47,6 +47,9 @@ fast
     app
       .prepare()
       .then(() => {
+
+        /*****  PAGES *****/
+
         fast.route({
           method: 'GET',
           url: '/*',
@@ -101,13 +104,33 @@ fast
           }
         });
 
-        fast.get('/signup', (request, reply) => {
-          if (request.session.authenticated) {
+        fast.route({
+          method: 'GET',
+          url: '/signup',
+          handler: (request, reply) => {
+            if (request.session.authenticated) {
+              reply.redirect('/index');
+            } else {
+              return app.render(request.req, reply.res, '/signup', request.query).then(() => {
+                reply.sent = true;
+              });
+            }
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/settings',
+          handler: (request, reply) => {
+          if (!request.session.authenticated) {
             reply.redirect('/index');
           } else {
-            return app.render(request.req, reply.res, '/signup', request.query).then(() => {
-              reply.sent = true;
-            });
+            return app
+              .render(request.req, reply.res, '/settings', request.query)
+              .then(() => {
+                reply.sent = true;
+              });
+            }
           }
         });
 
@@ -121,31 +144,6 @@ fast
             const reports = await mReport.FindByChannelAndDate(channel, date);
 
             reply.send(reports);
-          }
-        });
-
-        fast.route({
-          method: 'GET',
-          url: '/settings',
-          handler: async (request, reply) => {
-            if (!request.session.authenticated) {
-              reply.redirect('/index');
-            } else {
-              fast.log.info(`Fetching data for current user ${request.session.user.name}`);
-
-              const currentUserId = request.session.user.id;
-              const registrant = await mRegistrant.Find(currentUserId);
-
-              if (!registrant) {
-                fast.log.error(`No user with id: ${currentUserId}`);
-                reply.redirect('/index');
-              }
-
-              const req = { ...request.req, registrant };
-              return app.render(req, reply.res, '/settings', request.query).then(() => {
-                reply.sent = true;
-              });
-            }
           }
         });
 
@@ -353,6 +351,33 @@ fast
             } else {
               fast.log.error('Cannot update settings for unauthenticated user');
               reply.redirect('/index');
+            }
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/currentuser',
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              fast.log.info(
+                `Fetching data for current user ${request.session.user.name}`
+              );
+
+              const currentUserId = request.session.user.id;
+              const registrant = await mRegistrant.Find(currentUserId);
+
+              if (!registrant) {
+                fast.log.error('Could not find current user data');
+                reply
+                  .code(500)
+                  .send({ error: `No user with id: ${currentUserId}` });
+              } else {
+                fast.log.info(registrant);
+                reply.send(registrant);
+              }
+            } else {
+              fast.log.error('Cannot get information for unauthenticated user');
             }
           }
         });
