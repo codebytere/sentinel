@@ -10,7 +10,16 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { Box, Columns, Container, Heading, Hero, Navbar, Table } from 'react-bulma-components';
+import {
+  Box,
+  Breadcrumb,
+  Columns,
+  Container,
+  Heading,
+  Hero,
+  Navbar,
+  Table
+} from 'react-bulma-components';
 import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import {
   getReportStats,
@@ -101,18 +110,21 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     const formattedChannel = channel[0].toUpperCase() + channel.slice(1);
 
     return (
-      <Navbar.Container className={'breadcrumb is-medium has-arrow-separator'}>
-        <ul>
-          <li>
-            <a href={'/index'}>Home</a>
-          </li>
-          <li className='is-active'>
-            <a href={'/channels/beta'} aria-current='page'>
-              {formattedChannel}
-            </a>
-          </li>
-        </ul>
-      </Navbar.Container>
+      <Breadcrumb
+        size={'medium'}
+        separator={'arrow'}
+        items={[
+          {
+            name: 'Home',
+            url: '/index'
+          },
+          {
+            name: formattedChannel,
+            url: '/channels/beta',
+            active: true
+          }
+        ]}
+      ></Breadcrumb>
     );
   }
 

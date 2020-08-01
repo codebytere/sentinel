@@ -1,11 +1,11 @@
 import { Component, Fragment } from 'react';
 import {
   Box,
+  Breadcrumb,
   Columns,
   Container,
   Heading,
   Hero,
-  Navbar,
   Table,
   Tag
 } from 'react-bulma-components';
@@ -64,21 +64,25 @@ class Reports extends Component<IReportProps, {}> {
     const formattedChannel = channel[0].toUpperCase() + channel.slice(1);
 
     return (
-      <Navbar.Container className={'breadcrumb is-medium has-arrow-separator'}>
-        <ul>
-          <li>
-            <a href={'/index'}>Home</a>
-          </li>
-          <li>
-            <a href={`/channels/${channel}`}>{formattedChannel}</a>
-          </li>
-          <li className='is-active'>
-            <a href={`/channels/${channel}/${date}`} aria-current='page'>
-              {date}
-            </a>
-          </li>
-        </ul>
-      </Navbar.Container>
+      <Breadcrumb
+        size={'medium'}
+        separator={'arrow'}
+        items={[
+          {
+            name: 'Home',
+            url: '/index'
+          },
+          {
+            name: formattedChannel,
+            url: `/channels/${channel}`
+          },
+          {
+            name: date,
+            url: `/channels/${channel}/${date}`,
+            active: true
+          }
+        ]}
+      ></Breadcrumb>
     );
   }
 
