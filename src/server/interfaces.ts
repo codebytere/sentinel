@@ -23,13 +23,10 @@ export interface ISettingsProps {
   channel: api.ReleaseChannel;
 }
 
-export interface IReportListProps {
-  reports: IReportInfo[];
-  changeReport: (id: string) => void;
-}
-
 export interface IReportProps {
   reports: IReport[];
+  channel: string;
+  date: string;
   versionQualifier: string;
 }
 
@@ -52,13 +49,6 @@ export interface IRegistrantState {
 
 export interface ISignupState {
   newRegistrant: api.Registrant;
-}
-
-export interface IReportState {
-  platformOptions: string[];
-  registrants: string[];
-  currentPlatformData?: { table: api.TestData };
-  currentReport: IReport;
 }
 
 // Other Interfaces
