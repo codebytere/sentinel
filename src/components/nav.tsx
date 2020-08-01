@@ -54,6 +54,7 @@ class NavBar extends Component<IAlertProps, INavBarState> {
                     <p className={'navbar-item'}>
                       Logged in as:&nbsp;<b>{auth.user.name}</b>
                     </p>
+                    <Navbar.Divider></Navbar.Divider>
                     <a href={'/settings'} className={'navbar-item'}>
                       Settings
                     </a>

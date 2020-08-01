@@ -168,17 +168,17 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
   private CustomTooltip(tooltipData) {
     const { active, payload, label } = tooltipData;
 
-    const style = {
-      background: 'white',
-      border: '2px solid black',
-      padding: '10px',
-      borderRadius: '10px'
-    };
-
     if (active && payload?.length > 0) {
       const data = payload[0].payload;
       return (
-        <div style={style}>
+        <div
+          style={{
+            background: 'white',
+            border: '2px solid black',
+            padding: '10px',
+            borderRadius: '10px'
+          }}
+        >
           <p className='label'>{label}</p>
           <p>
             <b>Reports Passed:</b> {data.passed}
@@ -226,8 +226,11 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
 
     return (
       <Box style={{ backgroundColor: bgColor }}>
-        <div className={'table-container'} style={{ overflowY: 'auto', maxHeight: '50vh' }}>
-          <Table bordered id={'reports-table'}>
+        <div
+          className={'table-container'}
+          style={{ overflowY: 'auto', maxHeight: '50vh', borderRadius: '8px' }}
+        >
+          <Table bordered className={'is-hoverable'} id={'reports-table'}>
             <tbody>
               <tr>
                 <th>Date</th>

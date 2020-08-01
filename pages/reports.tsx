@@ -104,19 +104,24 @@ class Reports extends Component<IReportProps, {}> {
           <Heading size={5} className={'has-text-centered'}>
             {versionQualifier}
           </Heading>
-          <Table bordered id={'reports-table'}>
-            <tbody>
-              <tr>
-                <th>App Name</th>
-                <th>Status</th>
-                <th>Platform</th>
-                <th>Tests Passed</th>
-                <th>Logfile</th>
-                <th>CI Run</th>
-              </tr>
-              {reportData}
-            </tbody>
-          </Table>
+          <div
+            className={'table-container'}
+            style={{ overflowY: 'auto', maxHeight: '100vh', borderRadius: '8px' }}
+          >
+            <Table bordered className={'is-hoverable'}>
+              <tbody>
+                <tr>
+                  <th>App Name</th>
+                  <th>Status</th>
+                  <th>Platform</th>
+                  <th>Tests Passed</th>
+                  <th>Logfile</th>
+                  <th>CI Run</th>
+                </tr>
+                {reportData}
+              </tbody>
+            </Table>
+          </div>
         </Box>
       </Fragment>
     );
