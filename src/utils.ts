@@ -24,7 +24,7 @@ export const getBaseURL = (req: NextApiRequest | null) => {
   const host = req?.headers?.host ? req.headers.host : window.location.host;
   const isLocalHost = ['localhost:3000', '0.0.0.0:3000'].includes(host);
   return isLocalHost ? 'http://localhost:3000' : `https://${host}`;
-}
+};
 
 // Return a date string in YYYY-MM-DD format.
 export const formatDateString = (d: Date) => {

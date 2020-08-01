@@ -45,20 +45,23 @@ class Home extends Component<IHomeProps, {}> {
 
   public render() {
     const { requests, registrants } = this.props;
+    const { Body } = Hero;
+    const { Column } = Columns;
+
     const sortedRequests = requests.sort(dateSort);
 
     return (
       <Hero color={'white'} size={'fullheight'}>
-        <Hero.Body>
+        <Body>
           <Container>
             <Columns centered>
-              <Columns.Column>{this.renderTrendChart(sortedRequests)}</Columns.Column>
+              <Column>{this.renderTrendChart(sortedRequests)}</Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>{this.renderChannelTable(registrants)}</Columns.Column>
+              <Column>{this.renderChannelTable(registrants)}</Column>
             </Columns>
           </Container>
-        </Hero.Body>
+        </Body>
       </Hero>
     );
   }

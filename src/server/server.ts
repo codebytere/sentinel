@@ -47,8 +47,7 @@ fast
     app
       .prepare()
       .then(() => {
-
-        /*****  PAGES *****/
+        /*****  PAGE ROUTES *****/
 
         fast.route({
           method: 'GET',
@@ -122,17 +121,19 @@ fast
           method: 'GET',
           url: '/settings',
           handler: (request, reply) => {
-          if (!request.session.authenticated) {
-            reply.redirect('/index');
-          } else {
-            return app
-              .render(request.req, reply.res, '/settings', request.query)
-              .then(() => {
+            if (!request.session.authenticated) {
+              reply.redirect('/index');
+            } else {
+              return app.render(request.req, reply.res, '/settings', request.query).then(() => {
                 reply.sent = true;
               });
             }
           }
         });
+
+        /***** DATA ROUTES *****/
+
+        /** GET **/
 
         fast.route({
           method: 'GET',
@@ -236,6 +237,62 @@ fast
         });
 
         fast.route({
+          method: 'GET',
+          url: '/logout',
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              fast.log.info('Logging out current user');
+
+              request.session.authenticated = false;
+              request.session.user = {};
+              request.destroySession(err => {
+                if (err) {
+                  reply.code(500).send('Internal Server Error');
+                } else {
+                  reply.redirect('/index');
+                }
+              });
+            } else {
+              reply.redirect('/index');
+            }
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/currentuser',
+          handler: async (request, reply) => {
+            if (request.session.authenticated) {
+              fast.log.info(`Fetching data for current user ${request.session.user.name}`);
+
+              const currentUserId = request.session.user.id;
+              const registrant = await mRegistrant.Find(currentUserId);
+
+              if (!registrant) {
+                fast.log.error('Could not find current user data');
+                reply.code(500).send({ error: `No user with id: ${currentUserId}` });
+              } else {
+                fast.log.info(registrant);
+                reply.send(registrant);
+              }
+            } else {
+              fast.log.error('Cannot get information for unauthenticated user');
+            }
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/registrants',
+          handler: async (request, reply) => {
+            const registrants = await mRegistrant.FindAll();
+            reply.send(registrants);
+          }
+        });
+
+        /** POST **/
+
+        fast.route({
           method: 'POST',
           url: '/register',
           schema: registerSchema,
@@ -309,28 +366,6 @@ fast
         });
 
         fast.route({
-          method: 'GET',
-          url: '/logout',
-          handler: async (request, reply) => {
-            if (request.session.authenticated) {
-              fast.log.info('Logging out current user');
-
-              request.session.authenticated = false;
-              request.session.user = {};
-              request.destroySession(err => {
-                if (err) {
-                  reply.code(500).send('Internal Server Error');
-                } else {
-                  reply.redirect('/index');
-                }
-              });
-            } else {
-              reply.redirect('/index');
-            }
-          }
-        });
-
-        fast.route({
           method: 'POST',
           url: '/update',
           schema: updateSettingsSchema,
@@ -351,33 +386,6 @@ fast
             } else {
               fast.log.error('Cannot update settings for unauthenticated user');
               reply.redirect('/index');
-            }
-          }
-        });
-
-        fast.route({
-          method: 'GET',
-          url: '/currentuser',
-          handler: async (request, reply) => {
-            if (request.session.authenticated) {
-              fast.log.info(
-                `Fetching data for current user ${request.session.user.name}`
-              );
-
-              const currentUserId = request.session.user.id;
-              const registrant = await mRegistrant.Find(currentUserId);
-
-              if (!registrant) {
-                fast.log.error('Could not find current user data');
-                reply
-                  .code(500)
-                  .send({ error: `No user with id: ${currentUserId}` });
-              } else {
-                fast.log.info(registrant);
-                reply.send(registrant);
-              }
-            } else {
-              fast.log.error('Cannot get information for unauthenticated user');
             }
           }
         });
@@ -490,15 +498,6 @@ fast
         });
 
         fast.route({
-          method: 'GET',
-          url: '/registrants',
-          handler: async (request, reply) => {
-            const registrants = await mRegistrant.FindAll();
-            reply.send(registrants);
-          }
-        });
-
-        fast.route({
           method: 'POST',
           url: '/report/:reportId',
           schema: newReportSchema,
@@ -539,6 +538,8 @@ fast
             reply.send({ success: 'TestData saved' });
           }
         });
+
+        /***** HANDLERS *****/
 
         fast.setNotFoundHandler((request, reply) => {
           return app.render404(request.req, reply.res).then(() => {

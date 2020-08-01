@@ -41,19 +41,21 @@ class Reports extends Component<IReportProps, {}> {
 
   public render() {
     const { reports, channel, date } = this.props;
+    const { Body } = Hero;
+    const { Column } = Columns;
 
     return (
       <Hero color={'white'} size={'fullheight'}>
-        <Hero.Body>
+        <Body>
           <Container>
             <Columns centered>
-              <Columns.Column>{this.renderBreadcrumb(channel, date)}</Columns.Column>
+              <Column>{this.renderBreadcrumb(channel, date)}</Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>{this.renderReports(reports)}</Columns.Column>
+              <Column>{this.renderReports(reports)}</Column>
             </Columns>
           </Container>
-        </Hero.Body>
+        </Body>
       </Hero>
     );
   }

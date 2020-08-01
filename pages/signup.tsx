@@ -30,14 +30,17 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
   }
 
   public render() {
+    const { Consumer } = AuthContext;
+    const { Column } = Columns;
     const { Input, Field, Control, Checkbox, Label } = Form;
+    const { Body } = Hero;
 
     return (
       <Hero color={'light'} size={'fullheight'}>
-        <Hero.Body>
+        <Body>
           <Container>
             <Columns className={'is-centered'}>
-              <Columns.Column size={6}>
+              <Column size={6}>
                 <Box>
                   <Label>General Information</Label>
                   <Field>
@@ -99,19 +102,19 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear
                     </Button>{' '}
-                    <AuthContext.Consumer>
+                    <Consumer>
                       {(auth: IAuthProviderState) => (
                         <Button onClick={() => this.handleFormSubmit(auth)} color={'success'}>
                           Sign Up
                         </Button>
                       )}
-                    </AuthContext.Consumer>
+                    </Consumer>
                   </Field>
                 </Box>
-              </Columns.Column>
+              </Column>
             </Columns>
           </Container>
-        </Hero.Body>
+        </Body>
       </Hero>
     );
   }
@@ -248,7 +251,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
     });
 
     return (
-      <Table bordered className={'is-narrow'} id={'webhook-table'}>
+      <Table bordered size={'narrow'} id={'webhook-table'}>
         <tbody>
           <tr>
             <th>Platform</th>

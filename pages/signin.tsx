@@ -24,24 +24,29 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
   }
 
   public render() {
+    const { Consumer } = AuthContext;
+    const { Column } = Columns;
+    const { Input, Field } = Form;
+    const { Body } = Hero;
+
     return (
       <Hero color={'light'} size={'fullheight'}>
-        <Hero.Body>
+        <Body>
           <Container>
-            <Columns className={'is-centered'}>
-              <Columns.Column size={4}>
+            <Columns centered>
+              <Column size={4}>
                 <Box>
-                  <Form.Field>
-                    <Form.Input
+                  <Field>
+                    <Input
                       title={'User Name'}
                       name={'username'}
                       value={this.state.registrant.username}
                       placeholder={'Enter your username'}
                       onChange={this.handleInput}
                     />{' '}
-                  </Form.Field>
-                  <Form.Field>
-                    <Form.Input
+                  </Field>
+                  <Field>
+                    <Input
                       title={'Password'}
                       name={'password'}
                       type={'password'}
@@ -49,12 +54,12 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
                       placeholder={'Enter your password'}
                       onChange={this.handleInput}
                     />{' '}
-                  </Form.Field>
-                  <Form.Field>
+                  </Field>
+                  <Field>
                     <Button onClick={this.handleClearForm} color={'danger'}>
                       Clear
                     </Button>{' '}
-                    <AuthContext.Consumer>
+                    <Consumer>
                       {(auth: IAuthProviderState) => (
                         <Button
                           onClick={() => {
@@ -65,13 +70,13 @@ class SignInContainer extends Component<IAlertProps, IRegistrantState> {
                           Sign In
                         </Button>
                       )}
-                    </AuthContext.Consumer>
-                  </Form.Field>
+                    </Consumer>
+                  </Field>
                 </Box>
-              </Columns.Column>
+              </Column>
             </Columns>
           </Container>
-        </Hero.Body>
+        </Body>
       </Hero>
     );
   }

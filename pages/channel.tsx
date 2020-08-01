@@ -10,15 +10,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import {
-  Box,
-  Breadcrumb,
-  Columns,
-  Container,
-  Heading,
-  Hero,
-  Table
-} from 'react-bulma-components';
+import { Box, Breadcrumb, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
 import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import {
   getReportStats,
@@ -68,25 +60,26 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
 
   public render() {
     const { channel, requests } = this.props;
+    const { Body } = Hero;
+    const { Column } = Columns;
+
     const sortedRequests = requests.sort(dateSort);
 
     return (
       <Hero color={'white'} size={'fullheight'}>
-        <Hero.Body>
+        <Body>
           <Container>
             <Columns centered>
-              <Columns.Column>{this.renderBreadcrumb(channel)}</Columns.Column>
+              <Column>{this.renderBreadcrumb(channel)}</Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>{this.renderTrendChart(channel, sortedRequests)}</Columns.Column>
+              <Column>{this.renderTrendChart(channel, sortedRequests)}</Column>
             </Columns>
             <Columns centered>
-              <Columns.Column>
-                {this.renderRequests(channel, sortedRequests.reverse())}
-              </Columns.Column>
+              <Column>{this.renderRequests(channel, sortedRequests.reverse())}</Column>
             </Columns>
           </Container>
-        </Hero.Body>
+        </Body>
       </Hero>
     );
   }

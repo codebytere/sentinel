@@ -190,7 +190,7 @@ class Settings extends Component<ISettingsProps, {}> {
     });
 
     return (
-      <Table bordered className={'is-narrow'} id={'webhook-table'}>
+      <Table bordered size={'narrow'} id={'webhook-table'}>
         <tbody>
           <tr>
             <th>Platform</th>
