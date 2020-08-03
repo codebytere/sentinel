@@ -117,7 +117,9 @@ class Reports extends Component<IReportProps, {}> {
         const status = this.getStatusButton(td.status);
         reportData.push(
           <tr>
-            <th>{name}</th>
+            <th>
+              <a href={`/registrants/${name}`}>{name}</a>
+            </th>
             <th>{status}</th>
             <th>{`${td.os}-${td.arch}`}</th>
             <th>{`${td.totalPassed!}/${td.totalTests!}`}</th>

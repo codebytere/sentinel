@@ -135,6 +135,17 @@ export const getTestDataSchema = {
   }
 };
 
+// Schema for /registrant/data/:username
+export const registrantSchema = {
+  params: {
+    type: 'object',
+    required: ['username'],
+    properties: {
+      reportId: { type: 'string' }
+    }
+  }
+};
+
 // Schema for /report/:reportId
 export const newReportSchema = {
   params: {

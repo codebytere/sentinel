@@ -18,7 +18,8 @@ import {
   getReportsSchema,
   getReportSchema,
   getRequestSchema,
-  updateSettingsSchema
+  updateSettingsSchema,
+  registrantSchema
 } from './schemas';
 import { HOST, PORT, REPORT_WEBHOOK, PLATFORMS, SESSION_SECRET, NODE_ENV } from './constants';
 
@@ -64,6 +65,16 @@ fast
           url: '/request/*',
           handler: (request, reply) => {
             return app.render(request.req, reply.res, '/reports', request.query).then(() => {
+              reply.sent = true;
+            });
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/registrants/:name',
+          handler: (request, reply) => {
+            return app.render(request.req, reply.res, '/registrant', request.query).then(() => {
               reply.sent = true;
             });
           }
@@ -254,6 +265,24 @@ fast
               });
             } else {
               reply.redirect('/index');
+            }
+          }
+        });
+
+        fast.route({
+          method: 'GET',
+          url: '/registrant/data/:username',
+          schema: registrantSchema,
+          handler: async (request, reply) => {
+            const { username } = request.params;
+
+            const registrant = await mRegistrant.GetAllDataForRegistrant(username);
+            if (!registrant) {
+              fast.log.error('Could not find current user data');
+              reply.code(500).send({ error: `No Registrant with username: ${username}` });
+            } else {
+              fast.log.info(registrant);
+              reply.send(registrant);
             }
           }
         });

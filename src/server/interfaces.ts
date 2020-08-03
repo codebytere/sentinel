@@ -13,6 +13,10 @@ export interface IReleaseChannelProps {
   requests: IRequest[];
 }
 
+export interface IRegistrantProps {
+  registrant: IRegistrant;
+}
+
 export interface IAlertProps {
   alert: AlertManager;
 }

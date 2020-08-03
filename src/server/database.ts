@@ -27,6 +27,32 @@ export class mRegistrant {
   }
 
   /**
+   * @param username The username of the Sentinel registrant.
+   *
+   * @returns All data associated with a specific Registrant.
+   */
+  static async GetAllDataForRegistrant(username: string) {
+    let registrant: Tables.Registrant | null = null;
+
+    try {
+      registrant = await Tables.Registrant.findOne({
+        where: { username },
+        include: [
+          {
+            model: Tables.Report,
+            include: [{ model: Tables.TestData }, { model: Tables.Request }],
+            attributes: ['status', 'createdAt']
+          }
+        ]
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    return registrant ? new mRegistrant(registrant) : false;
+  }
+
+  /**
    * @param id The id of the Sentinel registrant.
    *
    * @returns The Registrant with the specified id or, false if none found.

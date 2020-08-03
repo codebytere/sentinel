@@ -2,14 +2,16 @@ import { IRequest } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
 
-// Determines whether a given version is a nightly release.
-export const isNightly = v => v.includes('nightly');
-
-// Determines whether a given version is a beta release.
-export const isBeta = v => v.includes('beta');
-
-// Determines whether a given version is a stable release.
-export const isStable = v => !(isBeta(v) || isNightly(v));
+// Determines whether a given version is a nightly, beta, or stable release.
+export const getChannelForVersion = (v: string) => {
+  if (v.includes('nightly')) {
+    return api.Channel.NIGHTLY;
+  } else if (v.includes('beta')) {
+    return api.Channel.BETA;
+  } else {
+    return api.Channel.STABLE;
+  }
+};
 
 // Comparison function to sort dates in descending order.
 export const dateSort = (one: IRequest, two: IRequest) => {
@@ -35,19 +37,12 @@ export const formatDateString = (d: Date) => {
 // Return an object containing total and passed tests for a Request.
 export const getReportStats = (request: IRequest) => {
   const version = request.table.versionQualifier;
-
+  const type = getChannelForVersion(version);
   const stats = {
     total: request.reports.filter(rep => rep.table.status !== api.Status.NOT_RUN).length,
     passed: request.reports.filter(rep => rep.table.status === api.Status.PASSED).length,
     failed: request.reports.filter(rep => rep.table.status === api.Status.FAILED).length
   };
-
-  let type = api.Channel.STABLE;
-  if (isNightly(version)) {
-    type = api.Channel.NIGHTLY;
-  } else if (isBeta(version)) {
-    type = api.Channel.BETA;
-  }
 
   return { stats, type };
 };

@@ -15,9 +15,7 @@ import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import {
   getReportStats,
   dateSort,
-  isStable,
-  isNightly,
-  isBeta,
+  getChannelForVersion,
   formatDateString,
   getBaseURL
 } from 'src/utils';
@@ -34,16 +32,12 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     const path = req?.url ? req.url : window.location.pathname;
     const channel = path.replace('/channels/', '');
 
-    if (channel === api.Channel.STABLE) {
-      requests = requests.filter(r => isStable(r.table.versionQualifier));
-    } else if (channel === api.Channel.BETA) {
-      requests = requests.filter(r => isBeta(r.table.versionQualifier));
-    } else {
-      requests = requests.filter(r => isNightly(r.table.versionQualifier));
-    }
+    const filtered = requests.filter(r => {
+      return channel === getChannelForVersion(r.table.versionQualifier);
+    });
 
     const result: IRequest[] = [];
-    for (const request of requests) {
+    for (const request of filtered) {
       const raw = await fetch(`${baseURL}/reports/${request.table.id}`);
       const reports = await raw.json();
       result.push({ table: request.table, reports });
