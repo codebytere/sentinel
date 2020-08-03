@@ -411,6 +411,11 @@ fast
                 reply.code(500).send({
                   error: `Failed to update settings for ${authedUser}`
                 });
+              } else {
+                fast.log.info(`Successfully updated settings for ${authedUser}`);
+                reply.send({
+                  success: `Updated settings for ${authedUser}`
+                });
               }
             } else {
               fast.log.error('Cannot update settings for unauthenticated user');

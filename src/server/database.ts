@@ -96,12 +96,12 @@ export class mRegistrant {
       if (!registrant) return false;
 
       // Update release channel to test against.
-      await registrant.update('channel', opts.channel);
+      await registrant.set('channel', opts.channel);
 
       // Update user password.
       if (opts.password) {
         const hash = bcrypt.hashSync(opts.password, 10);
-        await registrant.update('password', hash);
+        await registrant.set('password', hash);
       }
 
       // Update all webhooks which were changed.

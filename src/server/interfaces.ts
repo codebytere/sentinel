@@ -23,8 +23,8 @@ export interface IAlertProps {
 
 export interface ISettingsProps {
   alert: AlertManager;
-  webhooks: Record<string, string> | null;
-  channel: api.ReleaseChannel;
+  webhooks?: Record<string, string> | null;
+  channel?: api.ReleaseChannel;
 }
 
 export interface IReportProps {
