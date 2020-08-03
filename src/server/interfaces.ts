@@ -36,6 +36,13 @@ export interface IReportProps {
 
 // State
 
+export interface ISettingsState {
+  updatedSettings: {
+    channel: api.ReleaseChannel;
+    password: string;
+  };
+}
+
 export interface INavBarState {
   open: boolean;
   user?: {

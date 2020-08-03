@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, FormEvent } from 'react';
 import Router from 'next/router';
 import {
   Container,
@@ -13,13 +13,13 @@ import {
 // import { withAlert } from 'react-alert'
 import converter from 'html-table-to-json';
 import { PLATFORMS } from '../src/server/constants';
-import { ISettingsProps, IRegistrant } from 'src/server/interfaces';
+import { ISettingsProps, IRegistrant, ISettingsState } from 'src/server/interfaces';
 import { AuthContext, IAuthProviderState } from '../src/contexts/auth';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
 import { getBaseURL } from 'src/utils';
 
-class Settings extends Component<ISettingsProps, {}> {
+class Settings extends Component<ISettingsProps, ISettingsState> {
   static contextType = AuthContext;
 
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
@@ -35,7 +35,16 @@ class Settings extends Component<ISettingsProps, {}> {
   constructor(props: ISettingsProps) {
     super(props);
 
+    this.state = {
+      updatedSettings: {
+        password: '',
+        channel: this.props.channel
+      }
+    };
+
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.onInputCheckboxChange = this.onInputCheckboxChange.bind(this);
+    this.onPasswordChange = this.onPasswordChange.bind(this);
   }
 
   public render() {
@@ -57,9 +66,9 @@ class Settings extends Component<ISettingsProps, {}> {
                   <Field>
                     <Input
                       title={'Password'}
-                      name={'password'}
-                      id={'password'}
                       type={'password'}
+                      value={this.state.updatedSettings.password}
+                      onChange={this.onPasswordChange}
                       placeholder={'Update your password'}
                     />{' '}
                   </Field>
@@ -83,10 +92,7 @@ class Settings extends Component<ISettingsProps, {}> {
                     <Control>
                       <Consumer>
                         {(auth: IAuthProviderState) => (
-                          <Button
-                            onClick={() => this.handleFormSubmit(auth.user!.name)}
-                            color={'success'}
-                          >
+                          <Button onClick={this.handleFormSubmit} color={'success'}>
                             Update Settings
                           </Button>
                         )}
@@ -104,24 +110,28 @@ class Settings extends Component<ISettingsProps, {}> {
 
   /* PRIVATE METHODS */
 
-  private handleFormSubmit(regName: string) {
+  private onPasswordChange(event: FormEvent<HTMLInputElement>) {
+    const value = event.currentTarget.value;
+
+    this.setState(prevState => ({
+      updatedSettings: {
+        ...prevState.updatedSettings,
+        password: value
+      }
+    }));
+  }
+
+  private handleFormSubmit() {
+    const { channel, password } = this.state.updatedSettings;
     // const alert = this.props.alert
 
     const rawTableHTML = document.getElementById('webhook-table')!;
     const rawTableString = rawTableHTML.outerHTML.toString();
     const webhooks = this.convertTableToJSON(rawTableString);
-    const channel = this.handleChannelCheckboxes();
-
-    const bodyData = { webhooks, channel };
-
-    const passwordElement = document.getElementById('password') as HTMLInputElement;
-    if (passwordElement) {
-      bodyData['password'] = passwordElement.value;
-    }
 
     fetch('/update-user', {
       method: 'POST',
-      body: JSON.stringify(bodyData),
+      body: JSON.stringify({ webhooks, channel, password }),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
@@ -143,25 +153,31 @@ class Settings extends Component<ISettingsProps, {}> {
       });
   }
 
-  private handleChannelCheckboxes = () => {
-    const stable = document.getElementById('stable')! as HTMLInputElement;
-    const beta = document.getElementById('stable')! as HTMLInputElement;
-    const nightly = document.getElementById('stable')! as HTMLInputElement;
+  private onInputCheckboxChange(event: React.ChangeEvent<HTMLInputElement>) {
+    let { channel } = this.state.updatedSettings;
 
-    let channel = api.ReleaseChannel.None;
+    const id = event.target.id;
+    const checked = event.target.checked;
 
-    channel = stable.checked
-      ? channel | api.ReleaseChannel.Stable
-      : channel & ~api.ReleaseChannel.Stable;
+    if (id === api.Channel.STABLE) {
+      channel = checked
+        ? channel | api.ReleaseChannel.Stable
+        : channel & ~api.ReleaseChannel.Stable;
+    } else if (id === api.Channel.BETA) {
+      channel = checked ? channel | api.ReleaseChannel.Beta : channel & ~api.ReleaseChannel.Beta;
+    } else {
+      channel = checked
+        ? channel | api.ReleaseChannel.Nightly
+        : channel & ~api.ReleaseChannel.Nightly;
+    }
 
-    channel = beta.checked ? channel | api.ReleaseChannel.Beta : channel & ~api.ReleaseChannel.Beta;
-
-    channel = nightly.checked
-      ? channel | api.ReleaseChannel.Nightly
-      : channel & ~api.ReleaseChannel.Nightly;
-
-    return channel;
-  };
+    this.setState(prevState => ({
+      updatedSettings: {
+        ...prevState.updatedSettings,
+        channel
+      }
+    }));
+  }
 
   private convertTableToJSON(data: string) {
     const webhookData: Record<string, string> = {};
@@ -176,24 +192,34 @@ class Settings extends Component<ISettingsProps, {}> {
   }
 
   private renderChannels() {
-    const { channel } = this.props;
+    const { channel } = this.state.updatedSettings;
     const { Control, Checkbox } = Form;
 
-    const usingStable = channel & api.ReleaseChannel.Stable;
-    const usingBeta = channel & api.ReleaseChannel.Beta;
-    const usingNightly = channel & api.ReleaseChannel.Nightly;
+    const usingChannel = (rc: api.ReleaseChannel) => (channel & rc) === rc;
 
     return (
       <Control>
-        <Checkbox id={'stable'} checked={usingStable}>
+        <Checkbox
+          id={'stable'}
+          checked={usingChannel(api.ReleaseChannel.Stable)}
+          onChange={this.onInputCheckboxChange}
+        >
           {' '}
           Stable
         </Checkbox>{' '}
-        <Checkbox id={'beta'} checked={usingBeta}>
+        <Checkbox
+          id={'beta'}
+          checked={usingChannel(api.ReleaseChannel.Beta)}
+          onChange={this.onInputCheckboxChange}
+        >
           {' '}
           Beta
         </Checkbox>{' '}
-        <Checkbox id={'nightly'} checked={usingNightly}>
+        <Checkbox
+          id={'nightly'}
+          checked={usingChannel(api.ReleaseChannel.Nightly)}
+          onChange={this.onInputCheckboxChange}
+        >
           {' '}
           Nightly
         </Checkbox>
