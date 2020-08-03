@@ -56,7 +56,7 @@ class Registrant extends Component<IRegistrantProps, {}> {
         const d1 = new Date(r1.createdAt);
         const d2 = new Date(r2.createdAt);
 
-        return d1 > d2 ? 1 : d1 < d2 ? -1 : 0;
+        return d1 > d2 ? -1 : d1 < d2 ? 1 : 0;
       })
       .filter(r => {
         // @ts-expect-error - TS is not aware of the join.
