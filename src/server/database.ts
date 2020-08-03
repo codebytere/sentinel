@@ -74,31 +74,50 @@ export class mRegistrant {
   /**
    * Updates webhooks for a Sentinel registrant.
    *
+   * @param opts
    * @param id The id of the Sentinel registrant.
    * @param webhooks The webhooks to update for the registrant.
+   * @param password The Registrant's unhashed updated password.
+   * @param channel The release channels to test against.
    *
    * @returns true if the webhooks were successfully updated, else false.
    */
-  static async UpdateSettings(id: number, webhooks: Record<string, string>, channel: number) {
-    const registrant = await Tables.Registrant.findOne({
-      where: { id }
-    });
+  static async UpdateSettings(opts: {
+    id: number;
+    channel: api.ReleaseChannel;
+    password?: string;
+    webhooks: Record<string, string>;
+  }) {
+    try {
+      const registrant = await Tables.Registrant.findOne({
+        where: { id: opts.id }
+      });
 
-    if (!registrant) return false;
+      if (!registrant) return false;
 
-    // Update release channel to test against.
-    await registrant.update('channel', channel);
+      // Update release channel to test against.
+      await registrant.update('channel', opts.channel);
 
-    // Update all webhooks which were changed.
-    for (const hook in webhooks) {
-      if (webhooks[hook] !== '') {
-        // @ts-ignore - ts wrongly assumes that only the high-level key is valid.
-        await registrant.set(`webhooks.${hook}`, webhooks[hook]);
+      // Update user password.
+      if (opts.password) {
+        const hash = bcrypt.hashSync(opts.password, 10);
+        await registrant.update('password', hash);
       }
-    }
 
-    await registrant.save();
-    return true;
+      // Update all webhooks which were changed.
+      for (const hook in opts.webhooks) {
+        if (opts.webhooks[hook] !== '') {
+          // @ts-ignore - ts wrongly assumes that only the high-level key is valid.
+          await registrant.set(`webhooks.${hook}`, webhooks[hook]);
+        }
+      }
+
+      await registrant.save();
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   }
 
   /**
@@ -135,6 +154,7 @@ export class mRegistrant {
    * @param appName The name of the app being tested with Sentinel.
    * @param username The Registrant's chosen username.
    * @param password The Registrant's hashed password.
+   * @param channel The release channels to test against.
    * @param webhooks The set of callback urls for the testing platforms
    * this Registrant is opting into.
    *

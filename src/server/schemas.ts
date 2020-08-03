@@ -51,12 +51,13 @@ export const registerSchema = {
   }
 };
 
-// Schema for /update
+// Schema for /update-user
 export const updateSettingsSchema = {
   body: {
     type: 'object',
     properties: {
       channel: { type: 'number' },
+      password: { type: 'string' },
       webhooks: {
         type: 'object',
         properties: {

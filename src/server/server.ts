@@ -289,7 +289,7 @@ fast
 
         fast.route({
           method: 'GET',
-          url: '/currentuser',
+          url: '/current-user',
           handler: async (request, reply) => {
             if (request.session.authenticated) {
               fast.log.info(`Fetching data for current user ${request.session.user.name}`);
@@ -396,17 +396,17 @@ fast
 
         fast.route({
           method: 'POST',
-          url: '/update',
+          url: '/update-user',
           schema: updateSettingsSchema,
           handler: async (request, reply) => {
             if (request.session.authenticated) {
-              const { webhooks, channel } = request.body;
+              const { webhooks, channel, password } = request.body;
               const authedUser = request.session.user.name;
 
-              fast.log.info(`Updating webhooks for ${authedUser}`);
+              fast.log.info(`Updating user data for ${authedUser}`);
 
               const id = request.session.user.id;
-              const success = await mRegistrant.UpdateSettings(id, webhooks, channel);
+              const success = await mRegistrant.UpdateSettings({ id, webhooks, channel, password });
               if (!success) {
                 reply.code(500).send({
                   error: `Failed to update settings for ${authedUser}`

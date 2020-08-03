@@ -24,7 +24,7 @@ class Settings extends Component<ISettingsProps, {}> {
 
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
-    const reply = await fetch(`${baseURL}/currentuser`);
+    const reply = await fetch(`${baseURL}/current-user`);
 
     const registrant: IRegistrant = await reply.json();
     const webhooks = registrant.table.webhooks || null;
@@ -58,6 +58,7 @@ class Settings extends Component<ISettingsProps, {}> {
                     <Input
                       title={'Password'}
                       name={'password'}
+                      id={'password'}
                       type={'password'}
                       placeholder={'Update your password'}
                     />{' '}
@@ -111,9 +112,16 @@ class Settings extends Component<ISettingsProps, {}> {
     const webhooks = this.convertTableToJSON(rawTableString);
     const channel = this.handleChannelCheckboxes();
 
-    fetch('/update', {
+    const bodyData = { webhooks, channel };
+
+    const passwordElement = document.getElementById('password') as HTMLInputElement;
+    if (passwordElement) {
+      bodyData['password'] = passwordElement.value;
+    }
+
+    fetch('/update-user', {
       method: 'POST',
-      body: JSON.stringify({ webhooks, channel }),
+      body: JSON.stringify(bodyData),
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
