@@ -14,9 +14,6 @@ import {
   newReportSchema,
   registerSchema,
   loginSchema,
-  getTestDataSchema,
-  getReportsSchema,
-  getReportSchema,
   getRequestSchema,
   updateSettingsSchema,
   registrantSchema
@@ -161,53 +158,6 @@ fast
 
         fast.route({
           method: 'GET',
-          url: '/reports/registrant/:registrantId',
-          schema: getReportsSchema,
-          handler: async (request, reply) => {
-            const { registrantId } = request.params;
-
-            if (request.session.authenticated) {
-              const reports = await mReport.FindForRegistrant(registrantId);
-              reply.send(reports);
-            } else {
-              fast.log.info(`User not authorized to access /reports/registrant/${registrantId}`);
-              reply.code(401).send({ error: 'Not Authorized' });
-            }
-          }
-        });
-
-        fast.route({
-          method: 'GET',
-          url: '/reports/:requestId',
-          schema: getReportSchema,
-          handler: async (request, reply) => {
-            const { requestId } = request.params;
-            const { includeTestData } = request.query;
-
-            fast.log.info(`Fetching Reports for request: ${requestId}`);
-
-            const reports = await mRequest.GetReports(requestId);
-
-            if (includeTestData) {
-              fast.log.info(`Appending TestData to Reports for request: ${requestId}`);
-
-              const result: {
-                table: Tables.Report;
-                testData: mTestData[];
-              }[] = [];
-              for (const report of reports) {
-                const testData = await mReport.GetTestData(report.table.id);
-                result.push({ table: report.table, testData });
-              }
-              reply.send(result);
-            } else {
-              reply.send(reports);
-            }
-          }
-        });
-
-        fast.route({
-          method: 'GET',
           url: '/requests/:requestId',
           schema: getRequestSchema,
           handler: async (request, reply) => {
@@ -226,20 +176,6 @@ fast
           handler: async (_request, reply) => {
             const response = await mRequest.FindAll();
             reply.send(response);
-          }
-        });
-
-        fast.route({
-          method: 'GET',
-          url: '/testdata/:reportId',
-          schema: getTestDataSchema,
-          handler: async (request, reply) => {
-            const { reportId } = request.params;
-
-            fast.log.info(`Fetching TestData sets for report: ${reportId}`);
-
-            const testDataSets = await mTestData.GetFromReport(reportId);
-            reply.send(testDataSets);
           }
         });
 

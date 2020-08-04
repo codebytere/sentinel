@@ -89,17 +89,6 @@ export const loginSchema = {
   }
 };
 
-// Schema for /report/registrant/:registrantId
-export const getReportsSchema = {
-  params: {
-    type: 'object',
-    required: ['registrantId'],
-    properties: {
-      registrantId: { type: 'number' }
-    }
-  }
-};
-
 // Schema for /requests/:requestId
 export const getRequestSchema = {
   params: {
@@ -107,31 +96,6 @@ export const getRequestSchema = {
     required: ['requestId'],
     properties: {
       requestId: { type: 'number' }
-    }
-  }
-};
-
-// Schema for '/reports/:requestId'
-export const getReportSchema = {
-  query: {
-    includeTestData: { type: 'boolean' }
-  },
-  params: {
-    type: 'object',
-    required: ['requestId'],
-    properties: {
-      requestId: { type: 'number' }
-    }
-  }
-};
-
-// Schema for /testdata/:reportId
-export const getTestDataSchema = {
-  params: {
-    type: 'object',
-    required: ['reportId'],
-    properties: {
-      reportId: { type: 'number' }
     }
   }
 };
