@@ -40,7 +40,12 @@ export class mRegistrant {
         include: [
           {
             model: Tables.Report,
-            include: [{ model: Tables.TestData }, { model: Tables.Request }],
+            include: [
+              {
+                model: Tables.Request,
+                attributes: ['versionQualifier', 'createdAt']
+              }
+            ],
             attributes: ['status', 'createdAt']
           }
         ]
@@ -344,9 +349,11 @@ export class mRequest {
         include: [
           {
             model: Tables.Report,
+            attributes: ['status', 'createdAt'],
             include: [
               {
-                model: Tables.TestData
+                model: Tables.TestData,
+                attributes: ['status', 'totalTests', 'totalPassed']
               }
             ]
           }
