@@ -412,7 +412,17 @@ export class mRequest {
           createdAt: {
             [Op.gt]: new Date(MINIMUM_TIME_AGO)
           }
-        }
+        },
+        include: [
+          {
+            model: Tables.Report,
+            include: [
+              {
+                model: Tables.TestData
+              }
+            ]
+          }
+        ]
       });
     } catch (err) {
       console.error(err);

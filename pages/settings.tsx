@@ -10,7 +10,7 @@ import {
   Box,
   Table
 } from 'react-bulma-components';
-import { withAlert } from 'react-alert'
+import { withAlert } from 'react-alert';
 import converter from 'html-table-to-json';
 import { PLATFORMS } from '../src/server/constants';
 import { ISettingsProps, IRegistrant, ISettingsState } from 'src/server/interfaces';
@@ -92,7 +92,10 @@ class Settings extends Component<ISettingsProps, ISettingsState> {
                     <Control>
                       <Consumer>
                         {(auth: IAuthProviderState) => (
-                          <Button onClick={() => this.handleFormSubmit(auth.user!.name)} color={'success'}>
+                          <Button
+                            onClick={() => this.handleFormSubmit(auth.user!.name)}
+                            color={'success'}
+                          >
                             Update Settings
                           </Button>
                         )}
@@ -123,7 +126,7 @@ class Settings extends Component<ISettingsProps, ISettingsState> {
 
   private handleFormSubmit(regName: string) {
     const { channel, password } = this.state.updatedSettings;
-    const alert = this.props.alert
+    const alert = this.props.alert;
 
     const rawTableHTML = document.getElementById('webhook-table')!;
     const rawTableString = rawTableHTML.outerHTML.toString();
@@ -139,9 +142,9 @@ class Settings extends Component<ISettingsProps, ISettingsState> {
     })
       .then(response => {
         if (response.status === 200) {
-          alert.show(`Successfully updated webhooks for ${regName}`)
+          alert.show(`Successfully updated webhooks for ${regName}`);
         } else {
-          alert.show(`Failed to update webhooks for ${regName}`)
+          alert.show(`Failed to update webhooks for ${regName}`);
         }
         return response.json();
       })

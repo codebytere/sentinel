@@ -48,6 +48,7 @@ export namespace api {
     commitHash: string;
     createdAt: Date;
     updatedAt: Date;
+    Reports?: api.Report[];
   }
 
   export interface Report {
@@ -60,6 +61,7 @@ export namespace api {
     createdAt: Date;
     updatedAt: Date;
     requestId: number;
+    TestData?: api.TestData[];
   }
 
   export interface TestData {
@@ -70,8 +72,8 @@ export namespace api {
     sourceLink?: string;
     timeStart: Date;
     timeStop: Date;
-    totalTests?: number;
-    totalPassed?: number;
+    totalTests: number;
+    totalPassed: number;
     totalSkipped?: number;
     totalWarnings?: number;
     totalFailed?: number;

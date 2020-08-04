@@ -12,13 +12,7 @@ import {
 } from 'recharts';
 import { Box, Breadcrumb, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
 import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
-import {
-  getReportStats,
-  dateSort,
-  getChannelForVersion,
-  formatDateString,
-  getBaseURL
-} from 'src/utils';
+import { dateSort, formatDateString, getBaseURL, getChannelForVersion, getStats } from 'src/utils';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
 
@@ -26,24 +20,15 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
 
-    const rawRequests = await fetch(`${baseURL}/requests`);
-    let requests: IRequest[] = await rawRequests.json();
-
     const path = req?.url ? req.url : window.location.pathname;
     const channel = path.replace('/channels/', '');
 
-    const filtered = requests.filter(r => {
+    const rawRequests = await fetch(`${baseURL}/requests`);
+    const requests: IRequest[] = (await rawRequests.json()).filter((r: IRequest) => {
       return channel === getChannelForVersion(r.table.versionQualifier);
     });
 
-    const result: IRequest[] = [];
-    for (const request of filtered) {
-      const raw = await fetch(`${baseURL}/reports/${request.table.id}`);
-      const reports = await raw.json();
-      result.push({ table: request.table, reports });
-    }
-
-    return { requests: result, channel };
+    return { requests, channel };
   }
 
   constructor(props: IReleaseChannelProps) {
@@ -119,8 +104,8 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     const bgColor = this.getBackgroundColor(channel);
     const data = requests.map(r => {
       const {
-        stats: { passed, total }
-      } = getReportStats(r);
+        report: { passed, total }
+      } = getStats(r.table.Reports!);
 
       const percentage = total === 0 ? total : (passed / total) * 100;
       const date = new Date(r.table.createdAt).toLocaleDateString();
@@ -203,9 +188,8 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
         channel === api.Channel.NIGHTLY
           ? `https://github.com/electron/nightlies/releases/tag/${version}`
           : `https://github.com/electron/electron/releases/tag/${version}`;
-      const {
-        stats: { passed, total }
-      } = getReportStats(r);
+
+      const { report, platform, test } = getStats(r.table.Reports!);
 
       return (
         <tr>
@@ -213,10 +197,15 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
           <td>
             <a href={releaseLink}>{version}</a>
           </td>
-          <th>{`${passed}/${total}`}</th>
-          <th>TODO</th>
+          <th>{`${report.passed}/${report.total}`}</th>
+          <th>{`${platform.passed}/${platform.total}`}</th>
+          <th>{`${test.passed}/${test.total}`}</th>
           <td>
-            {total > 0 ? <a href={`/channels/${channel}/${date}`}>See Reports</a> : 'No Reports'}
+            {report.total > 0 ? (
+              <a href={`/channels/${channel}/${date}`}>See Reports</a>
+            ) : (
+              'No Reports'
+            )}
           </td>
         </tr>
       );
@@ -234,6 +223,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
                 <th>Date</th>
                 <th>Version</th>
                 <th>Apps Passing</th>
+                <th>Platforms Passing</th>
                 <th>Tests Passing</th>
                 <th>Reports</th>
               </tr>

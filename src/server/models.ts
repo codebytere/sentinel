@@ -95,6 +95,7 @@ export namespace Tables {
     }
   );
 
+  Request.hasMany(Report, { foreignKey: 'requestId' });
   Registrant.hasMany(Report, { foreignKey: 'registrantId' });
   Report.belongsTo(Request, { foreignKey: 'requestId' });
   Report.belongsTo(Registrant, { foreignKey: 'registrantId' });

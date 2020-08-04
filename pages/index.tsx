@@ -13,7 +13,7 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { getReportStats, dateSort, getBaseURL } from 'src/utils';
+import { getStats, dateSort, getBaseURL, getChannelForVersion } from 'src/utils';
 import { NextApiRequest } from 'next';
 
 class Home extends Component<IHomeProps, {}> {
@@ -23,17 +23,10 @@ class Home extends Component<IHomeProps, {}> {
     const rawRequests = await fetch(`${baseURL}/requests`);
     const requests = await rawRequests.json();
 
-    const result: IRequest[] = [];
-    for (const request of requests) {
-      const raw = await fetch(`${baseURL}/reports/${request.table.id}`);
-      const reports = await raw.json();
-      result.push({ table: request.table, reports });
-    }
-
     const rawRegistrants = await fetch(`${baseURL}/registrants`);
     const registrants = await rawRegistrants.json();
 
-    return { requests: result, registrants };
+    return { requests, registrants };
   }
 
   constructor(props: IHomeProps) {
@@ -71,9 +64,10 @@ class Home extends Component<IHomeProps, {}> {
   private renderTrendChart(requests: IRequest[]) {
     const data = requests.map(r => {
       const {
-        stats: { passed, total },
-        type
-      } = getReportStats(r);
+        report: { passed, total }
+      } = getStats(r.table.Reports!);
+
+      const type = getChannelForVersion(r.table.versionQualifier);
 
       const percentage = total === 0 ? total : (passed / total) * 100;
       const date = new Date(r.table.createdAt).toLocaleDateString();

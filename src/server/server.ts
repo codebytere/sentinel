@@ -222,6 +222,15 @@ fast
 
         fast.route({
           method: 'GET',
+          url: '/requests',
+          handler: async (_request, reply) => {
+            const response = await mRequest.FindAll();
+            reply.send(response);
+          }
+        });
+
+        fast.route({
+          method: 'GET',
           url: '/testdata/:reportId',
           schema: getTestDataSchema,
           handler: async (request, reply) => {
@@ -232,11 +241,6 @@ fast
             const testDataSets = await mTestData.GetFromReport(reportId);
             reply.send(testDataSets);
           }
-        });
-
-        fast.get('/requests', async (_request, reply) => {
-          const response = await mRequest.FindAll();
-          reply.send(response);
         });
 
         fast.get('/checkAuth', async (request, reply) => {
@@ -258,7 +262,7 @@ fast
               request.session.user = {};
               request.destroySession(err => {
                 if (err) {
-                  reply.code(500).send('Internal Server Error');
+                  reply.code(500).send({ error: 'Failed to destroy user session' });
                 } else {
                   reply.redirect('/index');
                 }

@@ -34,15 +34,28 @@ export const formatDateString = (d: Date) => {
   return date.toISOString().slice(0, 10);
 };
 
-// Return an object containing total and passed tests for a Request.
-export const getReportStats = (request: IRequest) => {
-  const version = request.table.versionQualifier;
-  const type = getChannelForVersion(version);
-  const stats = {
-    total: request.reports.filter(rep => rep.table.status !== api.Status.NOT_RUN).length,
-    passed: request.reports.filter(rep => rep.table.status === api.Status.PASSED).length,
-    failed: request.reports.filter(rep => rep.table.status === api.Status.FAILED).length
+// Return an object containing Report, platform, and TestData stats.
+export const getStats = (reports: api.Report[]) => {
+  const reportStats = {
+    total: reports.length,
+    passed: reports.filter(rep => rep.status === api.Status.PASSED).length
   };
 
-  return { stats, type };
+  const testStats = { total: 0, passed: 0 };
+  const platformStats = { total: 0, passed: 0 };
+
+  for (const report of reports) {
+    const testData: api.TestData[] = report.TestData!;
+    for (const td of testData) {
+      platformStats.total++;
+      if (td.status === api.Status.PASSED) {
+        platformStats.passed++;
+      }
+
+      testStats.total += td.totalTests;
+      testStats.passed += td.totalPassed;
+    }
+  }
+
+  return { report: reportStats, platform: platformStats, test: testStats };
 };
