@@ -37,7 +37,7 @@ export const formatDateString = (d: Date) => {
 // Return an object containing Report, platform, and TestData stats.
 export const getStats = (reports: api.Report[]) => {
   const reportStats = {
-    total: reports.length,
+    total: reports.filter(rep => rep.status !== api.Status.NOT_RUN).length,
     passed: reports.filter(rep => rep.status === api.Status.PASSED).length
   };
 
