@@ -120,7 +120,8 @@ class Reports extends Component<IReportProps, {}> {
               <a href={`/registrants/${name}`}>{name}</a>
             </th>
             <th>{status}</th>
-            <th>{`${td.os}-${td.arch}`}</th>
+            <th>{td.os}</th>
+            <th>{td.arch}</th>
             <th>{`${td.totalPassed!}/${td.totalTests!}`}</th>
             <th>{td.logfileLink ? <a href={td.logfileLink}>Log</a> : 'No Logfile'}</th>
             <th>{td.ciLink ? <a href={td.ciLink}>CI</a> : 'No CI Link'}</th>
@@ -144,7 +145,8 @@ class Reports extends Component<IReportProps, {}> {
                 <tr>
                   <th>App Name</th>
                   <th>Status</th>
-                  <th>Platform</th>
+                  <th>OS</th>
+                  <th>Arch</th>
                   <th>Tests Passed</th>
                   <th>Logfile</th>
                   <th>CI Run</th>
