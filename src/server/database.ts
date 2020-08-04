@@ -209,30 +209,6 @@ export class mTestData {
 
     return new mTestData(td);
   }
-
-  /**
-   * @param reportId The id of the Report corresponding to this TestData.
-   *
-   * @returns An array of granular TestData for a given Report.
-   */
-  static async GetFromReport(reportId: number) {
-    let testData: Tables.TestData[] = [];
-
-    try {
-      testData = await Tables.TestData.findAll({
-        where: {
-          reportId,
-          createdAt: {
-            [Op.gt]: new Date(MINIMUM_TIME_AGO)
-          }
-        }
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
-    return testData.map(data => new mTestData(data));
-  }
 }
 
 /**
@@ -270,30 +246,6 @@ export class mReport {
         })
       );
     }
-  }
-
-  /**
-   * @param reportId The id of the Report.
-   *
-   * @returns An array of all Reports associated with this Request.
-   */
-  static async GetTestData(reportId: number) {
-    let testData: Tables.TestData[] = [];
-
-    try {
-      testData = await Tables.TestData.findAll({
-        where: {
-          reportId,
-          createdAt: {
-            [Op.gt]: new Date(MINIMUM_TIME_AGO)
-          }
-        }
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
-    return testData.map(t => new mTestData(t));
   }
 
   /**
@@ -336,30 +288,6 @@ export class mReport {
             where: createdQuery
           }
         ]
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
-    return reports.map(report => new mReport(report));
-  }
-
-  /**
-   * @param registrantId The id of the Registrant.
-   *
-   * @returns An array of all Reports associated with a Registrant.
-   */
-  static async FindForRegistrant(registrantId: number) {
-    let reports: Tables.Report[] = [];
-
-    try {
-      reports = await Tables.Report.findAll({
-        where: {
-          registrantId,
-          createdAt: {
-            [Op.gt]: new Date(MINIMUM_TIME_AGO)
-          }
-        }
       });
     } catch (err) {
       console.error(err);
@@ -429,25 +357,6 @@ export class mRequest {
     }
 
     return requests.map(r => new mRequest(r));
-  }
-
-  /**
-   * @param requestId The id of the Request.
-   *
-   * @returns An array of all Reports associated with this Request.
-   */
-  static async GetReports(requestId: number): Promise<mReport[]> {
-    const reports = await Tables.Report.findAll({
-      where: {
-        requestId,
-        createdAt: {
-          [Op.gt]: new Date(MINIMUM_TIME_AGO)
-        }
-      },
-      include: [Tables.Request]
-    });
-
-    return reports.map(r => new mReport(r));
   }
 
   /**
