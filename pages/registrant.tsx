@@ -48,8 +48,7 @@ class Registrant extends Component<IRegistrantProps, {}> {
       totalReports: 0
     };
 
-    // @ts-expect-error - TS is not aware of the join.
-    const reports: api.Report[] = registrant.table.Reports;
+    const reports: api.Report[] = registrant.table.Reports!;
 
     const sortedReports: api.Report[] = reports
       .sort((r1, r2) => {
@@ -59,14 +58,12 @@ class Registrant extends Component<IRegistrantProps, {}> {
         return d1 > d2 ? -1 : d1 < d2 ? 1 : 0;
       })
       .filter(r => {
-        // @ts-expect-error - TS is not aware of the join.
-        return channel === getChannelForVersion(r.Request.versionQualifier);
+        return channel === getChannelForVersion(r.Request!.versionQualifier);
       });
 
     const passes = reports.filter((r: api.Report) => {
       const passed = r.status === api.Status.PASSED;
-      // @ts-expect-error - TS is not aware of the join.
-      const matchesChannel = channel === getChannelForVersion(r.Request.versionQualifier);
+      const matchesChannel = channel === getChannelForVersion(r.Request!.versionQualifier);
       return passed && matchesChannel;
     }).length;
 

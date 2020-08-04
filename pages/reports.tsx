@@ -110,8 +110,7 @@ class Reports extends Component<IReportProps, {}> {
     const reportData: JSX.Element[] = [];
     for (const report of reports) {
       const { name } = report.table;
-      // @ts-expect-error - TS is not aware of the join.
-      const testData: api.TestData[] = report.table.TestData;
+      const testData: api.TestData[] = report.table.TestData!;
 
       for (const td of testData) {
         const status = this.getStatusButton(td.status);

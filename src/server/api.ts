@@ -36,6 +36,8 @@ export namespace api {
     password: string;
     channel: api.ReleaseChannel;
     webhooks?: Record<string, string>;
+    // Present as a result of table joins.
+    Reports?: api.Report[];
   }
 
   export interface Request {
@@ -48,6 +50,7 @@ export namespace api {
     commitHash: string;
     createdAt: Date;
     updatedAt: Date;
+    // Present as a result of table joins.
     Reports?: api.Report[];
   }
 
@@ -61,7 +64,10 @@ export namespace api {
     createdAt: Date;
     updatedAt: Date;
     requestId: number;
+    // Present as a result of table joins.
     TestData?: api.TestData[];
+    // Present as a result of table joins.
+    Request?: api.Request;
   }
 
   export interface TestData {
