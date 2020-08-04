@@ -48,31 +48,25 @@ class Registrant extends Component<IRegistrantProps, {}> {
       totalReports: 0
     };
 
-    const reports: api.Report[] = registrant.table.Reports!;
-
-    const sortedReports: api.Report[] = reports
+    const reports: api.Report[] = registrant.table
+      .Reports!.filter((r: api.Report) => {
+        return channel === getChannelForVersion(r.Request!.versionQualifier);
+      })
       .sort((r1, r2) => {
         const d1 = new Date(r1.createdAt);
         const d2 = new Date(r2.createdAt);
 
         return d1 > d2 ? -1 : d1 < d2 ? 1 : 0;
-      })
-      .filter(r => {
-        return channel === getChannelForVersion(r.Request!.versionQualifier);
       });
 
-    const passes = reports.filter((r: api.Report) => {
-      const passed = r.status === api.Status.PASSED;
-      const matchesChannel = channel === getChannelForVersion(r.Request!.versionQualifier);
-      return passed && matchesChannel;
-    }).length;
+    const { length: passes } = reports.filter((r: api.Report) => r.status === api.Status.PASSED);
 
-    result.passRate = `${Math.floor((100 * passes) / reports.length)}%`;
+    result.passRate = reports.length ? `${Math.floor((100 * passes) / reports.length)}%` : 'N/A';
 
-    if (sortedReports.length > 0) {
-      result.status = sortedReports[0].status;
-      result.lastRun = formatDateString(new Date(sortedReports[0].createdAt));
-      result.totalReports = sortedReports.length;
+    if (reports.length > 0) {
+      result.status = reports[0].status;
+      result.lastRun = formatDateString(new Date(reports[0].createdAt));
+      result.totalReports = reports.length;
     }
 
     return result;
