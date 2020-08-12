@@ -67,6 +67,7 @@ class Settings extends Component<ISettingsProps, ISettingsState> {
                     <Input
                       title={'Password'}
                       type={'password'}
+                      name={'password'}
                       value={this.state.updatedSettings.password}
                       onChange={this.onPasswordChange}
                       placeholder={'Update your password'}

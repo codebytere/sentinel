@@ -57,6 +57,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                   <Field>
                     <Input
                       title={'User Name'}
+                      name={'username'}
                       value={this.state.newRegistrant.username}
                       placeholder={'Enter your name'}
                       onChange={this.handleInput}
@@ -65,6 +66,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                   <Field>
                     <Input
                       title={'App Name'}
+                      name={'appName'}
                       value={this.state.newRegistrant.appName}
                       placeholder={`Enter your app's name`}
                       onChange={this.handleInput}
@@ -73,6 +75,7 @@ class SignUpContainer extends Component<ISignupProps, ISignupState> {
                   <Field>
                     <Input
                       title={'Password'}
+                      name={'password'}
                       type={'password'}
                       value={this.state.newRegistrant.password}
                       placeholder={'Enter a new password'}
