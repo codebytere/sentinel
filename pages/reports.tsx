@@ -14,6 +14,7 @@ import { IReportProps, IReport } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
 import { getBaseURL } from 'src/utils';
+import { DATA_AUTH_TOKEN } from 'src/server/constants';
 
 class Reports extends Component<IReportProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
@@ -21,12 +22,16 @@ class Reports extends Component<IReportProps, {}> {
 
     const path = req?.url ? req.url : window.location.pathname;
     const [channel, date] = path.replace('/channels/', '').split('/');
-    const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`);
+    const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`, {
+      headers: { authToken: DATA_AUTH_TOKEN }
+    });
     const reports = await rawReports.json();
 
     // requestId will be the same for any given set of Reports.
     const reqId = reports[0].table.requestId;
-    const rawRequest = await fetch(`${baseURL}/requests/${reqId}`);
+    const rawRequest = await fetch(`${baseURL}/requests/${reqId}`, {
+      headers: { authToken: DATA_AUTH_TOKEN }
+    });
     const request: mRequest = await rawRequest.json();
     const versionQualifier = request.table.versionQualifier;
 

@@ -1,4 +1,4 @@
-// Schema for /trigger
+// Schema for POST /trigger
 export const triggerSchema = {
   body: {
     type: 'object',
@@ -22,7 +22,7 @@ export const triggerSchema = {
   }
 };
 
-// Schema for /register
+// Schema for POST /register
 export const registerSchema = {
   body: {
     type: 'object',
@@ -51,7 +51,7 @@ export const registerSchema = {
   }
 };
 
-// Schema for /update-user
+// Schema for POST /update-user
 export const updateSettingsSchema = {
   body: {
     type: 'object',
@@ -77,7 +77,7 @@ export const updateSettingsSchema = {
   }
 };
 
-// Schema for /login
+// Schema for POST /login
 export const loginSchema = {
   body: {
     type: 'object',
@@ -89,8 +89,15 @@ export const loginSchema = {
   }
 };
 
-// Schema for /requests/:requestId
+// Schema for GET /requests/:requestId
 export const getRequestSchema = {
+  headers: {
+    type: 'object',
+    required: ['authToken'],
+    properties: {
+      authToken: { type: 'string' }
+    }
+  },
   params: {
     type: 'object',
     required: ['requestId'],
@@ -100,8 +107,15 @@ export const getRequestSchema = {
   }
 };
 
-// Schema for /registrant/data/:username
+// Schema for GET /registrant/data/:username
 export const registrantSchema = {
+  headers: {
+    type: 'object',
+    required: ['authToken'],
+    properties: {
+      authToken: { type: 'string' }
+    }
+  },
   params: {
     type: 'object',
     required: ['username'],
@@ -111,7 +125,25 @@ export const registrantSchema = {
   }
 };
 
-// Schema for /report/:reportId
+export const getReportsByChannelSchema = {
+  headers: {
+    type: 'object',
+    required: ['authToken'],
+    properties: {
+      authToken: { type: 'string' }
+    }
+  },
+  params: {
+    type: 'object',
+    required: ['channel', 'date'],
+    properties: {
+      channel: { type: 'string' },
+      date: { type: 'string' }
+    }
+  }
+};
+
+// Schema for POST /report/:reportId
 export const newReportSchema = {
   params: {
     type: 'object',
@@ -159,6 +191,16 @@ export const newReportSchema = {
         pattern: '^https?://'
       },
       testAgent: { type: 'object' }
+    }
+  }
+};
+
+export const authHeaderSchema = {
+  headers: {
+    type: 'object',
+    required: ['authToken'],
+    properties: {
+      authToken: { type: 'string' }
     }
   }
 };

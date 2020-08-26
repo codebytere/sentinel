@@ -5,6 +5,7 @@ export const {
   REPORT_WEBHOOK = 'http://localhost:3000',
   DATABASE_URL = 'postgres://postgres@localhost:5432/postgres',
   SESSION_SECRET = 'myverylongsupersecretthatisloadedfromenv',
+  DATA_AUTH_TOKEN = '',
   NODE_ENV
 } = process.env;
 

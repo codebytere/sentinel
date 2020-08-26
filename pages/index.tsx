@@ -15,15 +15,20 @@ import {
 } from 'recharts';
 import { getStats, dateSort, getBaseURL, getChannelForVersion } from 'src/utils';
 import { NextApiRequest } from 'next';
+import { DATA_AUTH_TOKEN } from 'src/server/constants';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
 
-    const rawRequests = await fetch(`${baseURL}/requests`);
+    const rawRequests = await fetch(`${baseURL}/requests`, {
+      headers: { authToken: DATA_AUTH_TOKEN }
+    });
     const requests = await rawRequests.json();
 
-    const rawRegistrants = await fetch(`${baseURL}/registrants`);
+    const rawRegistrants = await fetch(`${baseURL}/registrants`, {
+      headers: { authToken: DATA_AUTH_TOKEN }
+    });
     const registrants = await rawRegistrants.json();
 
     return { requests, registrants };

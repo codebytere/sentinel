@@ -16,9 +16,19 @@ import {
   loginSchema,
   getRequestSchema,
   updateSettingsSchema,
-  registrantSchema
+  registrantSchema,
+  getReportsByChannelSchema,
+  authHeaderSchema
 } from './schemas';
-import { HOST, PORT, REPORT_WEBHOOK, PLATFORMS, SESSION_SECRET, NODE_ENV } from './constants';
+import {
+  HOST,
+  PORT,
+  REPORT_WEBHOOK,
+  PLATFORMS,
+  SESSION_SECRET,
+  NODE_ENV,
+  DATA_AUTH_TOKEN
+} from './constants';
 
 const isDev = NODE_ENV !== 'production';
 const serverOptions: fastify.ServerOptions = { logger: isDev };
@@ -146,9 +156,14 @@ fast
         fast.route({
           method: 'GET',
           url: '/reports/:channel/:date',
+          schema: getReportsByChannelSchema,
           handler: async (request, reply) => {
-            const { channel, date } = request.params;
-            console.log('CHANNEL IS: ', channel);
+            const { channel, date } = request.params as { channel: api.Channel; date: string };
+            const { authToken } = request.headers as { authToken: string };
+
+            if (authToken !== DATA_AUTH_TOKEN) {
+              reply.code(401).send({ error: 'Not authorized to access data' });
+            }
 
             const reports = await mReport.FindByChannelAndDate(channel, date);
 
@@ -162,6 +177,11 @@ fast
           schema: getRequestSchema,
           handler: async (request, reply) => {
             const { requestId } = request.params;
+            const { authToken } = request.headers as { authToken: string };
+
+            if (authToken !== DATA_AUTH_TOKEN) {
+              reply.code(401).send({ error: 'Not authorized to access data' });
+            }
 
             fast.log.info(`Fetching request for id: ${requestId}`);
 
@@ -173,7 +193,14 @@ fast
         fast.route({
           method: 'GET',
           url: '/requests',
-          handler: async (_request, reply) => {
+          schema: authHeaderSchema,
+          handler: async (request, reply) => {
+            const { authToken } = request.headers as { authToken: string };
+
+            if (authToken !== DATA_AUTH_TOKEN) {
+              reply.code(401).send({ error: 'Not authorized to access data' });
+            }
+
             const response = await mRequest.FindAll();
             reply.send(response);
           }
@@ -215,6 +242,11 @@ fast
           schema: registrantSchema,
           handler: async (request, reply) => {
             const { username } = request.params;
+            const { authToken } = request.headers as { authToken: string };
+
+            if (authToken !== DATA_AUTH_TOKEN) {
+              reply.code(401).send({ error: 'Not authorized to access data' });
+            }
 
             const registrant = await mRegistrant.GetAllDataForRegistrant(username);
             if (!registrant) {
@@ -246,6 +278,7 @@ fast
               }
             } else {
               fast.log.error('Cannot get information for unauthenticated user');
+              reply.code(401).send({ error: 'Cannot get information for unauthenticated user' });
             }
           }
         });
@@ -253,7 +286,14 @@ fast
         fast.route({
           method: 'GET',
           url: '/registrants',
+          schema: authHeaderSchema,
           handler: async (request, reply) => {
+            const { authToken } = request.headers as { authToken: string };
+
+            if (authToken !== DATA_AUTH_TOKEN) {
+              reply.code(401).send({ error: 'Not authorized to access data' });
+            }
+
             const registrants = await mRegistrant.FindAll();
             reply.send(registrants);
           }

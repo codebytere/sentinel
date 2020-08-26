@@ -15,6 +15,7 @@ import { IRequest, IReleaseChannelProps } from 'src/server/interfaces';
 import { dateSort, formatDateString, getBaseURL, getChannelForVersion, getStats } from 'src/utils';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
+import { DATA_AUTH_TOKEN } from 'src/server/constants';
 
 class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
@@ -23,7 +24,10 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
     const path = req?.url ? req.url : window.location.pathname;
     const channel = path.replace('/channels/', '');
 
-    const rawRequests = await fetch(`${baseURL}/requests`);
+    const rawRequests = await fetch(`${baseURL}/requests`, {
+      headers: { authToken: DATA_AUTH_TOKEN }
+    });
+
     const requests: IRequest[] = (await rawRequests.json()).filter((r: IRequest) => {
       return channel === getChannelForVersion(r.table.versionQualifier);
     });
