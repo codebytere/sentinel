@@ -25,12 +25,12 @@ class Home extends Component<IHomeProps, {}> {
 
     try {
       const rawRequests = await fetch(`${baseURL}/requests`, {
-        headers: { authToken: DATA_AUTH_TOKEN }
+        headers: { authorization: DATA_AUTH_TOKEN }
       });
       requests = await rawRequests.json();
 
       const rawRegistrants = await fetch(`${baseURL}/registrants`, {
-        headers: { authToken: DATA_AUTH_TOKEN }
+        headers: { authorization: DATA_AUTH_TOKEN }
       });
       registrants = await rawRegistrants.json();
     } catch (error) {

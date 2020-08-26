@@ -17,7 +17,7 @@ class Registrant extends Component<IRegistrantProps, {}> {
 
     try {
       const rawRegistrant = await fetch(`${baseURL}/registrant/data/${name}`, {
-        headers: { authToken: DATA_AUTH_TOKEN }
+        headers: { authorization: DATA_AUTH_TOKEN }
       });
       registrant = await rawRegistrant.json();
     } catch (error) {

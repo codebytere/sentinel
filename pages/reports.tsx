@@ -28,14 +28,14 @@ class Reports extends Component<IReportProps, {}> {
 
     try {
       const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`, {
-        headers: { authToken: DATA_AUTH_TOKEN }
+        headers: { authorization: DATA_AUTH_TOKEN }
       });
       reports = await rawReports.json();
 
       // requestId will be the same for any given set of Reports.
       const reqId = reports[0].table.requestId;
       const rawRequest = await fetch(`${baseURL}/requests/${reqId}`, {
-        headers: { authToken: DATA_AUTH_TOKEN }
+        headers: { authorization: DATA_AUTH_TOKEN }
       });
       request = await rawRequest.json();
       versionQualifier = request.table.versionQualifier;

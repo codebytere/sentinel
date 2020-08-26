@@ -93,9 +93,9 @@ export const loginSchema = {
 export const getRequestSchema = {
   headers: {
     type: 'object',
-    required: ['authToken'],
+    required: ['authorization'],
     properties: {
-      authToken: { type: 'string' }
+      authorization: { type: 'string' }
     }
   },
   params: {
@@ -111,9 +111,9 @@ export const getRequestSchema = {
 export const registrantSchema = {
   headers: {
     type: 'object',
-    required: ['authToken'],
+    required: ['authorization'],
     properties: {
-      authToken: { type: 'string' }
+      authorization: { type: 'string' }
     }
   },
   params: {
@@ -128,9 +128,9 @@ export const registrantSchema = {
 export const getReportsByChannelSchema = {
   headers: {
     type: 'object',
-    required: ['authToken'],
+    required: ['authorization'],
     properties: {
-      authToken: { type: 'string' }
+      authorization: { type: 'string' }
     }
   },
   params: {
@@ -198,9 +198,9 @@ export const newReportSchema = {
 export const authHeaderSchema = {
   headers: {
     type: 'object',
-    required: ['authToken'],
+    required: ['authorization'],
     properties: {
-      authToken: { type: 'string' }
+      authorization: { type: 'string' }
     }
   }
 };

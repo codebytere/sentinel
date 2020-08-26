@@ -159,9 +159,9 @@ fast
           schema: getReportsByChannelSchema,
           handler: async (request, reply) => {
             const { channel, date } = request.params as { channel: api.Channel; date: string };
-            const { authToken } = request.headers as { authToken: string };
+            const { authorization } = request.headers as { authorization: string };
 
-            if (authToken !== DATA_AUTH_TOKEN) {
+            if (authorization !== DATA_AUTH_TOKEN) {
               reply.code(401).send({ error: 'Not authorized to access data' });
             }
 
@@ -177,9 +177,9 @@ fast
           schema: getRequestSchema,
           handler: async (request, reply) => {
             const { requestId } = request.params as { requestId: number };
-            const { authToken } = request.headers as { authToken: string };
+            const { authorization } = request.headers as { authorization: string };
 
-            if (authToken !== DATA_AUTH_TOKEN) {
+            if (authorization !== DATA_AUTH_TOKEN) {
               reply.code(401).send({ error: 'Not authorized to access data' });
             }
 
@@ -195,9 +195,9 @@ fast
           url: '/requests',
           schema: authHeaderSchema,
           handler: async (request, reply) => {
-            const { authToken } = request.headers as { authToken: string };
+            const { authorization } = request.headers as { authorization: string };
 
-            if (authToken !== DATA_AUTH_TOKEN) {
+            if (authorization !== DATA_AUTH_TOKEN) {
               reply.code(401).send({ error: 'Not authorized to access data' });
             }
 
@@ -242,9 +242,9 @@ fast
           schema: registrantSchema,
           handler: async (request, reply) => {
             const { username } = request.params as { username: string };
-            const { authToken } = request.headers as { authToken: string };
+            const { authorization } = request.headers as { authorization: string };
 
-            if (authToken !== DATA_AUTH_TOKEN) {
+            if (authorization !== DATA_AUTH_TOKEN) {
               reply.code(401).send({ error: 'Not authorized to access data' });
             }
 
@@ -288,9 +288,9 @@ fast
           url: '/registrants',
           schema: authHeaderSchema,
           handler: async (request, reply) => {
-            const { authToken } = request.headers as { authToken: string };
+            const { authorization } = request.headers as { authorization: string };
 
-            if (authToken !== DATA_AUTH_TOKEN) {
+            if (authorization !== DATA_AUTH_TOKEN) {
               reply.code(401).send({ error: 'Not authorized to access data' });
             }
 

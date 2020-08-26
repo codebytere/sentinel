@@ -27,7 +27,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
 
     try {
       const rawRequests = await fetch(`${baseURL}/requests`, {
-        headers: { authToken: DATA_AUTH_TOKEN }
+        headers: { authorization: DATA_AUTH_TOKEN }
       });
 
       requests = (await rawRequests.json()).filter((r: IRequest) => {
