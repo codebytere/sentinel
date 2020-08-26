@@ -91,7 +91,7 @@ export class mRegistrant {
     id: number;
     channel: api.ReleaseChannel;
     password?: string;
-    webhooks: Record<string, string>;
+    webhooks?: Record<string, string>;
   }) {
     try {
       const registrant = await Tables.Registrant.findOne({

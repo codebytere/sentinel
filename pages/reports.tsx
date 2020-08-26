@@ -9,7 +9,7 @@ import {
   Table,
   Tag
 } from 'react-bulma-components';
-import { mRequest } from 'src/server/database';
+import { mRequest, mReport } from 'src/server/database';
 import { IReportProps, IReport } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
@@ -19,21 +19,29 @@ import { DATA_AUTH_TOKEN } from 'src/server/constants';
 class Reports extends Component<IReportProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
+    let reports: mReport[] = [];
+    let versionQualifier = '';
+    let request: mRequest;
 
     const path = req?.url ? req.url : window.location.pathname;
     const [channel, date] = path.replace('/channels/', '').split('/');
-    const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`, {
-      headers: { authToken: DATA_AUTH_TOKEN }
-    });
-    const reports = await rawReports.json();
 
-    // requestId will be the same for any given set of Reports.
-    const reqId = reports[0].table.requestId;
-    const rawRequest = await fetch(`${baseURL}/requests/${reqId}`, {
-      headers: { authToken: DATA_AUTH_TOKEN }
-    });
-    const request: mRequest = await rawRequest.json();
-    const versionQualifier = request.table.versionQualifier;
+    try {
+      const rawReports = await fetch(`${baseURL}/reports/${channel}/${date}`, {
+        headers: { authToken: DATA_AUTH_TOKEN }
+      });
+      reports = await rawReports.json();
+
+      // requestId will be the same for any given set of Reports.
+      const reqId = reports[0].table.requestId;
+      const rawRequest = await fetch(`${baseURL}/requests/${reqId}`, {
+        headers: { authToken: DATA_AUTH_TOKEN }
+      });
+      request = await rawRequest.json();
+      versionQualifier = request.table.versionQualifier;
+    } catch (error) {
+      console.error(error);
+    }
 
     return { reports, channel, date, versionQualifier };
   }

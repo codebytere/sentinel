@@ -20,17 +20,22 @@ import { DATA_AUTH_TOKEN } from 'src/server/constants';
 class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
+    let requests: IRequest[] = [];
 
     const path = req?.url ? req.url : window.location.pathname;
     const channel = path.replace('/channels/', '');
 
-    const rawRequests = await fetch(`${baseURL}/requests`, {
-      headers: { authToken: DATA_AUTH_TOKEN }
-    });
+    try {
+      const rawRequests = await fetch(`${baseURL}/requests`, {
+        headers: { authToken: DATA_AUTH_TOKEN }
+      });
 
-    const requests: IRequest[] = (await rawRequests.json()).filter((r: IRequest) => {
-      return channel === getChannelForVersion(r.table.versionQualifier);
-    });
+      requests = (await rawRequests.json()).filter((r: IRequest) => {
+        return channel === getChannelForVersion(r.table.versionQualifier);
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     return { requests, channel };
   }

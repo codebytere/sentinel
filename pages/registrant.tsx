@@ -5,16 +5,24 @@ import { IRequest, IRegistrantProps } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import { getBaseURL, getChannelForVersion, formatDateString } from 'src/utils';
 import { NextApiRequest } from 'next';
+import { DATA_AUTH_TOKEN } from 'src/server/constants';
 
 class Registrant extends Component<IRegistrantProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
+    let registrant: IRequest[] = [];
 
     const path = req?.url ? req.url : window.location.pathname;
     const [name] = path.replace('/registrants/', '').split('/');
 
-    const rawRegistrant = await fetch(`${baseURL}/registrant/data/${name}`);
-    const registrant: IRequest[] = await rawRegistrant.json();
+    try {
+      const rawRegistrant = await fetch(`${baseURL}/registrant/data/${name}`, {
+        headers: { authToken: DATA_AUTH_TOKEN }
+      });
+      registrant = await rawRegistrant.json();
+    } catch (error) {
+      console.error(error);
+    }
 
     return { registrant };
   }

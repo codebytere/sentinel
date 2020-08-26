@@ -20,16 +20,22 @@ import { DATA_AUTH_TOKEN } from 'src/server/constants';
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
+    let registrants = [];
+    let requests = [];
 
-    const rawRequests = await fetch(`${baseURL}/requests`, {
-      headers: { authToken: DATA_AUTH_TOKEN }
-    });
-    const requests = await rawRequests.json();
+    try {
+      const rawRequests = await fetch(`${baseURL}/requests`, {
+        headers: { authToken: DATA_AUTH_TOKEN }
+      });
+      requests = await rawRequests.json();
 
-    const rawRegistrants = await fetch(`${baseURL}/registrants`, {
-      headers: { authToken: DATA_AUTH_TOKEN }
-    });
-    const registrants = await rawRegistrants.json();
+      const rawRegistrants = await fetch(`${baseURL}/registrants`, {
+        headers: { authToken: DATA_AUTH_TOKEN }
+      });
+      registrants = await rawRegistrants.json();
+    } catch (error) {
+      console.error(error);
+    }
 
     return { requests, registrants };
   }

@@ -176,7 +176,7 @@ fast
           url: '/requests/:requestId',
           schema: getRequestSchema,
           handler: async (request, reply) => {
-            const { requestId } = request.params;
+            const { requestId } = request.params as { requestId: number };
             const { authToken } = request.headers as { authToken: string };
 
             if (authToken !== DATA_AUTH_TOKEN) {
@@ -241,7 +241,7 @@ fast
           url: '/registrant/data/:username',
           schema: registrantSchema,
           handler: async (request, reply) => {
-            const { username } = request.params;
+            const { username } = request.params as { username: string };
             const { authToken } = request.headers as { authToken: string };
 
             if (authToken !== DATA_AUTH_TOKEN) {
@@ -306,7 +306,8 @@ fast
           url: '/register',
           schema: registerSchema,
           handler: async (request, reply) => {
-            const { appName, channel, username, webhooks } = request.body;
+            const { appName, channel, username, webhooks } = request.body as api.Registrant;
+
             fast.log.info(`Creating new account for username: ${username} and app: ${appName}`);
 
             const hash = bcrypt.hashSync(request.body.password, 10);
@@ -348,7 +349,7 @@ fast
               reply.send(request.session.user).redirect('/index');
             }
 
-            const { username, password } = request.body;
+            const { username, password } = request.body as { username: string; password: string };
 
             try {
               fast.log.info(`Logging in ${username}`);
@@ -380,7 +381,7 @@ fast
           schema: updateSettingsSchema,
           handler: async (request, reply) => {
             if (request.session.authenticated) {
-              const { webhooks, channel, password } = request.body;
+              const { webhooks, channel, password } = request.body as api.Registrant;
               const authedUser = request.session.user.name;
 
               fast.log.info(`Updating user data for ${authedUser}`);
@@ -409,7 +410,11 @@ fast
           url: '/trigger',
           schema: triggerSchema,
           handler: async (request, reply) => {
-            const { platformInstallData, versionQualifier, commitHash } = request.body;
+            const {
+              platformInstallData,
+              versionQualifier,
+              commitHash
+            } = request.body as api.ReportRequest;
 
             const { platform, link } = platformInstallData;
 
@@ -516,8 +521,8 @@ fast
           url: '/report/:reportId',
           schema: newReportSchema,
           handler: async (request, reply) => {
-            const { reportId } = request.params;
-            const { authorization } = request.headers;
+            const { reportId } = request.params as { reportId: number };
+            const { authorization } = request.headers as { authorization: string };
 
             const report = await mReport.FindById(reportId);
             if (!report) {
