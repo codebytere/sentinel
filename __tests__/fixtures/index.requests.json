@@ -1,0 +1,981 @@
+[
+  {
+    "table": {
+      "id": 140,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200729/electron-11.0.0-nightly.20200729-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200729/electron-11.0.0-nightly.20200729-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200729/electron-11.0.0-nightly.20200729-darwin-x64.zip"
+      },
+      "versionQualifier": "11.0.0-nightly.20200729",
+      "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+      "createdAt": "2020-07-29T18:07:38.780Z",
+      "updatedAt": "2020-07-29T18:07:39.973Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-29T18:07:39.211Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-29T18:07:38.871Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-07-29T18:07:39.434Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 141,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200730/electron-11.0.0-nightly.20200730-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200730/electron-11.0.0-nightly.20200730-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200730/electron-11.0.0-nightly.20200730-darwin-x64.zip"
+      },
+      "versionQualifier": "11.0.0-nightly.20200730",
+      "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+      "createdAt": "2020-07-30T18:19:43.577Z",
+      "updatedAt": "2020-07-30T18:19:44.712Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-30T18:19:44.060Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-30T18:19:43.596Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-07-30T18:19:44.231Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 139,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/v10.0.0-nightly.20200507/electron-10.0.0-nightly.20200507-darwin-x64.zip"
+      },
+      "versionQualifier": "v8.4.1",
+      "commitHash": "12345678130112",
+      "createdAt": "2020-07-29T05:16:22.013Z",
+      "updatedAt": "2020-07-29T05:16:22.013Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-29T05:16:22.609Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 6121,
+              "totalPassed": 6121
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-29T05:16:22.022Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-29T05:16:22.382Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 142,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200731/electron-11.0.0-nightly.20200731-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200731/electron-11.0.0-nightly.20200731-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200731/electron-11.0.0-nightly.20200731-darwin-x64.zip"
+      },
+      "versionQualifier": "11.0.0-nightly.20200731",
+      "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+      "createdAt": "2020-07-31T17:58:35.112Z",
+      "updatedAt": "2020-07-31T17:58:37.171Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-31T17:58:36.130Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-07-31T17:58:35.157Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-07-31T17:58:36.382Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 143,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200803/electron-11.0.0-nightly.20200803-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200803/electron-11.0.0-nightly.20200803-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200803/electron-11.0.0-nightly.20200803-darwin-x64.zip"
+      },
+      "versionQualifier": "11.0.0-nightly.20200803",
+      "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+      "createdAt": "2020-08-03T18:04:00.692Z",
+      "updatedAt": "2020-08-03T18:04:05.061Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-03T18:04:00.714Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-03T18:04:01.088Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-03T18:04:01.279Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 145,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200805/electron-11.0.0-nightly.20200805-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200805/electron-11.0.0-nightly.20200805-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200805/electron-11.0.0-nightly.20200805-darwin-x64.zip"
+      },
+      "versionQualifier": "11.0.0-nightly.20200805",
+      "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+      "createdAt": "2020-08-05T18:34:26.109Z",
+      "updatedAt": "2020-08-05T18:34:27.436Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-05T18:34:26.534Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-05T18:34:26.134Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-05T18:34:26.720Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 146,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200811/electron-v11.0.0-nightly.20200811-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v11.0.0-nightly.20200811",
+      "commitHash": "refs/tags/v11.0.0-nightly.20200811",
+      "createdAt": "2020-08-11T18:34:41.000Z",
+      "updatedAt": "2020-08-11T18:34:42.940Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-11T18:34:41.562Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-11T18:34:41.024Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-11T18:34:41.501Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 148,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/electron/releases/download/v9.2.1/electron-v9.2.1-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v9.2.1",
+      "commitHash": "refs/tags/v9.2.1",
+      "createdAt": "2020-08-18T21:23:47.238Z",
+      "updatedAt": "2020-08-18T21:23:54.432Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-18T21:23:53.162Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-18T21:23:52.024Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Failed",
+          "createdAt": "2020-08-18T21:23:52.996Z",
+          "TestData": [
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            },
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            },
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-18T21:23:53.329Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 24,
+              "totalPassed": 24
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 144,
+      "platformInstallData": {
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200804/electron-11.0.0-nightly.20200804-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200804/electron-11.0.0-nightly.20200804-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200804/electron-11.0.0-nightly.20200804-darwin-x64.zip"
+      },
+      "versionQualifier": "11.0.0-nightly.20200804",
+      "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+      "createdAt": "2020-08-04T18:28:24.503Z",
+      "updatedAt": "2020-08-04T18:28:25.571Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-04T18:28:24.526Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-04T18:28:24.884Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            },
+            {
+              "status": "Passed",
+              "totalTests": 619,
+              "totalPassed": 619
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-04T18:28:25.045Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 149,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/electron/releases/download/v10.0.0-beta.25/electron-v10.0.0-beta.25-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v10.0.0-beta.25",
+      "commitHash": "refs/tags/v10.0.0-beta.25",
+      "createdAt": "2020-08-22T08:13:56.576Z",
+      "updatedAt": "2020-08-22T08:14:10.527Z",
+      "Reports": [
+        {
+          "status": "Failed",
+          "createdAt": "2020-08-22T08:13:56.974Z",
+          "TestData": [
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            },
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            },
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-22T08:13:56.707Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-22T08:13:57.263Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-22T08:13:57.467Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 24,
+              "totalPassed": 24
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 150,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200822/electron-v11.0.0-nightly.20200822-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v11.0.0-nightly.20200822",
+      "commitHash": "refs/tags/v11.0.0-nightly.20200822",
+      "createdAt": "2020-08-23T07:51:24.231Z",
+      "updatedAt": "2020-08-23T07:51:26.860Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-23T07:51:24.372Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-23T07:51:24.967Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-23T07:51:25.224Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 24,
+              "totalPassed": 24
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-23T07:51:24.867Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 151,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200824/electron-v11.0.0-nightly.20200824-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v11.0.0-nightly.20200824",
+      "commitHash": "refs/tags/v11.0.0-nightly.20200824",
+      "createdAt": "2020-08-24T18:48:50.649Z",
+      "updatedAt": "2020-08-24T18:48:52.359Z",
+      "Reports": [
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-24T18:48:50.739Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-24T18:48:51.138Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-24T18:48:51.295Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 24,
+              "totalPassed": 24
+            }
+          ]
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-24T18:48:51.057Z",
+          "TestData": []
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 152,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/electron/releases/download/v10.0.0/electron-v10.0.0-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v10.0.0",
+      "commitHash": "refs/tags/v10.0.0",
+      "createdAt": "2020-08-24T21:01:47.832Z",
+      "updatedAt": "2020-08-24T21:01:51.391Z",
+      "Reports": [
+        {
+          "status": "Failed",
+          "createdAt": "2020-08-24T21:01:48.148Z",
+          "TestData": [
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            },
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            },
+            {
+              "status": "Failed",
+              "totalTests": 0,
+              "totalPassed": 0
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-24T21:01:47.913Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            },
+            {
+              "status": "Passed",
+              "totalTests": 140,
+              "totalPassed": 140
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-24T21:01:48.336Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            },
+            {
+              "status": "Passed",
+              "totalTests": 622,
+              "totalPassed": 622
+            }
+          ]
+        },
+        {
+          "status": "Passed",
+          "createdAt": "2020-08-24T21:01:49.315Z",
+          "TestData": [
+            {
+              "status": "Passed",
+              "totalTests": 24,
+              "totalPassed": 24
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 147,
+      "platformInstallData": {
+        "win32-ia32": "https://github.com/electron/nightlies/releases/download/v11.0.0-nightly.20200812/electron-v11.0.0-nightly.20200812-win32-ia32.zip"
+      },
+      "versionQualifier": "v11.0.0-nightly.20200812",
+      "commitHash": "refs/tags/v11.0.0-nightly.20200812",
+      "createdAt": "2020-08-12T18:14:43.577Z",
+      "updatedAt": "2020-08-12T18:14:43.577Z",
+      "Reports": []
+    }
+  },
+  {
+    "table": {
+      "id": 153,
+      "platformInstallData": {
+        "mas-x64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-mas-x64.zip",
+        "linux-x64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-linux-x64.zip",
+        "win32-x64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-win32-x64.zip",
+        "darwin-x64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-darwin-x64.zip",
+        "linux-ia32": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-linux-ia32.zip",
+        "win32-ia32": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-win32-ia32.zip",
+        "linux-arm64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-linux-arm64.zip",
+        "win32-arm64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-win32-arm64.zip",
+        "linux-armv7l": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-linux-armv7l.zip",
+        "win32-arm64-x64": "https://github.com/electron/electron/releases/download/v7.3.3/electron-v7.3.3-win32-arm64-x64.zip"
+      },
+      "versionQualifier": "v7.3.3",
+      "commitHash": "refs/tags/v7.3.3",
+      "createdAt": "2020-08-25T16:21:08.932Z",
+      "updatedAt": "2020-08-25T16:21:10.551Z",
+      "Reports": [
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-25T16:21:09.175Z",
+          "TestData": []
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-25T16:21:08.991Z",
+          "TestData": []
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-25T16:21:09.228Z",
+          "TestData": []
+        },
+        {
+          "status": "Not Run",
+          "createdAt": "2020-08-25T16:21:09.132Z",
+          "TestData": []
+        }
+      ]
+    }
+  }
+]

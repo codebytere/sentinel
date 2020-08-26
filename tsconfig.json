@@ -29,7 +29,8 @@
     "dist",
     ".next",
     "out",
-    "next.config.js"
+    "next.config.js",
+    "pages/__tests__"
   ],
   "include": [
     "next-env.d.ts",

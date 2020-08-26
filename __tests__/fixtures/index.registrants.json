@@ -1,0 +1,66 @@
+[
+  {
+    "table": {
+      "id": 9,
+      "username": "gitify",
+      "appName": "gitify",
+      "password": "$2b$10$63IPI5rUrEJEI4CBEpi5D.CYUVoFHGVC0sP.lI3xKNWlc6XIsisai",
+      "webhooks": {
+        "linux-x64": "http://sentinel-client.herokuapp.com/gitify",
+        "win32-x64": "http://sentinel-client.herokuapp.com/gitify",
+        "darwin-x64": "http://sentinel-client.herokuapp.com/gitify"
+      },
+      "channel": 7,
+      "createdAt": "2020-07-17T20:10:19.061Z",
+      "updatedAt": "2020-07-17T20:10:19.061Z"
+    }
+  },
+  {
+    "table": {
+      "id": 8,
+      "username": "vscode",
+      "appName": "vscode",
+      "password": "$2b$10$GzNX982MGa4ujZphQFCEZ.DLt/o1uxSqlzGG5vs0MM2sStl6WK4lK",
+      "webhooks": {
+        "linux-x64": "https://sentinel-client.herokuapp.com/vscode",
+        "win32-x64": "https://sentinel-client.herokuapp.com/vscode",
+        "darwin-x64": "https://sentinel-client.herokuapp.com/vscode"
+      },
+      "channel": 7,
+      "createdAt": "2020-04-15T05:05:25.339Z",
+      "updatedAt": "2020-04-15T05:05:25.339Z"
+    }
+  },
+  {
+    "table": {
+      "id": 7,
+      "username": "fiddle",
+      "appName": "fiddle",
+      "password": "$2b$10$ozksXinAVXx2nQKIuSisu.MMBYYcxERIQB0P6GdycjbdibQeP60oK",
+      "webhooks": {
+        "linux-x64": "https://sentinel-client.herokuapp.com/fiddle",
+        "win32-x64": "https://sentinel-client.herokuapp.com/fiddle",
+        "darwin-x64": "https://sentinel-client.herokuapp.com/fiddle"
+      },
+      "channel": 7,
+      "createdAt": "2020-03-06T19:06:51.915Z",
+      "updatedAt": "2020-03-06T19:06:51.915Z"
+    }
+  },
+  {
+    "table": {
+      "id": 10,
+      "username": "kap",
+      "appName": "kap",
+      "password": "$2b$10$KiS5nFBLbmiyTKBKba3Qv.KyGqJvgaa.evTpKPOGBIoKBbEORUrFG",
+      "webhooks": {
+        "linux-x64": "http://sentinel-client.herokuapp.com/kap",
+        "win32-x64": "http://sentinel-client.herokuapp.com/kap",
+        "darwin-x64": "http://sentinel-client.herokuapp.com/kap"
+      },
+      "channel": 7,
+      "createdAt": "2020-08-12T01:29:46.007Z",
+      "updatedAt": "2020-08-12T01:29:46.007Z"
+    }
+  }
+]

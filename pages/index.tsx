@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
 import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';

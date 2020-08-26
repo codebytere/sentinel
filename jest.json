@@ -1,0 +1,27 @@
+{
+  "transform": {
+    ".(|ts|tsx)": "ts-jest"
+  },
+  "preset": "ts-jest",
+  "bail": true,
+  "resetMocks": true,
+  "resetModules": true,
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts",
+    "tsx"
+  ],
+  "modulePaths": [
+    "<rootDir>"
+  ],
+  "testPathIgnorePatterns": [
+    "/.tmp/",
+    ".next"
+  ],
+  "globals": {
+    "ts-jest": {
+      "tsConfig": "tsconfig.test.json"
+    }
+  }
+}
