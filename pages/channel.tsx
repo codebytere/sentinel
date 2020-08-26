@@ -111,16 +111,18 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
   private renderTrendChart(channel: string, requests: IRequest[]) {
     const graphTitle = channel[0].toUpperCase() + channel.slice(1);
     const bgColor = this.getBackgroundColor(channel);
-    const data = requests.map(r => {
-      const {
-        report: { passed, total }
-      } = getStats(r.table.Reports!);
+    const data = requests
+      .map(r => {
+        const {
+          report: { passed, total }
+        } = getStats(r.table.Reports!);
 
-      const percentage = total === 0 ? total : (passed / total) * 100;
-      const date = new Date(r.table.createdAt).toLocaleDateString();
+        const percentage = total === 0 ? total : (passed / total) * 100;
+        const date = new Date(r.table.createdAt).toLocaleDateString();
 
-      return { date, passed, total, percentage };
-    });
+        return { date, passed, total, percentage };
+      })
+      .filter(r => r.total > 0);
 
     return (
       <Box style={{ backgroundColor: bgColor }}>

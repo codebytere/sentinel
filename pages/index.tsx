@@ -73,30 +73,32 @@ class Home extends Component<IHomeProps, {}> {
   /* PRIVATE METHODS */
 
   private renderTrendChart(requests: IRequest[]) {
-    const data = requests.map(r => {
-      const {
-        report: { passed, total }
-      } = getStats(r.table.Reports!);
+    const data = requests
+      .map(r => {
+        const {
+          report: { passed, total }
+        } = getStats(r.table.Reports!);
 
-      const type = getChannelForVersion(r.table.versionQualifier);
+        const type = getChannelForVersion(r.table.versionQualifier);
 
-      const percentage = total === 0 ? total : (passed / total) * 100;
-      const date = new Date(r.table.createdAt).toLocaleDateString();
+        const percentage = total === 0 ? total : (passed / total) * 100;
+        const date = new Date(r.table.createdAt).toLocaleDateString();
 
-      const stable = type === api.Channel.STABLE ? percentage : null;
-      const beta = type === api.Channel.BETA ? percentage : null;
-      const nightly = type === api.Channel.NIGHTLY ? percentage : null;
+        const stable = type === api.Channel.STABLE ? percentage : null;
+        const beta = type === api.Channel.BETA ? percentage : null;
+        const nightly = type === api.Channel.NIGHTLY ? percentage : null;
 
-      return {
-        date,
-        passed,
-        total,
-        stable,
-        beta,
-        nightly,
-        type
-      };
-    });
+        return {
+          date,
+          passed,
+          total,
+          stable,
+          beta,
+          nightly,
+          type
+        };
+      })
+      .filter(r => r.total > 0);
 
     const CustomTooltip = tooltipData => {
       const { active, payload, label } = tooltipData;
