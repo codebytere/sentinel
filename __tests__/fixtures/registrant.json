@@ -1,0 +1,170 @@
+{
+  "table": {
+    "id": 7,
+    "username": "fiddle",
+    "appName": "fiddle",
+    "password": "$2b$10$ozksXinAVXx2nQKIuSisu.MMBYYcxERIQB0P6GdycjbdibQeP60oK",
+    "webhooks": {
+      "linux-x64": "https://sentinel-client.herokuapp.com/fiddle",
+      "win32-x64": "https://sentinel-client.herokuapp.com/fiddle",
+      "darwin-x64": "https://sentinel-client.herokuapp.com/fiddle"
+    },
+    "channel": 7,
+    "createdAt": "2020-03-06T19:06:51.915Z",
+    "updatedAt": "2020-03-06T19:06:51.915Z",
+    "Reports": [
+      {
+        "status": "Passed",
+        "createdAt": "2020-07-29T05:16:22.382Z",
+        "Request": {
+          "versionQualifier": "v8.4.1",
+          "createdAt": "2020-07-29T05:16:22.013Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-07-29T18:07:39.211Z",
+        "Request": {
+          "versionQualifier": "11.0.0-nightly.20200729",
+          "createdAt": "2020-07-29T18:07:38.780Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-07-30T18:19:44.060Z",
+        "Request": {
+          "versionQualifier": "11.0.0-nightly.20200730",
+          "createdAt": "2020-07-30T18:19:43.577Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-07-31T17:58:36.130Z",
+        "Request": {
+          "versionQualifier": "11.0.0-nightly.20200731",
+          "createdAt": "2020-07-31T17:58:35.112Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-18T21:23:53.162Z",
+        "Request": {
+          "versionQualifier": "v9.2.1",
+          "createdAt": "2020-08-18T21:23:47.238Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-03T18:04:01.088Z",
+        "Request": {
+          "versionQualifier": "11.0.0-nightly.20200803",
+          "createdAt": "2020-08-03T18:04:00.692Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-04T18:28:24.884Z",
+        "Request": {
+          "versionQualifier": "11.0.0-nightly.20200804",
+          "createdAt": "2020-08-04T18:28:24.503Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-05T18:34:26.534Z",
+        "Request": {
+          "versionQualifier": "11.0.0-nightly.20200805",
+          "createdAt": "2020-08-05T18:34:26.109Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-11T18:34:41.024Z",
+        "Request": {
+          "versionQualifier": "v11.0.0-nightly.20200811",
+          "createdAt": "2020-08-11T18:34:41.000Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-22T08:13:57.263Z",
+        "Request": {
+          "versionQualifier": "v10.0.0-beta.25",
+          "createdAt": "2020-08-22T08:13:56.576Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-24T18:48:51.138Z",
+        "Request": {
+          "versionQualifier": "v11.0.0-nightly.20200824",
+          "createdAt": "2020-08-24T18:48:50.649Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-23T07:51:24.967Z",
+        "Request": {
+          "versionQualifier": "v11.0.0-nightly.20200822",
+          "createdAt": "2020-08-23T07:51:24.231Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-24T21:01:48.336Z",
+        "Request": {
+          "versionQualifier": "v10.0.0",
+          "createdAt": "2020-08-24T21:01:47.832Z"
+        }
+      },
+      {
+        "status": "Not Run",
+        "createdAt": "2020-08-25T16:21:09.175Z",
+        "Request": {
+          "versionQualifier": "v7.3.3",
+          "createdAt": "2020-08-25T16:21:08.932Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-26T19:22:58.661Z",
+        "Request": {
+          "versionQualifier": "v11.0.0-nightly.20200826",
+          "createdAt": "2020-08-26T19:22:58.124Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-27T18:24:27.808Z",
+        "Request": {
+          "versionQualifier": "v12.0.0-nightly.20200827",
+          "createdAt": "2020-08-27T18:24:26.707Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-28T01:17:00.054Z",
+        "Request": {
+          "versionQualifier": "v10.1.0",
+          "createdAt": "2020-08-28T01:16:59.620Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-31T19:38:26.330Z",
+        "Request": {
+          "versionQualifier": "v11.0.0-beta.3",
+          "createdAt": "2020-08-31T19:38:25.646Z"
+        }
+      },
+      {
+        "status": "Passed",
+        "createdAt": "2020-08-31T19:38:33.922Z",
+        "Request": {
+          "versionQualifier": "v12.0.0-nightly.20200831",
+          "createdAt": "2020-08-31T19:38:31.473Z"
+        }
+      }
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Box, Columns, Container, Heading, Hero, Table } from 'react-bulma-components';
-import { IRequest, IHomeProps, IRegistrant } from 'src/server/interfaces';
+import { IRequest, IHomeProps } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import {
   LineChart,
@@ -185,7 +185,7 @@ class Home extends Component<IHomeProps, {}> {
     );
   }
 
-  private renderChannelTable(registrants: IRegistrant[]) {
+  private renderChannelTable(registrants: mRegistrant[]) {
     let stableCount = 0;
     let betaCount = 0;
     let nightlyCount = 0;

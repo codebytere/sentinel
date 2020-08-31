@@ -13,11 +13,12 @@ import {
 import { withAlert } from 'react-alert';
 import converter from 'html-table-to-json';
 import { PLATFORMS } from '../src/server/constants';
-import { ISettingsProps, IRegistrant, ISettingsState } from 'src/server/interfaces';
+import { ISettingsProps, ISettingsState } from 'src/server/interfaces';
 import { AuthContext, IAuthProviderState } from '../src/contexts/auth';
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
 import { getBaseURL } from 'src/utils';
+import { mRegistrant } from 'src/server/database';
 
 class Settings extends Component<ISettingsProps, ISettingsState> {
   static contextType = AuthContext;
@@ -26,7 +27,7 @@ class Settings extends Component<ISettingsProps, ISettingsState> {
     const baseURL = getBaseURL(req);
     const reply = await fetch(`${baseURL}/current-user`);
 
-    const registrant: IRegistrant = await reply.json();
+    const registrant: mRegistrant = await reply.json();
     const webhooks = registrant.table.webhooks || null;
 
     return { webhooks, channel: registrant.table.channel };

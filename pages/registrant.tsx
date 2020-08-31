@@ -1,16 +1,17 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 import { Box, Columns, Container, Heading, Hero, Table, Tag } from 'react-bulma-components';
-import { IRequest, IRegistrantProps } from 'src/server/interfaces';
+import { IRegistrantProps } from 'src/server/interfaces';
 import { api } from 'src/server/api';
 import { getBaseURL, getChannelForVersion, formatDateString } from 'src/utils';
 import { NextApiRequest } from 'next';
 import { DATA_AUTH_TOKEN } from 'src/server/constants';
+import { mRegistrant } from 'src/server/database';
 
 class Registrant extends Component<IRegistrantProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
-    let registrant: IRequest[] = [];
+    let registrant: mRegistrant | null = null;
 
     const path = req?.url ? req.url : window.location.pathname;
     const [name] = path.replace('/registrants/', '').split('/');
@@ -57,6 +58,7 @@ class Registrant extends Component<IRegistrantProps, {}> {
     };
 
     const reports: api.Report[] = registrant.table
+      // @ts-ignore
       .Reports!.filter((r: api.Report) => {
         return channel === getChannelForVersion(r.Request!.versionQualifier);
       })

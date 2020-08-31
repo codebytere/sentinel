@@ -1,11 +1,12 @@
 import { AlertManager } from 'react-alert';
 import { api } from './api';
+import { mRegistrant } from './database';
 
 // Props
 
 export interface IHomeProps {
   requests: IRequest[];
-  registrants: IRegistrant[];
+  registrants: mRegistrant[];
 }
 
 export interface IReleaseChannelProps {
@@ -14,7 +15,7 @@ export interface IReleaseChannelProps {
 }
 
 export interface IRegistrantProps {
-  registrant: IRegistrant;
+  registrant: mRegistrant;
 }
 
 export interface IAlertProps {
@@ -63,10 +64,6 @@ export interface ISignupState {
 }
 
 // Other Interfaces
-
-export interface IRegistrant {
-  table: api.Registrant;
-}
 
 export interface IReportInfo {
   id: number;
