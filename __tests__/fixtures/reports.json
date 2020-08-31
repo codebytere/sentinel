@@ -1,0 +1,444 @@
+[
+  {
+    "table": {
+      "id": 226,
+      "registrantId": 7,
+      "name": "fiddle",
+      "status": "Passed",
+      "reportsExpected": 1,
+      "sessionToken": "dd04473a97b8f120cdd749ee627abd0a5f69aadb-285576867-2867560740",
+      "createdAt": "2020-07-29T18:07:39.211Z",
+      "updatedAt": "2020-07-29T18:11:00.363Z",
+      "requestId": 140,
+      "Registrant": {
+        "id": 7,
+        "username": "fiddle",
+        "appName": "fiddle",
+        "password": "$2b$10$ozksXinAVXx2nQKIuSisu.MMBYYcxERIQB0P6GdycjbdibQeP60oK",
+        "webhooks": {
+          "linux-x64": "https://sentinel-client.herokuapp.com/fiddle",
+          "win32-x64": "https://sentinel-client.herokuapp.com/fiddle",
+          "darwin-x64": "https://sentinel-client.herokuapp.com/fiddle"
+        },
+        "channel": 7,
+        "createdAt": "2020-03-06T19:06:51.915Z",
+        "updatedAt": "2020-03-06T19:06:51.915Z"
+      },
+      "TestData": [
+        {
+          "id": 411,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "win32",
+          "sourceLink": "https://github.com/electron/fiddle",
+          "timeStart": "2020-07-29T18:09:42.000Z",
+          "timeStop": "2020-07-29T18:11:01.000Z",
+          "totalTests": 619,
+          "totalPassed": 619,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/electron/fiddle-win32-x64-1596046284050",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/187500476",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz",
+              "speed": 2294
+            },
+            "type": "Linux",
+            "freeMem": 5051400192,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T18:11:25.633Z",
+          "updatedAt": "2020-07-29T18:11:25.633Z",
+          "reportId": 226
+        },
+        {
+          "id": 412,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "darwin",
+          "sourceLink": "https://github.com/electron/fiddle",
+          "timeStart": "2020-07-29T18:09:40.000Z",
+          "timeStop": "2020-07-29T18:10:27.000Z",
+          "totalTests": 619,
+          "totalPassed": 619,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/electron/fiddle-darwin-x64-1596046345145",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/187500479",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz",
+              "speed": 2294
+            },
+            "type": "Linux",
+            "freeMem": 5056655360,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T18:12:26.915Z",
+          "updatedAt": "2020-07-29T18:12:26.915Z",
+          "reportId": 226
+        },
+        {
+          "id": 410,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "linux",
+          "sourceLink": "https://github.com/electron/fiddle",
+          "timeStart": "2020-07-29T18:08:29.000Z",
+          "timeStop": "2020-07-29T18:09:37.000Z",
+          "totalTests": 619,
+          "totalPassed": 619,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/electron/fiddle-linux-x64-1596046258651",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/187500491",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz",
+              "speed": 2095
+            },
+            "type": "Linux",
+            "freeMem": 5069045760,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T18:11:00.353Z",
+          "updatedAt": "2020-07-29T18:11:00.353Z",
+          "reportId": 226
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 224,
+      "registrantId": 8,
+      "name": "vscode",
+      "status": "Passed",
+      "reportsExpected": 1,
+      "sessionToken": "12345678130112-3805225070-1463593302",
+      "createdAt": "2020-07-29T05:16:22.609Z",
+      "updatedAt": "2020-07-29T05:29:39.828Z",
+      "requestId": 139,
+      "Registrant": {
+        "id": 8,
+        "username": "vscode",
+        "appName": "vscode",
+        "password": "$2b$10$GzNX982MGa4ujZphQFCEZ.DLt/o1uxSqlzGG5vs0MM2sStl6WK4lK",
+        "webhooks": {
+          "linux-x64": "https://sentinel-client.herokuapp.com/vscode",
+          "win32-x64": "https://sentinel-client.herokuapp.com/vscode",
+          "darwin-x64": "https://sentinel-client.herokuapp.com/vscode"
+        },
+        "channel": 7,
+        "createdAt": "2020-04-15T05:05:25.339Z",
+        "updatedAt": "2020-04-15T05:05:25.339Z"
+      },
+      "TestData": [
+        {
+          "id": 406,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "linux",
+          "sourceLink": "https://github.com/microsoft/vscode",
+          "timeStart": "2020-07-29T05:25:48.000Z",
+          "timeStop": "2020-07-29T05:26:53.000Z",
+          "totalTests": 6121,
+          "totalPassed": 6121,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/microsoft/vscode-linux-x64-1596000577864",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/186676728",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz",
+              "speed": 2095
+            },
+            "type": "Linux",
+            "freeMem": 5019615232,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T05:29:39.823Z",
+          "updatedAt": "2020-07-29T05:29:39.823Z",
+          "reportId": 224
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 225,
+      "registrantId": 9,
+      "name": "gitify",
+      "status": "Passed",
+      "reportsExpected": 1,
+      "sessionToken": "dd04473a97b8f120cdd749ee627abd0a5f69aadb-285576867-725515964",
+      "createdAt": "2020-07-29T18:07:38.871Z",
+      "updatedAt": "2020-07-29T18:09:13.423Z",
+      "requestId": 140,
+      "Registrant": {
+        "id": 9,
+        "username": "gitify",
+        "appName": "gitify",
+        "password": "$2b$10$63IPI5rUrEJEI4CBEpi5D.CYUVoFHGVC0sP.lI3xKNWlc6XIsisai",
+        "webhooks": {
+          "linux-x64": "http://sentinel-client.herokuapp.com/gitify",
+          "win32-x64": "http://sentinel-client.herokuapp.com/gitify",
+          "darwin-x64": "http://sentinel-client.herokuapp.com/gitify"
+        },
+        "channel": 7,
+        "createdAt": "2020-07-17T20:10:19.061Z",
+        "updatedAt": "2020-07-17T20:10:19.061Z"
+      },
+      "TestData": [
+        {
+          "id": 407,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "linux",
+          "sourceLink": "https://github.com/manosim/gitify",
+          "timeStart": "2020-07-29T18:08:32.000Z",
+          "timeStop": "2020-07-29T18:08:45.000Z",
+          "totalTests": 140,
+          "totalPassed": 140,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/manosim/gitify-linux-x64-1596046151583",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/187500489",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz",
+              "speed": 2095
+            },
+            "type": "Linux",
+            "freeMem": 5070086144,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T18:09:13.403Z",
+          "updatedAt": "2020-07-29T18:09:13.403Z",
+          "reportId": 225
+        },
+        {
+          "id": 408,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "darwin",
+          "sourceLink": "https://github.com/manosim/gitify",
+          "timeStart": "2020-07-29T18:09:18.000Z",
+          "timeStop": "2020-07-29T18:09:37.000Z",
+          "totalTests": 140,
+          "totalPassed": 140,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/manosim/gitify-darwin-x64-1596046211966",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/187500482",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz",
+              "speed": 2394
+            },
+            "type": "Linux",
+            "freeMem": 5075615744,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T18:10:13.456Z",
+          "updatedAt": "2020-07-29T18:10:13.456Z",
+          "reportId": 225
+        },
+        {
+          "id": 409,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "win32",
+          "sourceLink": "https://github.com/manosim/gitify",
+          "timeStart": "2020-07-29T18:10:09.000Z",
+          "timeStop": "2020-07-29T18:10:27.000Z",
+          "totalTests": 140,
+          "totalPassed": 140,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/manosim/gitify-win32-x64-1596046255582",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/187500471",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz",
+              "speed": 2095
+            },
+            "type": "Linux",
+            "freeMem": 5065629696,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T18:10:57.285Z",
+          "updatedAt": "2020-07-29T18:10:57.285Z",
+          "reportId": 225
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 222,
+      "registrantId": 9,
+      "name": "gitify",
+      "status": "Passed",
+      "reportsExpected": 1,
+      "sessionToken": "12345678130112-3805225070-725515964",
+      "createdAt": "2020-07-29T05:16:22.022Z",
+      "updatedAt": "2020-07-29T05:18:05.514Z",
+      "requestId": 139,
+      "Registrant": {
+        "id": 9,
+        "username": "gitify",
+        "appName": "gitify",
+        "password": "$2b$10$63IPI5rUrEJEI4CBEpi5D.CYUVoFHGVC0sP.lI3xKNWlc6XIsisai",
+        "webhooks": {
+          "linux-x64": "http://sentinel-client.herokuapp.com/gitify",
+          "win32-x64": "http://sentinel-client.herokuapp.com/gitify",
+          "darwin-x64": "http://sentinel-client.herokuapp.com/gitify"
+        },
+        "channel": 7,
+        "createdAt": "2020-07-17T20:10:19.061Z",
+        "updatedAt": "2020-07-17T20:10:19.061Z"
+      },
+      "TestData": [
+        {
+          "id": 404,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "linux",
+          "sourceLink": "https://github.com/manosim/gitify",
+          "timeStart": "2020-07-29T05:17:27.000Z",
+          "timeStop": "2020-07-29T05:17:46.000Z",
+          "totalTests": 140,
+          "totalPassed": 140,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/manosim/gitify-linux-x64-1595999883139",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/186676721",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) Platinum 8171M CPU @ 2.60GHz",
+              "speed": 2095
+            },
+            "type": "Linux",
+            "freeMem": 5025959936,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T05:18:05.490Z",
+          "updatedAt": "2020-07-29T05:18:05.490Z",
+          "reportId": 222
+        }
+      ]
+    }
+  },
+  {
+    "table": {
+      "id": 223,
+      "registrantId": 7,
+      "name": "fiddle",
+      "status": "Passed",
+      "reportsExpected": 1,
+      "sessionToken": "12345678130112-3805225070-2867560740",
+      "createdAt": "2020-07-29T05:16:22.382Z",
+      "updatedAt": "2020-07-29T05:18:48.542Z",
+      "requestId": 139,
+      "Registrant": {
+        "id": 7,
+        "username": "fiddle",
+        "appName": "fiddle",
+        "password": "$2b$10$ozksXinAVXx2nQKIuSisu.MMBYYcxERIQB0P6GdycjbdibQeP60oK",
+        "webhooks": {
+          "linux-x64": "https://sentinel-client.herokuapp.com/fiddle",
+          "win32-x64": "https://sentinel-client.herokuapp.com/fiddle",
+          "darwin-x64": "https://sentinel-client.herokuapp.com/fiddle"
+        },
+        "channel": 7,
+        "createdAt": "2020-03-06T19:06:51.915Z",
+        "updatedAt": "2020-03-06T19:06:51.915Z"
+      },
+      "TestData": [
+        {
+          "id": 405,
+          "status": "Passed",
+          "arch": "x64",
+          "os": "linux",
+          "sourceLink": "https://github.com/electron/fiddle",
+          "timeStart": "2020-07-29T05:17:19.000Z",
+          "timeStop": "2020-07-29T05:18:25.000Z",
+          "totalTests": 619,
+          "totalPassed": 619,
+          "totalSkipped": 0,
+          "totalWarnings": 0,
+          "totalFailed": 0,
+          "logfileLink": "http://electron-sentinel.s3.amazonaws.com/logs/electron/fiddle-linux-x64-1595999926748",
+          "ciLink": "https://github.com/codebytere/sentinel-oss/actions/runs/186676726",
+          "testAgent": {
+            "arch": "x64",
+            "cpus": {
+              "cores": 2,
+              "model": "Intel(R) Xeon(R) CPU E5-2673 v3 @ 2.40GHz",
+              "speed": 2397
+            },
+            "type": "Linux",
+            "freeMem": 5022363648,
+            "release": "5.3.0-1032-azure",
+            "platform": "linux",
+            "totalMem": 7263739904,
+            "endianness": "LE"
+          },
+          "createdAt": "2020-07-29T05:18:48.538Z",
+          "updatedAt": "2020-07-29T05:18:48.538Z",
+          "reportId": 223
+        }
+      ]
+    }
+  }
+]

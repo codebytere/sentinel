@@ -1,0 +1,14 @@
+{
+  "table": {
+    "id": 140,
+    "platformInstallData": {
+      "linux-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200729/electron-11.0.0-nightly.20200729-linux-x64.zip",
+      "win32-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200729/electron-11.0.0-nightly.20200729-win32-x64.zip",
+      "darwin-x64": "https://github.com/electron/nightlies/releases/download/11.0.0-nightly.20200729/electron-11.0.0-nightly.20200729-darwin-x64.zip"
+    },
+    "versionQualifier": "11.0.0-nightly.20200729",
+    "commitHash": "dd04473a97b8f120cdd749ee627abd0a5f69aadb",
+    "createdAt": "2020-07-29T18:07:38.780Z",
+    "updatedAt": "2020-07-29T18:07:39.973Z"
+  }
+}
