@@ -16,11 +16,12 @@ import { dateSort, formatDateString, getBaseURL, getChannelForVersion, getStats 
 import { api } from 'src/server/api';
 import { NextApiRequest } from 'next';
 import { DATA_AUTH_TOKEN } from 'src/server/constants';
+import { mRequest } from 'src/server/database';
 
 class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
-    let requests: IRequest[] = [];
+    let requests: mRequest[] = [];
 
     const path = req?.url ? req.url : window.location.pathname;
     const channel = path.replace('/channels/', '');
@@ -30,7 +31,7 @@ class ReleaseChannel extends Component<IReleaseChannelProps, {}> {
         headers: { authorization: DATA_AUTH_TOKEN }
       });
 
-      requests = (await rawRequests.json()).filter((r: IRequest) => {
+      requests = (await rawRequests.json()).filter((r: mRequest) => {
         return channel === getChannelForVersion(r.table.versionQualifier);
       });
     } catch (error) {

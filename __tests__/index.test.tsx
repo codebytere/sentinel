@@ -11,7 +11,7 @@ describe('index page', () => {
   });
 
   it('correctly fetches initial props', async () => {
-    const requestsJSON = require('./fixtures/index.requests.json');
+    const requestsJSON = require('./fixtures/requests.json');
     const registrantsJSON = require('./fixtures/index.registrants.json');
 
     fetchMock.once(JSON.stringify(requestsJSON)).once(JSON.stringify(registrantsJSON));

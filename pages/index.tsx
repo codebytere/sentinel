@@ -16,12 +16,13 @@ import {
 import { getStats, dateSort, getBaseURL, getChannelForVersion } from 'src/utils';
 import { NextApiRequest } from 'next';
 import { DATA_AUTH_TOKEN } from 'src/server/constants';
+import { mRequest, mRegistrant } from 'src/server/database';
 
 class Home extends Component<IHomeProps, {}> {
   static async getInitialProps({ req }: { req: NextApiRequest | null }) {
     const baseURL = getBaseURL(req);
-    let registrants = [];
-    let requests = [];
+    let registrants: mRegistrant[] = [];
+    let requests: mRequest[] = [];
 
     try {
       const rawRequests = await fetch(`${baseURL}/requests`, {
