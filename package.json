@@ -36,7 +36,7 @@
     "fastify-cookie": "^3.6.0",
     "fastify-session": "^3.3.0",
     "html-table-to-json": "^1.0.0",
-    "next": "^9.5.2",
+    "next": "^11.1.0",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.13.1",
     "pg": "^7.18.1",
