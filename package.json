@@ -38,7 +38,7 @@
     "html-table-to-json": "^1.0.0",
     "next": "^11.1.0",
     "node-fetch": "^2.6.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "pg": "^7.18.1",
     "react": "^16.12.0",
     "react-alert": "^6.0.0",
